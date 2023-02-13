@@ -37,4 +37,21 @@ private:
   bool _init(int32_t sensor_id);
 };
 
+
+//REGISTERS
+
+#define GRAVITY 9.80665
+#define OUTX_L_G (0X22)
+#define OUTX_H_G (0x23)    
+#define OUTY_L_G (0x24)
+#define OUTY_H_G (0x25)
+#define OUTZ_L_G (0x26)
+#define OUTZ_H_G (0x27)
+#define OUTX_L_A (0x28)
+#define OUTX_H_A (0x29)
+#define OUTY_L_A (0x2A)
+#define OUTY_H_A (0x2B)
+#define OUTZ_L_A (0x2C)
+#define OUTZ_H_A (0x2D)
+
 #endif

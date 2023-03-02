@@ -4,6 +4,6 @@
 
 method=source_dir
 command=
-source_dir=D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/components/bootloader/subproject
+source_dir=/Users/alexzhou13/Documents/spring2023/EC464/esp/esp-idf/components/bootloader/subproject
 work_dir=
 

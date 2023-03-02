@@ -3,56 +3,6 @@
         "children": [],
         "depends_on": null,
         "help": null,
-        "id": "SOC_LEDC_SUPPORT_APB_CLOCK",
-        "name": "SOC_LEDC_SUPPORT_APB_CLOCK",
-        "range": null,
-        "title": null,
-        "type": "bool"
-    },
-    {
-        "children": [],
-        "depends_on": null,
-        "help": null,
-        "id": "SOC_LEDC_SUPPORT_XTAL_CLOCK",
-        "name": "SOC_LEDC_SUPPORT_XTAL_CLOCK",
-        "range": null,
-        "title": null,
-        "type": "bool"
-    },
-    {
-        "children": [],
-        "depends_on": null,
-        "help": null,
-        "id": "SOC_LEDC_CHANNEL_NUM",
-        "name": "SOC_LEDC_CHANNEL_NUM",
-        "range": null,
-        "title": null,
-        "type": "int"
-    },
-    {
-        "children": [],
-        "depends_on": null,
-        "help": null,
-        "id": "SOC_LEDC_TIMER_BIT_WIDE_NUM",
-        "name": "SOC_LEDC_TIMER_BIT_WIDE_NUM",
-        "range": null,
-        "title": null,
-        "type": "int"
-    },
-    {
-        "children": [],
-        "depends_on": null,
-        "help": null,
-        "id": "SOC_LEDC_SUPPORT_FADE_STOP",
-        "name": "SOC_LEDC_SUPPORT_FADE_STOP",
-        "range": null,
-        "title": null,
-        "type": "bool"
-    },
-    {
-        "children": [],
-        "depends_on": null,
-        "help": null,
         "id": "SOC_MPU_CONFIGURABLE_REGIONS_SUPPORTED",
         "name": "SOC_MPU_CONFIGURABLE_REGIONS_SUPPORTED",
         "range": null,
@@ -145,6 +95,16 @@
         "help": null,
         "id": "SOC_GDMA_SUPPORTED",
         "name": "SOC_GDMA_SUPPORTED",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_GPTIMER_SUPPORTED",
+        "name": "SOC_GPTIMER_SUPPORTED",
         "range": null,
         "title": null,
         "type": "bool"
@@ -373,6 +333,36 @@
         "children": [],
         "depends_on": null,
         "help": null,
+        "id": "SOC_GPSPI_SUPPORTED",
+        "name": "SOC_GPSPI_SUPPORTED",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_LEDC_SUPPORTED",
+        "name": "SOC_LEDC_SUPPORTED",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_I2C_SUPPORTED",
+        "name": "SOC_I2C_SUPPORTED",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
         "id": "SOC_SYSTIMER_SUPPORTED",
         "name": "SOC_SYSTIMER_SUPPORTED",
         "range": null,
@@ -485,6 +475,16 @@
         "help": null,
         "id": "SOC_TOUCH_SENSOR_SUPPORTED",
         "name": "SOC_TOUCH_SENSOR_SUPPORTED",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_BOD_SUPPORTED",
+        "name": "SOC_BOD_SUPPORTED",
         "range": null,
         "title": null,
         "type": "bool"
@@ -703,16 +703,6 @@
         "children": [],
         "depends_on": null,
         "help": null,
-        "id": "SOC_RTC_SLOW_CLOCK_SUPPORT_8MD256",
-        "name": "SOC_RTC_SLOW_CLOCK_SUPPORT_8MD256",
-        "range": null,
-        "title": null,
-        "type": "bool"
-    },
-    {
-        "children": [],
-        "depends_on": null,
-        "help": null,
         "id": "SOC_ADC_CALIBRATION_V1_SUPPORTED",
         "name": "SOC_ADC_CALIBRATION_V1_SUPPORTED",
         "range": null,
@@ -903,6 +893,26 @@
         "children": [],
         "depends_on": null,
         "help": null,
+        "id": "SOC_GPIO_SUPPORT_PIN_GLITCH_FILTER",
+        "name": "SOC_GPIO_SUPPORT_PIN_GLITCH_FILTER",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_GPIO_FILTER_CLK_SUPPORT_APB",
+        "name": "SOC_GPIO_FILTER_CLK_SUPPORT_APB",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
         "id": "SOC_GPIO_SUPPORT_RTC_INDEPENDENT",
         "name": "SOC_GPIO_SUPPORT_RTC_INDEPENDENT",
         "range": null,
@@ -925,6 +935,16 @@
         "help": null,
         "id": "SOC_GPIO_VALID_GPIO_MASK",
         "name": "SOC_GPIO_VALID_GPIO_MASK",
+        "range": null,
+        "title": null,
+        "type": "hex"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_GPIO_VALID_DIGITAL_IO_PAD_MASK",
+        "name": "SOC_GPIO_VALID_DIGITAL_IO_PAD_MASK",
         "range": null,
         "title": null,
         "type": "hex"
@@ -1053,6 +1073,26 @@
         "children": [],
         "depends_on": null,
         "help": null,
+        "id": "SOC_I2S_SUPPORTS_XTAL",
+        "name": "SOC_I2S_SUPPORTS_XTAL",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_I2S_SUPPORTS_PLL_F160M",
+        "name": "SOC_I2S_SUPPORTS_PLL_F160M",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
         "id": "SOC_I2S_SUPPORTS_PCM",
         "name": "SOC_I2S_SUPPORTS_PCM",
         "range": null,
@@ -1083,6 +1123,16 @@
         "children": [],
         "depends_on": null,
         "help": null,
+        "id": "SOC_I2S_PDM_MAX_TX_LINES",
+        "name": "SOC_I2S_PDM_MAX_TX_LINES",
+        "range": null,
+        "title": null,
+        "type": "int"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
         "id": "SOC_I2S_SUPPORTS_PDM_RX",
         "name": "SOC_I2S_SUPPORTS_PDM_RX",
         "range": null,
@@ -1093,11 +1143,11 @@
         "children": [],
         "depends_on": null,
         "help": null,
-        "id": "SOC_I2S_SUPPORTS_PDM_CODEC",
-        "name": "SOC_I2S_SUPPORTS_PDM_CODEC",
+        "id": "SOC_I2S_PDM_MAX_RX_LINES",
+        "name": "SOC_I2S_PDM_MAX_RX_LINES",
         "range": null,
         "title": null,
-        "type": "bool"
+        "type": "int"
     },
     {
         "children": [],
@@ -1108,6 +1158,66 @@
         "range": null,
         "title": null,
         "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_LEDC_SUPPORT_APB_CLOCK",
+        "name": "SOC_LEDC_SUPPORT_APB_CLOCK",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_LEDC_SUPPORT_XTAL_CLOCK",
+        "name": "SOC_LEDC_SUPPORT_XTAL_CLOCK",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_LEDC_CHANNEL_NUM",
+        "name": "SOC_LEDC_CHANNEL_NUM",
+        "range": null,
+        "title": null,
+        "type": "int"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_LEDC_TIMER_BIT_WIDTH",
+        "name": "SOC_LEDC_TIMER_BIT_WIDTH",
+        "range": null,
+        "title": null,
+        "type": "int"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_LEDC_SUPPORT_FADE_STOP",
+        "name": "SOC_LEDC_SUPPORT_FADE_STOP",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_LEDC_GAMMA_FADE_RANGE_MAX",
+        "name": "SOC_LEDC_GAMMA_FADE_RANGE_MAX",
+        "range": null,
+        "title": null,
+        "type": "int"
     },
     {
         "children": [],
@@ -1223,11 +1333,21 @@
         "children": [],
         "depends_on": null,
         "help": null,
+        "id": "SOC_MCPWM_CLK_SUPPORT_PLL160M",
+        "name": "SOC_MCPWM_CLK_SUPPORT_PLL160M",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
         "id": "SOC_PCNT_GROUPS",
         "name": "SOC_PCNT_GROUPS",
         "range": null,
         "title": null,
-        "type": "bool"
+        "type": "int"
     },
     {
         "children": [],
@@ -1583,6 +1703,16 @@
         "children": [],
         "depends_on": null,
         "help": null,
+        "id": "SOC_SDM_CLK_SUPPORT_APB",
+        "name": "SOC_SDM_CLK_SUPPORT_APB",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
         "id": "SOC_SPI_PERIPH_NUM",
         "name": "SOC_SPI_PERIPH_NUM",
         "range": null,
@@ -1655,6 +1785,26 @@
         "help": null,
         "id": "SOC_SPI_SUPPORT_SLAVE_HD_VER2",
         "name": "SOC_SPI_SUPPORT_SLAVE_HD_VER2",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_SPI_SUPPORT_CLK_APB",
+        "name": "SOC_SPI_SUPPORT_CLK_APB",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_SPI_SUPPORT_CLK_XTAL",
+        "name": "SOC_SPI_SUPPORT_CLK_XTAL",
         "range": null,
         "title": null,
         "type": "bool"
@@ -1745,6 +1895,16 @@
         "help": null,
         "id": "SOC_SPIRAM_SUPPORTED",
         "name": "SOC_SPIRAM_SUPPORTED",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_SPIRAM_XIP_SUPPORTED",
+        "name": "SOC_SPIRAM_XIP_SUPPORTED",
         "range": null,
         "title": null,
         "type": "bool"
@@ -1938,6 +2098,56 @@
         "range": null,
         "title": null,
         "type": "hex"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_TWAI_CONTROLLER_NUM",
+        "name": "SOC_TWAI_CONTROLLER_NUM",
+        "range": null,
+        "title": null,
+        "type": "int"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_TWAI_CLK_SUPPORT_APB",
+        "name": "SOC_TWAI_CLK_SUPPORT_APB",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_TWAI_BRP_MIN",
+        "name": "SOC_TWAI_BRP_MIN",
+        "range": null,
+        "title": null,
+        "type": "int"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_TWAI_BRP_MAX",
+        "name": "SOC_TWAI_BRP_MAX",
+        "range": null,
+        "title": null,
+        "type": "int"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_TWAI_SUPPORTS_RX_STATUS",
+        "name": "SOC_TWAI_SUPPORTS_RX_STATUS",
+        "range": null,
+        "title": null,
+        "type": "bool"
     },
     {
         "children": [],
@@ -2243,6 +2453,16 @@
         "children": [],
         "depends_on": null,
         "help": null,
+        "id": "SOC_PM_SUPPORT_TOUCH_SENSOR_WAKEUP",
+        "name": "SOC_PM_SUPPORT_TOUCH_SENSOR_WAKEUP",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
         "id": "SOC_PM_SUPPORT_CPU_PD",
         "name": "SOC_PM_SUPPORT_CPU_PD",
         "range": null,
@@ -2273,8 +2493,8 @@
         "children": [],
         "depends_on": null,
         "help": null,
-        "id": "SOC_PM_SUPPORT_TOUCH_SENSOR_WAKEUP",
-        "name": "SOC_PM_SUPPORT_TOUCH_SENSOR_WAKEUP",
+        "id": "SOC_PM_SUPPORT_RC_FAST_PD",
+        "name": "SOC_PM_SUPPORT_RC_FAST_PD",
         "range": null,
         "title": null,
         "type": "bool"
@@ -2285,6 +2505,96 @@
         "help": null,
         "id": "SOC_PM_SUPPORT_DEEPSLEEP_CHECK_STUB_ONLY",
         "name": "SOC_PM_SUPPORT_DEEPSLEEP_CHECK_STUB_ONLY",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_CLK_RC_FAST_D256_SUPPORTED",
+        "name": "SOC_CLK_RC_FAST_D256_SUPPORTED",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_RTC_SLOW_CLK_SUPPORT_RC_FAST_D256",
+        "name": "SOC_RTC_SLOW_CLK_SUPPORT_RC_FAST_D256",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_CLK_RC_FAST_SUPPORT_CALIBRATION",
+        "name": "SOC_CLK_RC_FAST_SUPPORT_CALIBRATION",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_CLK_XTAL32K_SUPPORTED",
+        "name": "SOC_CLK_XTAL32K_SUPPORTED",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_EFUSE_DIS_DOWNLOAD_DCACHE",
+        "name": "SOC_EFUSE_DIS_DOWNLOAD_DCACHE",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_EFUSE_HARD_DIS_JTAG",
+        "name": "SOC_EFUSE_HARD_DIS_JTAG",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_EFUSE_DIS_USB_JTAG",
+        "name": "SOC_EFUSE_DIS_USB_JTAG",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_EFUSE_SOFT_DIS_JTAG",
+        "name": "SOC_EFUSE_SOFT_DIS_JTAG",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "SOC_EFUSE_DIS_DIRECT_BOOT",
+        "name": "SOC_EFUSE_DIS_DIRECT_BOOT",
         "range": null,
         "title": null,
         "type": "bool"
@@ -2633,36 +2943,6 @@
         "children": [],
         "depends_on": null,
         "help": null,
-        "id": "SOC_TWAI_BRP_MIN",
-        "name": "SOC_TWAI_BRP_MIN",
-        "range": null,
-        "title": null,
-        "type": "int"
-    },
-    {
-        "children": [],
-        "depends_on": null,
-        "help": null,
-        "id": "SOC_TWAI_BRP_MAX",
-        "name": "SOC_TWAI_BRP_MAX",
-        "range": null,
-        "title": null,
-        "type": "int"
-    },
-    {
-        "children": [],
-        "depends_on": null,
-        "help": null,
-        "id": "SOC_TWAI_SUPPORTS_RX_STATUS",
-        "name": "SOC_TWAI_SUPPORTS_RX_STATUS",
-        "range": null,
-        "title": null,
-        "type": "bool"
-    },
-    {
-        "children": [],
-        "depends_on": null,
-        "help": null,
         "id": "IDF_CMAKE",
         "name": "IDF_CMAKE",
         "range": null,
@@ -2675,6 +2955,16 @@
         "help": null,
         "id": "IDF_ENV_FPGA",
         "name": "IDF_ENV_FPGA",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "IDF_CI_BUILD",
+        "name": "IDF_CI_BUILD",
         "range": null,
         "title": null,
         "type": "bool"
@@ -2773,8 +3063,8 @@
         "children": [],
         "depends_on": null,
         "help": null,
-        "id": "IDF_TARGET_ESP32H2",
-        "name": "IDF_TARGET_ESP32H2",
+        "id": "IDF_TARGET_ESP32H4",
+        "name": "IDF_TARGET_ESP32H4",
         "range": null,
         "title": null,
         "type": "bool"
@@ -2783,30 +3073,30 @@
         "children": [
             {
                 "children": [],
-                "depends_on": "<choice IDF_TARGET_ESP32H2_BETA_VERSION>",
+                "depends_on": "<choice IDF_TARGET_ESP32H4_BETA_VERSION>",
                 "help": null,
-                "id": "IDF_TARGET_ESP32H2_BETA_VERSION_1",
-                "name": "IDF_TARGET_ESP32H2_BETA_VERSION_1",
+                "id": "IDF_TARGET_ESP32H4_BETA_VERSION_1",
+                "name": "IDF_TARGET_ESP32H4_BETA_VERSION_1",
                 "range": null,
-                "title": "ESP32-H2 beta1",
+                "title": "ESP32-H4 beta1",
                 "type": "bool"
             },
             {
                 "children": [],
-                "depends_on": "<choice IDF_TARGET_ESP32H2_BETA_VERSION>",
+                "depends_on": "<choice IDF_TARGET_ESP32H4_BETA_VERSION>",
                 "help": null,
-                "id": "IDF_TARGET_ESP32H2_BETA_VERSION_2",
-                "name": "IDF_TARGET_ESP32H2_BETA_VERSION_2",
+                "id": "IDF_TARGET_ESP32H4_BETA_VERSION_2",
+                "name": "IDF_TARGET_ESP32H4_BETA_VERSION_2",
                 "range": null,
-                "title": "ESP32-H2 beta2",
+                "title": "ESP32-H4 beta2",
                 "type": "bool"
             }
         ],
-        "depends_on": "IDF_TARGET_ESP32H2",
-        "help": "Currently ESP32-H2 has several beta versions for internal use only.\nSelect the one that matches your chip model.",
-        "id": "esp32-h2-beta-version",
-        "name": "IDF_TARGET_ESP32H2_BETA_VERSION",
-        "title": "ESP32-H2 beta version",
+        "depends_on": "IDF_TARGET_ESP32H4",
+        "help": "Currently ESP32-H4 has several beta versions for internal use only.\nSelect the one that matches your chip model.",
+        "id": "esp32-h4-beta-version",
+        "name": "IDF_TARGET_ESP32H4_BETA_VERSION",
+        "title": "ESP32-H4 beta version",
         "type": "choice"
     },
     {
@@ -2815,6 +3105,26 @@
         "help": null,
         "id": "IDF_TARGET_ESP32C2",
         "name": "IDF_TARGET_ESP32C2",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "IDF_TARGET_ESP32C6",
+        "name": "IDF_TARGET_ESP32C6",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "IDF_TARGET_ESP32H2",
+        "name": "IDF_TARGET_ESP32H2",
         "range": null,
         "title": null,
         "type": "bool"
@@ -3488,7 +3798,7 @@
             },
             {
                 "children": [],
-                "depends_on": "(IDF_TARGET_ESP32 && ESP32_REV_MIN >= 3) || SOC_SECURE_BOOT_V2_RSA",
+                "depends_on": "(IDF_TARGET_ESP32 && ESP32_REV_MIN_FULL >= 300) || SOC_SECURE_BOOT_V2_RSA",
                 "help": null,
                 "id": "SECURE_BOOT_V2_RSA_SUPPORTED",
                 "name": "SECURE_BOOT_V2_RSA_SUPPORTED",
@@ -3518,7 +3828,7 @@
             },
             {
                 "children": [],
-                "depends_on": "ESP32_REV_MIN >= 3",
+                "depends_on": "ESP32_REV_MIN_FULL >= 300",
                 "help": null,
                 "id": "SECURE_BOOT_V2_PREFERRED",
                 "name": "SECURE_BOOT_V2_PREFERRED",
@@ -3689,7 +3999,7 @@
                         "type": "choice"
                     }
                 ],
-                "depends_on": "SOC_SECURE_BOOT_SUPPORTED && !(IDF_TARGET_ESP32C3 && ESP32C3_REV_MIN < 3)",
+                "depends_on": "SOC_SECURE_BOOT_SUPPORTED && !(IDF_TARGET_ESP32C3 && ESP32C3_REV_MIN_FULL < 3)",
                 "help": "Build a bootloader which enables Secure Boot on first boot.\n\nOnce enabled, Secure Boot will not boot a modified bootloader. The bootloader will only load a partition\ntable or boot an app if the data has a verified digital signature. There are implications for reflashing\nupdated apps once secure boot is enabled.\n\nWhen enabling secure boot, JTAG and ROM BASIC Interpreter are permanently disabled by default.",
                 "id": "SECURE_BOOT",
                 "name": "SECURE_BOOT",
@@ -3864,7 +4174,7 @@
                             },
                             {
                                 "children": [],
-                                "depends_on": "<choice SECURE_FLASH_ENCRYPTION_MODE>",
+                                "depends_on": "(!EFUSE_VIRTUAL || IDF_CI_BUILD) && <choice SECURE_FLASH_ENCRYPTION_MODE>",
                                 "help": null,
                                 "id": "SECURE_FLASH_ENCRYPTION_MODE_RELEASE",
                                 "name": "SECURE_FLASH_ENCRYPTION_MODE_RELEASE",
@@ -3874,7 +4184,7 @@
                             }
                         ],
                         "depends_on": "SECURE_FLASH_ENC_ENABLED",
-                        "help": "By default Development mode is enabled which allows ROM download mode to perform flash encryption\noperations (plaintext is sent to the device, and it encrypts it internally and writes ciphertext\nto flash.) This mode is not secure, it's possible for an attacker to write their own chosen plaintext\nto flash.\n\nRelease mode should always be selected for production or manufacturing. Once enabled it's no longer\npossible for the device in ROM Download Mode to use the flash encryption hardware.\n\nRefer to the Flash Encryption section of the ESP-IDF Programmer's Guide for details.",
+                        "help": "By default Development mode is enabled which allows ROM download mode to perform flash encryption\noperations (plaintext is sent to the device, and it encrypts it internally and writes ciphertext\nto flash.) This mode is not secure, it's possible for an attacker to write their own chosen plaintext\nto flash.\n\nRelease mode should always be selected for production or manufacturing. Once enabled it's no longer\npossible for the device in ROM Download Mode to use the flash encryption hardware.\n\nWhen EFUSE_VIRTUAL is enabled, SECURE_FLASH_ENCRYPTION_MODE_RELEASE is not available.\nFor CI tests we use IDF_CI_BUILD to bypass it (\"export IDF_CI_BUILD=1\").\nWe do not recommend bypassing it for other purposes.\n\nRefer to the Flash Encryption section of the ESP-IDF Programmer's Guide for details.",
                         "id": "security-features-enable-flash-encryption-on-boot-read-docs-first--enable-usage-mode",
                         "name": "SECURE_FLASH_ENCRYPTION_MODE",
                         "title": "Enable usage mode",
@@ -4022,7 +4332,7 @@
                     {
                         "children": [],
                         "depends_on": "SOC_SUPPORTS_SECURE_DL_MODE && <choice SECURE_UART_ROM_DL_MODE>",
-                        "help": "If set, during startup the app will burn an eFuse bit to permanently switch the UART ROM\nDownload Mode into a separate Secure Download mode. This option can only work if\nDownload Mode is not already disabled by eFuse.\n\nSecure Download mode limits the use of Download Mode functions to simple flash read,\nwrite and erase operations, plus a command to return a summary of currently enabled\nsecurity features.\n\nSecure Download mode is not compatible with the esptool.py flasher stub feature,\nespefuse.py, read/writing memory or registers, encrypted download, or any other\nfeatures that interact with unsupported Download Mode commands.\n\nSecure Download mode should be enabled in any application where Flash Encryption\nand/or Secure Boot is enabled. Disabling this option does not immediately cancel\nthe benefits of the security features, but it increases the potential \"attack\nsurface\" for an attacker to try and bypass them with a successful physical attack.\n\nIt is also possible to enable secure download mode at runtime by calling\nesp_efuse_enable_rom_secure_download_mode()\n\nNote: Secure Download mode is not available for ESP32 (includes revisions till ECO3).",
+                        "help": "If set, during startup the app will burn an eFuse bit to permanently switch the UART ROM\nDownload Mode into a separate Secure Download mode. This option can only work if\nDownload Mode is not already disabled by eFuse.\n\nSecure Download mode limits the use of Download Mode functions to update SPI config,\nchanging baud rate, basic flash write and a command to return a summary of currently\nenabled security features (`get_security_info`).\n\nSecure Download mode is not compatible with the esptool.py flasher stub feature,\nespefuse.py, read/writing memory or registers, encrypted download, or any other\nfeatures that interact with unsupported Download Mode commands.\n\nSecure Download mode should be enabled in any application where Flash Encryption\nand/or Secure Boot is enabled. Disabling this option does not immediately cancel\nthe benefits of the security features, but it increases the potential \"attack\nsurface\" for an attacker to try and bypass them with a successful physical attack.\n\nIt is also possible to enable secure download mode at runtime by calling\nesp_efuse_enable_rom_secure_download_mode()\n\nNote: Secure Download mode is not available for ESP32 (includes revisions till ECO3).",
                         "id": "SECURE_ENABLE_SECURE_ROM_DL_MODE",
                         "name": "SECURE_ENABLE_SECURE_ROM_DL_MODE",
                         "range": null,
@@ -4040,7 +4350,7 @@
                         "type": "bool"
                     }
                 ],
-                "depends_on": "(SECURE_BOOT_V2_ENABLED || SECURE_FLASH_ENC_ENABLED) && (!IDF_TARGET_ESP32 || ESP32_REV_MIN_3)",
+                "depends_on": "(SECURE_BOOT_V2_ENABLED || SECURE_FLASH_ENC_ENABLED) && !(IDF_TARGET_ESP32 && ESP32_REV_MIN_FULL < 300)",
                 "help": null,
                 "id": "security-features-uart-rom-download-mode",
                 "name": "SECURE_UART_ROM_DL_MODE",
@@ -4149,8 +4459,8 @@
         "children": [],
         "depends_on": null,
         "help": null,
-        "id": "ESP_ROM_HAS_JPEG_DECODE",
-        "name": "ESP_ROM_HAS_JPEG_DECODE",
+        "id": "ESP_ROM_HAS_MZ_CRC32",
+        "name": "ESP_ROM_HAS_MZ_CRC32",
         "range": null,
         "title": null,
         "type": "bool"
@@ -4159,8 +4469,8 @@
         "children": [],
         "depends_on": null,
         "help": null,
-        "id": "ESP_ROM_SUPPORT_MULTIPLE_UART",
-        "name": "ESP_ROM_SUPPORT_MULTIPLE_UART",
+        "id": "ESP_ROM_HAS_JPEG_DECODE",
+        "name": "ESP_ROM_HAS_JPEG_DECODE",
         "range": null,
         "title": null,
         "type": "bool"
@@ -4231,6 +4541,36 @@
         "help": null,
         "id": "ESP_ROM_NEEDS_SWSETUP_WORKAROUND",
         "name": "ESP_ROM_NEEDS_SWSETUP_WORKAROUND",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "ESP_ROM_HAS_LAYOUT_TABLE",
+        "name": "ESP_ROM_HAS_LAYOUT_TABLE",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "ESP_ROM_HAS_SPI_FLASH",
+        "name": "ESP_ROM_HAS_SPI_FLASH",
+        "range": null,
+        "title": null,
+        "type": "bool"
+    },
+    {
+        "children": [],
+        "depends_on": null,
+        "help": null,
+        "id": "ESP_ROM_HAS_ETS_PRINTF_BUG",
+        "name": "ESP_ROM_HAS_ETS_PRINTF_BUG",
         "range": null,
         "title": null,
         "type": "bool"
@@ -4313,6 +4653,16 @@
                 "name": "ESPTOOLPY_OCT_FLASH",
                 "range": null,
                 "title": "Enable Octal Flash",
+                "type": "bool"
+            },
+            {
+                "children": [],
+                "depends_on": "IDF_TARGET_ESP32S3",
+                "help": "This config option helps decide whether flash is Quad or Octal, but please note some limitations:\n\n1. If the flash chip is an Octal one, even if one of \"QIO\", \"QOUT\", \"DIO\", \"DOUT\" options is\n   selected in `ESPTOOLPY_FLASHMODE`, our code will automatically change the\n   mode to \"OPI\" and the sample mode will be STR.\n2. If the flash chip is a Quad one, even if \"OPI\" is selected in `ESPTOOLPY_FLASHMODE`, our code will\n   automatically change the mode to \"DIO\".\n3. Please do not rely on this option when you are pretty sure that you are using Octal flash,\n   please enable `ESPTOOLPY_OCT_FLASH` option, then you can choose `DTR` sample mode\n   in `ESPTOOLPY_FLASH_SAMPLE_MODE`. Otherwise, only `STR` mode is available.\n4. Enabling this feature reduces available internal RAM size (around 900 bytes).\n   If your IRAM space is insufficient and you're aware of your flash type,\n   disable this option and select corresponding flash type options.",
+                "id": "ESPTOOLPY_FLASH_MODE_AUTO_DETECT",
+                "name": "ESPTOOLPY_FLASH_MODE_AUTO_DETECT",
+                "range": null,
+                "title": "Choose flash mode automatically (please read help)",
                 "type": "bool"
             },
             {
@@ -4524,6 +4874,16 @@
                 "name": "ESPTOOLPY_FLASHFREQ",
                 "title": "Flash SPI speed",
                 "type": "choice"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "This is an invisible item, used to define the targets that defaults to use 80MHz Flash SPI speed.",
+                "id": "ESPTOOLPY_FLASHFREQ_80M_DEFAULT",
+                "name": "ESPTOOLPY_FLASHFREQ_80M_DEFAULT",
+                "range": null,
+                "title": null,
+                "type": "bool"
             },
             {
                 "children": [],
@@ -5272,7 +5632,7 @@
                             },
                             {
                                 "children": [],
-                                "depends_on": "ESP_CONSOLE_UART_NUM != 2 && !IDF_TARGET_ESP32C3 && !IDF_TARGET_ESP32S2 && !IDF_TARGET_ESP32H2 && <choice APPTRACE_DESTINATION2>",
+                                "depends_on": "ESP_CONSOLE_UART_NUM != 2 && SOC_UART_NUM > 2 && <choice APPTRACE_DESTINATION2>",
                                 "help": null,
                                 "id": "APPTRACE_DEST_UART2",
                                 "name": "APPTRACE_DEST_UART2",
@@ -6157,6 +6517,36 @@
                                                 "range": null,
                                                 "title": null,
                                                 "type": "int"
+                                            },
+                                            {
+                                                "children": [],
+                                                "depends_on": "BT_GATTS_ENABLE && BT_BLUEDROID_ENABLED",
+                                                "help": "This option enable gatt robust caching feature on server",
+                                                "id": "BT_GATTS_ROBUST_CACHING_ENABLED",
+                                                "name": "BT_GATTS_ROBUST_CACHING_ENABLED",
+                                                "range": null,
+                                                "title": "Enable Robust Caching on Server Side",
+                                                "type": "bool"
+                                            },
+                                            {
+                                                "children": [],
+                                                "depends_on": "BT_GATTS_ENABLE && BT_BLUEDROID_ENABLED",
+                                                "help": "Enabling this option allows remote GATT clients to write device name",
+                                                "id": "BT_GATTS_DEVICE_NAME_WRITABLE",
+                                                "name": "BT_GATTS_DEVICE_NAME_WRITABLE",
+                                                "range": null,
+                                                "title": "Allow to write device name by GATT clients",
+                                                "type": "bool"
+                                            },
+                                            {
+                                                "children": [],
+                                                "depends_on": "BT_GATTS_ENABLE && BT_BLUEDROID_ENABLED",
+                                                "help": "Enabling this option allows remote GATT clients to write appearance",
+                                                "id": "BT_GATTS_APPEARANCE_WRITABLE",
+                                                "name": "BT_GATTS_APPEARANCE_WRITABLE",
+                                                "range": null,
+                                                "title": "Allow to write appearance by GATT clients",
+                                                "type": "bool"
                                             }
                                         ],
                                         "depends_on": "BT_BLE_ENABLED && BT_BLUEDROID_ENABLED",
@@ -8149,11 +8539,11 @@
                             {
                                 "children": [],
                                 "depends_on": "BT_BLUEDROID_ENABLED && BT_BLUEDROID_ENABLED",
-                                "help": "Maximum BT/BLE connection count",
+                                "help": "Maximum BT/BLE connection count. The ESP32-C3/S3 chip supports a maximum of 10 instances,\nincluding ADV, SCAN and connections. The ESP32-C3/S3 chip can connect up to 9 devices if\nADV or SCAN uses only one. If ADV and SCAN are both used, The ESP32-C3/S3 chip is connected\nto a maximum of 8 devices. Because Bluetooth cannot reclaim used instances once ADV or SCAN\nis used.",
                                 "id": "BT_ACL_CONNECTIONS",
                                 "name": "BT_ACL_CONNECTIONS",
                                 "range": null,
-                                "title": "BT/BLE MAX ACL CONNECTIONS(1~7)",
+                                "title": "BT/BLE MAX ACL CONNECTIONS(1~9)",
                                 "type": "int"
                             },
                             {
@@ -8239,12 +8629,22 @@
                             {
                                 "children": [],
                                 "depends_on": "BT_BLUEDROID_ENABLED && BT_BLUEDROID_ENABLED",
-                                "help": "This enables controller RPA list function.\nFor ESP32, ESP32 only support network privacy mode. If this option is enabled, ESP32 will only accept\nadvertising packets from peer devices that contain private address, HW will not receive the advertising\npackets contain identity address after IRK changed. If this option is disabled, address resolution will\nbe performed in the host, so the functions that require controller to resolve address in the white list\ncannot be used. This option is disabled by default on ESP32, please enable or disable this option according\nto your own needs.\n\nFor ESP32C3, ESP32S3, ESP32H2 and ESP32C2, devices support network privacy mode and device privacy mode,\nusers can switch the two modes according to their own needs. So this option is enabled by default.",
+                                "help": "This enables controller RPA list function.\nFor ESP32, ESP32 only support network privacy mode. If this option is enabled, ESP32 will only accept\nadvertising packets from peer devices that contain private address, HW will not receive the advertising\npackets contain identity address after IRK changed. If this option is disabled, address resolution will\nbe performed in the host, so the functions that require controller to resolve address in the white list\ncannot be used. This option is disabled by default on ESP32, please enable or disable this option according\nto your own needs.\n\nFor ESP32C3, ESP32S3, ESP32H4 and ESP32C2, devices support network privacy mode and device privacy mode,\nusers can switch the two modes according to their own needs. So this option is enabled by default.",
                                 "id": "BT_BLE_RPA_SUPPORTED",
                                 "name": "BT_BLE_RPA_SUPPORTED",
                                 "range": null,
                                 "title": "Update RPA to Controller",
                                 "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "BT_BLUEDROID_ENABLED && BT_BLUEDROID_ENABLED",
+                                "help": "This set RPA timeout of Controller and Host.\nDefault is 900 s (15 minutes). Range is 1 s to 1 hour (3600 s).",
+                                "id": "BT_BLE_RPA_TIMEOUT",
+                                "name": "BT_BLE_RPA_TIMEOUT",
+                                "range": null,
+                                "title": "Timeout of resolvable private address",
+                                "type": "int"
                             },
                             {
                                 "children": [],
@@ -8397,7 +8797,7 @@
                             {
                                 "children": [],
                                 "depends_on": "BT_NIMBLE_ENABLED && BT_NIMBLE_ENABLED",
-                                "help": "Defines maximum number of concurrent BLE connections. For ESP32, user\nis expected to configure BTDM_CTRL_BLE_MAX_CONN from controller menu\nalong with this option. Similarly for ESP32-C3 or ESP32-S3, user is expected to\nconfigure BT_CTRL_BLE_MAX_ACT from controller menu.",
+                                "help": "Defines maximum number of concurrent BLE connections. For ESP32, user\nis expected to configure BTDM_CTRL_BLE_MAX_CONN from controller menu\nalong with this option. Similarly for ESP32-C3 or ESP32-S3, user is expected to\nconfigure BT_CTRL_BLE_MAX_ACT from controller menu.\nFor ESP32C2, ESP32C6 and ESP32H2, each connection will take about 1k DRAM.",
                                 "id": "BT_NIMBLE_MAX_CONNECTIONS",
                                 "name": "BT_NIMBLE_MAX_CONNECTIONS",
                                 "range": null,
@@ -8911,7 +9311,7 @@
                                     }
                                 ],
                                 "depends_on": "BT_NIMBLE_ENABLED && BT_NIMBLE_ENABLED",
-                                "help": "Enable BLE Mesh functionality",
+                                "help": "Enable BLE Mesh example present in upstream mynewt-nimble and not maintained by Espressif.\n\nIDF maintains ESP-BLE-MESH as the official Mesh solution. Please refer to ESP-BLE-MESH guide at:\n`https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/esp-ble-mesh/ble-mesh-index.html`",
                                 "id": "BT_NIMBLE_MESH",
                                 "is_menuconfig": true,
                                 "name": "BT_NIMBLE_MESH",
@@ -8997,7 +9397,7 @@
                                             {
                                                 "children": [],
                                                 "depends_on": "BT_NIMBLE_EXT_ADV && BT_NIMBLE_EXT_ADV && BT_NIMBLE_ENABLED",
-                                                "help": "Change this option to set maximum number of extended advertising\ninstances. Minimum there is always one instance of\nadvertising. Enter how many more advertising instances you\nwant.",
+                                                "help": "Change this option to set maximum number of extended advertising\ninstances. Minimum there is always one instance of\nadvertising. Enter how many more advertising instances you\nwant.\nFor ESP32C2, ESP32C6 and ESP32H2, each extended advertising instance\nwill take about 0.5k DRAM.",
                                                 "id": "BT_NIMBLE_MAX_EXT_ADV_INSTANCES",
                                                 "name": "BT_NIMBLE_MAX_EXT_ADV_INSTANCES",
                                                 "range": null,
@@ -9056,13 +9456,23 @@
                                     },
                                     {
                                         "children": [],
-                                        "depends_on": "BT_NIMBLE_50_FEATURE_SUPPORT && (IDF_TARGET_ESP32C2 || IDF_TARGET_ESP32H2) && BT_NIMBLE_ENABLED",
+                                        "depends_on": "BT_NIMBLE_50_FEATURE_SUPPORT && SOC_ESP_NIMBLE_CONTROLLER && BT_NIMBLE_ENABLED",
                                         "help": "Set this option to set the upper limit for number of periodic advertiser list.",
                                         "id": "BT_NIMBLE_MAX_PERIODIC_ADVERTISER_LIST",
                                         "name": "BT_NIMBLE_MAX_PERIODIC_ADVERTISER_LIST",
                                         "range": null,
                                         "title": "Maximum number of periodic advertiser list",
                                         "type": "int"
+                                    },
+                                    {
+                                        "children": [],
+                                        "depends_on": "BT_NIMBLE_50_FEATURE_SUPPORT && IDF_TARGET_ESP32C6 && BT_NIMBLE_ENABLED",
+                                        "help": "Set this option to enable the Power Control feature",
+                                        "id": "BT_NIMBLE_BLE_POWER_CONTROL",
+                                        "name": "BT_NIMBLE_BLE_POWER_CONTROL",
+                                        "range": null,
+                                        "title": "Enable support for BLE Power Control",
+                                        "type": "bool"
                                     }
                                 ],
                                 "depends_on": "BT_NIMBLE_ENABLED && BT_NIMBLE_ENABLED",
@@ -9736,6 +10146,16 @@
                                         "type": "int"
                                     },
                                     {
+                                        "children": [],
+                                        "depends_on": "BT_CTRL_BLE_SCAN_DUPL && BT_CONTROLLER_ENABLED",
+                                        "help": "If the period value is non-zero, the controller will periodically clear the device information\nstored in the scan duuplicate filter. If it is 0, the scan duuplicate filter will not be cleared\nuntil the scanning is disabled. Duplicate advertisements for this period should not be sent to the\nHost in advertising report events.\nThere are two scenarios where the ADV packet will be repeatedly reported:\n1. The duplicate scan cache is full, the controller will delete the oldest device information and\nadd new device information.\n2. When the refresh period is up, the controller will clear all device information and start filtering\nagain.",
+                                        "id": "BT_CTRL_DUPL_SCAN_CACHE_REFRESH_PERIOD",
+                                        "name": "BT_CTRL_DUPL_SCAN_CACHE_REFRESH_PERIOD",
+                                        "range": null,
+                                        "title": "Duplicate scan list refresh period (seconds)",
+                                        "type": "int"
+                                    },
+                                    {
                                         "children": [
                                             {
                                                 "children": [],
@@ -9934,6 +10354,16 @@
                                 "name": "BT_CTRL_AGC_RECORRECT_EN",
                                 "range": null,
                                 "title": "Enable HW AGC recorrect",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "BT_CONTROLLER_ENABLED",
+                                "help": "Disable active scan backoff. The bluetooth spec requires that scanners should run a backoff procedure to\nminimize collision of scan request PDUs from nultiple scanners. If scan backoff is disabled, in active\nscanning, scan request PDU will be sent every time when HW receives scannable ADV PDU.",
+                                "id": "BT_CTRL_SCAN_BACKOFF_UPPERLIMITMAX",
+                                "name": "BT_CTRL_SCAN_BACKOFF_UPPERLIMITMAX",
+                                "range": null,
+                                "title": "Disable active scan backoff",
                                 "type": "bool"
                             }
                         ],
@@ -10506,6 +10936,16 @@
                         "range": null,
                         "title": "Divider for IV Update state refresh timer",
                         "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": "BLE_MESH",
+                        "help": "According to Section 3.10.5 of Mesh Specification v1.0.1.\nIf a node in Normal Operation receives a Secure Network beacon with an IV index\nequal to the last known IV index+1 and the IV Update Flag set to 0, the node may\nupdate its IV without going to the IV Update in Progress state, or it may initiate\nan IV Index Recovery procedure (Section 3.10.6), or it may ignore the Secure\nNetwork beacon. The node makes the choice depending on the time since last IV\nupdate and the likelihood that the node has missed the Secure Network beacons\nwith the IV update Flag.\nWhen the above situation is encountered, this option can be used to decide whether\nto perform the IV index recovery procedure.",
+                        "id": "BLE_MESH_IVU_RECOVERY_IVI",
+                        "name": "BLE_MESH_IVU_RECOVERY_IVI",
+                        "range": null,
+                        "title": "Recovery the IV index when the latest whole IV update procedure is missed",
+                        "type": "bool"
                     },
                     {
                         "children": [],
@@ -11553,6 +11993,16 @@
                                 "range": null,
                                 "title": "Place SPI slave ISR function into IRAM",
                                 "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": "Select this option to suppress the deprecation warning when using\n`SPI_MASTER_FREQ_nM` macros.\nSPI clock source can be set into different clock sources. These\nmacros are no longer guaranteed to be accurate.",
+                                "id": "SPI_SUPPRESS_FREQ_MACRO_DEPRECATE_WARN",
+                                "name": "SPI_SUPPRESS_FREQ_MACRO_DEPRECATE_WARN",
+                                "range": null,
+                                "title": "Suppress SPI_MASTER_FREQ_nM deprecation warning",
+                                "type": "bool"
                             }
                         ],
                         "depends_on": null,
@@ -11949,6 +12399,64 @@
                         "id": "component-config-driver-configurations-i2s-configuration",
                         "title": "I2S Configuration",
                         "type": "menu"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": "SOC_DAC_SUPPORTED",
+                                "help": "Place DAC control functions (e.g. 'dac_oneshot_output_voltage') into IRAM,\nso that this function can be IRAM-safe and able to be called in the other IRAM interrupt context.\nEnabling this option can improve driver performance as well.",
+                                "id": "DAC_CTRL_FUNC_IN_IRAM",
+                                "name": "DAC_CTRL_FUNC_IN_IRAM",
+                                "range": null,
+                                "title": "Place DAC control functions into IRAM",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "SOC_DAC_SUPPORTED",
+                                "help": "Ensure the DAC interrupt is IRAM-Safe by allowing the interrupt handler to be\nexecutable when the cache is disabled (e.g. SPI Flash write).",
+                                "id": "DAC_ISR_IRAM_SAFE",
+                                "name": "DAC_ISR_IRAM_SAFE",
+                                "range": null,
+                                "title": "DAC ISR IRAM-Safe",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "SOC_DAC_SUPPORTED",
+                                "help": "Wether to suppress the deprecation warnings when using legacy DAC driver (driver/dac.h).\nIf you want to continue using the legacy driver, and don't want to see related deprecation warnings,\nyou can enable this option.",
+                                "id": "DAC_SUPPRESS_DEPRECATE_WARN",
+                                "name": "DAC_SUPPRESS_DEPRECATE_WARN",
+                                "range": null,
+                                "title": "Suppress legacy driver deprecated warning",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "SOC_DAC_SUPPORTED",
+                                "help": "Wether to enable the debug log message for DAC driver.\nNote that, this option only controls the DAC driver log, won't affect other drivers.",
+                                "id": "DAC_ENABLE_DEBUG_LOG",
+                                "name": "DAC_ENABLE_DEBUG_LOG",
+                                "range": null,
+                                "title": "Enable debug log",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "SOC_DAC_DMA_16BIT_ALIGN && SOC_DAC_SUPPORTED",
+                                "help": "Whether to left shift the continuous data to align every bytes to 16 bits in the driver.\nOn ESP32, although the DAC resolution is only 8 bits,\nthe hardware requires 16 bits data in continuous mode.\nBy enabling this option, the driver will left shift 8 bits for the input data automatically.\nOnly disable this option when you decide to do this step by yourself.\nNote that the driver will allocate a new piece of memory to save the converted data.",
+                                "id": "DAC_DMA_AUTO_16BIT_ALIGN",
+                                "name": "DAC_DMA_AUTO_16BIT_ALIGN",
+                                "range": null,
+                                "title": "Align the continuous data to 16 bit automatically",
+                                "type": "bool"
+                            }
+                        ],
+                        "depends_on": "SOC_DAC_SUPPORTED",
+                        "id": "component-config-driver-configurations-dac-configuration",
+                        "title": "DAC Configuration",
+                        "type": "menu"
                     }
                 ],
                 "depends_on": null,
@@ -11993,7 +12501,7 @@
                             }
                         ],
                         "depends_on": null,
-                        "help": "If \"n\" - No virtual mode. All eFuse operations are real and use eFuse registers.\nIf \"y\" - The virtual mode is enabled and all eFuse operations (read and write) are redirected\nto RAM instead of eFuse registers, all permanent changes (via eFuse) are disabled.\nLog output will state changes that would be applied, but they will not be.\n\nDuring startup, the eFuses are copied into RAM. This mode is useful for fast tests.",
+                        "help": "If \"n\" - No virtual mode. All eFuse operations are real and use eFuse registers.\nIf \"y\" - The virtual mode is enabled and all eFuse operations (read and write) are redirected\nto RAM instead of eFuse registers, all permanent changes (via eFuse) are disabled.\nLog output will state changes that would be applied, but they will not be.\n\nIf it is \"y\", then SECURE_FLASH_ENCRYPTION_MODE_RELEASE cannot be used.\nBecause the EFUSE VIRT mode is for testing only.\n\nDuring startup, the eFuses are copied into RAM. This mode is useful for fast tests.",
                         "id": "EFUSE_VIRTUAL",
                         "name": "EFUSE_VIRTUAL",
                         "range": null,
@@ -12143,6 +12651,16 @@
                             },
                             {
                                 "children": [],
+                                "depends_on": "ESP_TLS_USING_MBEDTLS && ESP_TLS_SERVER",
+                                "help": "Ability to configure and use a certificate selection callback during server handshake,\nto select a certificate to present to the client based on the TLS extensions supplied in\nthe client hello (alpn, sni, etc).",
+                                "id": "ESP_TLS_SERVER_CERT_SELECT_HOOK",
+                                "name": "ESP_TLS_SERVER_CERT_SELECT_HOOK",
+                                "range": null,
+                                "title": "Certificate selection hook",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
                                 "depends_on": "ESP_TLS_SERVER && ESP_TLS_USING_MBEDTLS",
                                 "help": "When this option is enabled, the peer (here, the client) certificate is checked by the server,\nhowever the handshake continues even if verification failed. By default, the\npeer certificate is not checked and ignored by the server.\n\nmbedtls_ssl_get_verify_result() can be called after the handshake is complete to\nretrieve status of verification.",
                                 "id": "ESP_TLS_SERVER_MIN_AUTH_MODE_OPTIONAL",
@@ -12152,7 +12670,7 @@
                                 "type": "bool"
                             }
                         ],
-                        "depends_on": null,
+                        "depends_on": "(ESP_TLS_USING_MBEDTLS && MBEDTLS_TLS_SERVER) || ESP_TLS_USING_WOLFSSL",
                         "help": "Enable support for creating server side SSL/TLS session, available for mbedTLS\nas well as wolfSSL TLS library.",
                         "id": "ESP_TLS_SERVER",
                         "name": "ESP_TLS_SERVER",
@@ -12285,6 +12803,26 @@
                         "name": "ADC_DISABLE_DAC_OUTPUT",
                         "range": null,
                         "title": "Disable DAC when ADC2 is in use",
+                        "type": "bool"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": "IDF_TARGET_ESP32C3 || IDF_TARGET_ESP32S3",
+                        "help": "On ESP32C3 and ESP32S3, ADC2 Digital Controller is not stable. Therefore,\nADC2 continuous mode is not suggested on ESP32S3 and ESP32C3\n\nIf you stick to this, you can enable this option to force use ADC2 under above conditions.\nFor more details, you can search for errata on espressif website.",
+                        "id": "ADC_CONTINUOUS_FORCE_USE_ADC2_ON_C3_S3",
+                        "name": "ADC_CONTINUOUS_FORCE_USE_ADC2_ON_C3_S3",
+                        "range": null,
+                        "title": "Force use ADC2 continumous mode on ESP32S3 or ESP32C3",
+                        "type": "bool"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": "IDF_TARGET_ESP32C3",
+                        "help": "On ESP32C3, ADC2 Digital Controller is not stable. Therefore,\nADC2 oneshot mode is not suggested on ESP32C3\n\nIf you stick to this, you can enable this option to force use ADC2 under above conditions.\nFor more details, you can search for errata on espressif website.",
+                        "id": "ADC_ONESHOT_FORCE_USE_ADC2_ON_C3",
+                        "name": "ADC_ONESHOT_FORCE_USE_ADC2_ON_C3",
+                        "range": null,
+                        "title": "Force use ADC2 oneshot mode on ESP32C3",
                         "type": "bool"
                     }
                 ],
@@ -12781,7 +13319,7 @@
                 "children": [
                     {
                         "children": [],
-                        "depends_on": null,
+                        "depends_on": "ESP_TLS_USING_MBEDTLS && MBEDTLS_TLS_SERVER",
                         "help": "Enable ESP HTTPS server component",
                         "id": "ESP_HTTPS_SERVER_ENABLE",
                         "name": "ESP_HTTPS_SERVER_ENABLE",
@@ -12797,6 +13335,94 @@
             },
             {
                 "children": [
+                    {
+                        "children": [
+                            {
+                                "children": [
+                                    {
+                                        "children": [],
+                                        "depends_on": "<choice ESP32S3_REV_MIN>",
+                                        "help": null,
+                                        "id": "ESP32S3_REV_MIN_0",
+                                        "name": "ESP32S3_REV_MIN_0",
+                                        "range": null,
+                                        "title": "Rev v0.0 (ECO0)",
+                                        "type": "bool"
+                                    },
+                                    {
+                                        "children": [],
+                                        "depends_on": "<choice ESP32S3_REV_MIN>",
+                                        "help": null,
+                                        "id": "ESP32S3_REV_MIN_1",
+                                        "name": "ESP32S3_REV_MIN_1",
+                                        "range": null,
+                                        "title": "Rev v0.1 (ECO1)",
+                                        "type": "bool"
+                                    },
+                                    {
+                                        "children": [],
+                                        "depends_on": "<choice ESP32S3_REV_MIN>",
+                                        "help": null,
+                                        "id": "ESP32S3_REV_MIN_2",
+                                        "name": "ESP32S3_REV_MIN_2",
+                                        "range": null,
+                                        "title": "Rev v0.2 (ECO2)",
+                                        "type": "bool"
+                                    }
+                                ],
+                                "depends_on": null,
+                                "help": "Required minimum chip revision. ESP-IDF will check for it and\nreject to boot if the chip revision fails the check.\nThis ensures the chip used will have some modifications (features, or bugfixes).\n\nThe complied binary will only support chips above this revision,\nthis will also help to reduce binary size.",
+                                "id": "component-config-hardware-settings-chip-revision-minimum-supported-esp32-s3-revision",
+                                "name": "ESP32S3_REV_MIN",
+                                "title": "Minimum Supported ESP32-S3 Revision",
+                                "type": "choice"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "ESP32S3_REV_MIN_FULL",
+                                "name": "ESP32S3_REV_MIN_FULL",
+                                "range": null,
+                                "title": null,
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "ESP_REV_MIN_FULL",
+                                "name": "ESP_REV_MIN_FULL",
+                                "range": null,
+                                "title": null,
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "ESP32S3_REV_MAX_FULL",
+                                "name": "ESP32S3_REV_MAX_FULL",
+                                "range": null,
+                                "title": null,
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "ESP_REV_MAX_FULL",
+                                "name": "ESP_REV_MAX_FULL",
+                                "range": null,
+                                "title": null,
+                                "type": "int"
+                            }
+                        ],
+                        "depends_on": null,
+                        "id": "component-config-hardware-settings-chip-revision",
+                        "title": "Chip revision",
+                        "type": "menu"
+                    },
                     {
                         "children": [
                             {
@@ -12840,6 +13466,46 @@
                                 "type": "bool"
                             },
                             {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "ESP_MAC_ADDR_UNIVERSE_IEEE802154",
+                                "name": "ESP_MAC_ADDR_UNIVERSE_IEEE802154",
+                                "range": null,
+                                "title": null,
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "ESP_MAC_UNIVERSAL_MAC_ADDRESSES_ONE",
+                                "name": "ESP_MAC_UNIVERSAL_MAC_ADDRESSES_ONE",
+                                "range": null,
+                                "title": null,
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "ESP_MAC_UNIVERSAL_MAC_ADDRESSES_TWO",
+                                "name": "ESP_MAC_UNIVERSAL_MAC_ADDRESSES_TWO",
+                                "range": null,
+                                "title": null,
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "ESP_MAC_UNIVERSAL_MAC_ADDRESSES_FOUR",
+                                "name": "ESP_MAC_UNIVERSAL_MAC_ADDRESSES_FOUR",
+                                "range": null,
+                                "title": null,
+                                "type": "bool"
+                            },
+                            {
                                 "children": [
                                     {
                                         "children": [],
@@ -12878,6 +13544,16 @@
                                 "range": null,
                                 "title": null,
                                 "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "IDF_TARGET_ESP32",
+                                "help": "If you have an invalid MAC CRC (ESP_ERR_INVALID_CRC) problem\nand you still want to use this chip, you can enable this option to bypass such an error.\nThis applies to both MAC_FACTORY and CUSTOM_MAC efuses.",
+                                "id": "ESP_MAC_IGNORE_MAC_CRC_ERROR",
+                                "name": "ESP_MAC_IGNORE_MAC_CRC_ERROR",
+                                "range": null,
+                                "title": "Ignore MAC CRC error (not recommended)",
+                                "type": "bool"
                             }
                         ],
                         "depends_on": null,
@@ -13063,6 +13739,24 @@
                         "depends_on": null,
                         "id": "component-config-hardware-settings-peripheral-control",
                         "title": "Peripheral Control",
+                        "type": "menu"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": "SOC_ETM_SUPPORTED",
+                                "help": "Wether to enable the debug log message for ETM core driver.\nNote that, this option only controls the ETM related driver log, won't affect other drivers.",
+                                "id": "ETM_ENABLE_DEBUG_LOG",
+                                "name": "ETM_ENABLE_DEBUG_LOG",
+                                "range": null,
+                                "title": "Enable debug log",
+                                "type": "bool"
+                            }
+                        ],
+                        "depends_on": "SOC_ETM_SUPPORTED",
+                        "id": "component-config-hardware-settings-etm-configuration",
+                        "title": "ETM Configuration",
                         "type": "menu"
                     },
                     {
@@ -13337,6 +14031,16 @@
                         "type": "choice"
                     },
                     {
+                        "children": [],
+                        "depends_on": null,
+                        "help": null,
+                        "id": "ESP_NETIF_USES_TCPIP_WITH_BSD_API",
+                        "name": "ESP_NETIF_USES_TCPIP_WITH_BSD_API",
+                        "range": null,
+                        "title": null,
+                        "type": "bool"
+                    },
+                    {
                         "children": [
                             {
                                 "children": [],
@@ -13381,6 +14085,24 @@
                 "depends_on": null,
                 "id": "component-config-esp-netif-adapter",
                 "title": "ESP NETIF Adapter",
+                "type": "menu"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "depends_on": "IDF_TARGET_LINUX",
+                        "help": "This option enables statistics gathering and flash wear simulation. Linux only.",
+                        "id": "ESP_PARTITION_ENABLE_STATS",
+                        "name": "ESP_PARTITION_ENABLE_STATS",
+                        "range": null,
+                        "title": "Enable esp_partition statistics gathering",
+                        "type": "bool"
+                    }
+                ],
+                "depends_on": null,
+                "id": "component-config-esp_partition",
+                "title": "ESP_PARTITION",
                 "type": "menu"
             },
             {
@@ -13542,7 +14264,7 @@
                                 "type": "bool"
                             }
                         ],
-                        "depends_on": "!FREERTOS_SMP",
+                        "depends_on": "(!FREERTOS_SMP && !IDF_TARGET_ESP32C6 && !IDF_TARGET_ESP32H2) || __DOXYGEN__",
                         "help": "If enabled, application is compiled with support for power management.\nThis option has run-time overhead (increased interrupt latency,\nlonger time to enter idle state), and it also reduces accuracy of\nRTOS ticks and timers used for timekeeping.\nEnable this option if application uses power management APIs.",
                         "id": "PM_ENABLE",
                         "name": "PM_ENABLE",
@@ -13724,51 +14446,43 @@
                                         "type": "bool"
                                     },
                                     {
-                                        "children": [
-                                            {
-                                                "children": [],
-                                                "depends_on": "SPIRAM && SPIRAM",
-                                                "help": "The PSRAM Clock IO can be any unused GPIO, please refer to your hardware design.",
-                                                "id": "DEFAULT_PSRAM_CLK_IO",
-                                                "name": "DEFAULT_PSRAM_CLK_IO",
-                                                "range": null,
-                                                "title": "PSRAM CLK IO number",
-                                                "type": "int"
-                                            },
-                                            {
-                                                "children": [],
-                                                "depends_on": "SPIRAM && SPIRAM",
-                                                "help": "The PSRAM CS IO can be any unused GPIO, please refer to your hardware design.",
-                                                "id": "DEFAULT_PSRAM_CS_IO",
-                                                "name": "DEFAULT_PSRAM_CS_IO",
-                                                "range": null,
-                                                "title": "PSRAM CS IO number",
-                                                "type": "int"
-                                            }
-                                        ],
-                                        "depends_on": "SPIRAM && SPIRAM",
-                                        "id": "component-config-esp-psram-support-for-external-spi-connected-ram-spi-ram-config-psram-clock-and-cs-io-for-esp32s3",
-                                        "title": "PSRAM Clock and CS IO for ESP32S3",
-                                        "type": "menu"
+                                        "children": [],
+                                        "depends_on": "SPIRAM",
+                                        "help": null,
+                                        "id": "SPIRAM_CLK_IO",
+                                        "name": "SPIRAM_CLK_IO",
+                                        "range": null,
+                                        "title": null,
+                                        "type": "int"
                                     },
                                     {
                                         "children": [],
                                         "depends_on": "SPIRAM",
-                                        "help": "If enabled, instruction in flash will be copied into SPIRAM.\nIf SPIRAM_RODATA also enabled, you can run the instruction when erasing or programming the flash.",
+                                        "help": null,
+                                        "id": "SPIRAM_CS_IO",
+                                        "name": "SPIRAM_CS_IO",
+                                        "range": null,
+                                        "title": null,
+                                        "type": "int"
+                                    },
+                                    {
+                                        "children": [],
+                                        "depends_on": "SPIRAM",
+                                        "help": "If enabled, instructions in flash will be moved into PSRAM on startup.\nIf SPIRAM_RODATA is also enabled, code that requires execution during an SPI1 Flash operation\ncan forgo being placed in IRAM, thus optimizing RAM usage (see External RAM documentation\nfor more details).",
                                         "id": "SPIRAM_FETCH_INSTRUCTIONS",
                                         "name": "SPIRAM_FETCH_INSTRUCTIONS",
                                         "range": null,
-                                        "title": "Cache fetch instructions from SPI RAM",
+                                        "title": "Move Instructions in Flash to PSRAM",
                                         "type": "bool"
                                     },
                                     {
                                         "children": [],
                                         "depends_on": "SPIRAM",
-                                        "help": "If enabled, rodata in flash will be copied into SPIRAM.\nIf SPIRAM_FETCH_INSTRUCTIONS is also enabled,\nyou can run the instruction when erasing or programming the flash.",
+                                        "help": "If enabled, rodata in flash will be moved into PSRAM on startup.\nIf SPIRAM_FETCH_INSTRUCTIONS is also enabled, code that requires execution during an SPI1 Flash operation\ncan forgo being placed in IRAM, thus optimizing RAM usage (see External RAM documentation\nfor more details).",
                                         "id": "SPIRAM_RODATA",
                                         "name": "SPIRAM_RODATA",
                                         "range": null,
-                                        "title": "Cache load read only data from SPI RAM",
+                                        "title": "Move Read-Only Data in Flash to PSRAM",
                                         "type": "bool"
                                     },
                                     {
@@ -14511,6 +15225,19 @@
                     },
                     {
                         "children": [],
+                        "depends_on": "ESP_SYSTEM_PANIC_PRINT_REBOOT",
+                        "help": "After the panic handler executes, you can specify a number of seconds to\nwait before the device reboots.",
+                        "id": "ESP_SYSTEM_PANIC_REBOOT_DELAY_SECONDS",
+                        "name": "ESP_SYSTEM_PANIC_REBOOT_DELAY_SECONDS",
+                        "range": [
+                            0,
+                            99
+                        ],
+                        "title": "Panic reboot delay (Seconds)",
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
                         "depends_on": null,
                         "help": "Only initialize and use the main core.",
                         "id": "ESP_SYSTEM_SINGLE_CORE_MODE",
@@ -14732,7 +15459,7 @@
                             },
                             {
                                 "children": [],
-                                "depends_on": "(IDF_TARGET_ESP32C3 || IDF_TARGET_ESP32S3) && <choice ESP_CONSOLE_UART>",
+                                "depends_on": "SOC_USB_SERIAL_JTAG_SUPPORTED && <choice ESP_CONSOLE_UART>",
                                 "help": null,
                                 "id": "ESP_CONSOLE_USB_SERIAL_JTAG",
                                 "name": "ESP_CONSOLE_USB_SERIAL_JTAG",
@@ -14791,7 +15518,7 @@
                                 "type": "bool"
                             }
                         ],
-                        "depends_on": "IDF_TARGET_ESP32S3 || IDF_TARGET_ESP32C3",
+                        "depends_on": "SOC_USB_SERIAL_JTAG_SUPPORTED",
                         "help": "This secondary option supports output through other specific port like USB_SERIAL_JTAG\nwhen UART0 port as a primary is selected but not connected. This secondary output currently only supports\nnon-blocking mode without using REPL. If you want to output in blocking mode with REPL or\ninput through this secondary port, please change the primary config to this port\nin `Channel for console output` menu.",
                         "id": "component-config-esp-system-settings-channel-for-console-secondary-output",
                         "name": "ESP_CONSOLE_SECONDARY",
@@ -14949,54 +15676,75 @@
                         "children": [
                             {
                                 "children": [],
-                                "depends_on": "ESP_TASK_WDT",
-                                "help": "If this option is enabled, the Task Watchdog Timer will be configured to\ntrigger the panic handler when it times out. This can also be configured\nat run time (see Task Watchdog Timer API Reference)",
-                                "id": "ESP_TASK_WDT_PANIC",
-                                "name": "ESP_TASK_WDT_PANIC",
+                                "depends_on": "ESP_TASK_WDT_EN",
+                                "help": null,
+                                "id": "ESP_TASK_WDT_USE_ESP_TIMER",
+                                "name": "ESP_TASK_WDT_USE_ESP_TIMER",
                                 "range": null,
-                                "title": "Invoke panic handler on Task Watchdog timeout",
+                                "title": null,
                                 "type": "bool"
                             },
                             {
-                                "children": [],
-                                "depends_on": "ESP_TASK_WDT",
-                                "help": "Timeout period configuration for the Task Watchdog Timer in seconds.\nThis is also configurable at run time (see Task Watchdog Timer API Reference)",
-                                "id": "ESP_TASK_WDT_TIMEOUT_S",
-                                "name": "ESP_TASK_WDT_TIMEOUT_S",
-                                "range": [
-                                    1,
-                                    60
+                                "children": [
+                                    {
+                                        "children": [],
+                                        "depends_on": "ESP_TASK_WDT_INIT",
+                                        "help": "If this option is enabled, the Task Watchdog Timer will be configured to\ntrigger the panic handler when it times out. This can also be configured\nat run time (see Task Watchdog Timer API Reference)",
+                                        "id": "ESP_TASK_WDT_PANIC",
+                                        "name": "ESP_TASK_WDT_PANIC",
+                                        "range": null,
+                                        "title": "Invoke panic handler on Task Watchdog timeout",
+                                        "type": "bool"
+                                    },
+                                    {
+                                        "children": [],
+                                        "depends_on": "ESP_TASK_WDT_INIT",
+                                        "help": "Timeout period configuration for the Task Watchdog Timer in seconds.\nThis is also configurable at run time (see Task Watchdog Timer API Reference)",
+                                        "id": "ESP_TASK_WDT_TIMEOUT_S",
+                                        "name": "ESP_TASK_WDT_TIMEOUT_S",
+                                        "range": [
+                                            1,
+                                            60
+                                        ],
+                                        "title": "Task Watchdog timeout period (seconds)",
+                                        "type": "int"
+                                    },
+                                    {
+                                        "children": [],
+                                        "depends_on": "ESP_TASK_WDT_INIT",
+                                        "help": "If this option is enabled, the Task Watchdog Timer will watch the CPU0\nIdle Task. Having the Task Watchdog watch the Idle Task allows for detection\nof CPU starvation as the Idle Task not being called is usually a symptom of\nCPU starvation. Starvation of the Idle Task is detrimental as FreeRTOS household\ntasks depend on the Idle Task getting some runtime every now and then.",
+                                        "id": "ESP_TASK_WDT_CHECK_IDLE_TASK_CPU0",
+                                        "name": "ESP_TASK_WDT_CHECK_IDLE_TASK_CPU0",
+                                        "range": null,
+                                        "title": "Watch CPU0 Idle Task",
+                                        "type": "bool"
+                                    },
+                                    {
+                                        "children": [],
+                                        "depends_on": "ESP_TASK_WDT_INIT && !FREERTOS_UNICORE",
+                                        "help": "If this option is enabled, the Task Watchdog Timer will wach the CPU1\nIdle Task.",
+                                        "id": "ESP_TASK_WDT_CHECK_IDLE_TASK_CPU1",
+                                        "name": "ESP_TASK_WDT_CHECK_IDLE_TASK_CPU1",
+                                        "range": null,
+                                        "title": "Watch CPU1 Idle Task",
+                                        "type": "bool"
+                                    }
                                 ],
-                                "title": "Task Watchdog timeout period (seconds)",
-                                "type": "int"
-                            },
-                            {
-                                "children": [],
-                                "depends_on": "ESP_TASK_WDT",
-                                "help": "If this option is enabled, the Task Watchdog Timer will watch the CPU0\nIdle Task. Having the Task Watchdog watch the Idle Task allows for detection\nof CPU starvation as the Idle Task not being called is usually a symptom of\nCPU starvation. Starvation of the Idle Task is detrimental as FreeRTOS household\ntasks depend on the Idle Task getting some runtime every now and then.",
-                                "id": "ESP_TASK_WDT_CHECK_IDLE_TASK_CPU0",
-                                "name": "ESP_TASK_WDT_CHECK_IDLE_TASK_CPU0",
+                                "depends_on": "ESP_TASK_WDT_EN",
+                                "help": "Enabling this option will cause the Task Watchdog Timer to be initialized\nautomatically at startup.",
+                                "id": "ESP_TASK_WDT_INIT",
+                                "name": "ESP_TASK_WDT_INIT",
                                 "range": null,
-                                "title": "Watch CPU0 Idle Task",
-                                "type": "bool"
-                            },
-                            {
-                                "children": [],
-                                "depends_on": "ESP_TASK_WDT && !FREERTOS_UNICORE",
-                                "help": "If this option is enabled, the Task Wtachdog Timer will wach the CPU1\nIdle Task.",
-                                "id": "ESP_TASK_WDT_CHECK_IDLE_TASK_CPU1",
-                                "name": "ESP_TASK_WDT_CHECK_IDLE_TASK_CPU1",
-                                "range": null,
-                                "title": "Watch CPU1 Idle Task",
+                                "title": "Initialize Task Watchdog Timer on startup",
                                 "type": "bool"
                             }
                         ],
                         "depends_on": null,
-                        "help": "The Task Watchdog Timer can be used to make sure individual tasks are still\nrunning. Enabling this option will cause the Task Watchdog Timer to be\ninitialized automatically at startup. The Task Watchdog timer can be\ninitialized after startup as well (see Task Watchdog Timer API Reference)",
-                        "id": "ESP_TASK_WDT",
-                        "name": "ESP_TASK_WDT",
+                        "help": "The Task Watchdog Timer can be used to make sure individual tasks are still\nrunning. Enabling this option will enable the Task Watchdog Timer. It can be\neither initialized automatically at startup or initialized after startup\n(see Task Watchdog Timer API Reference)",
+                        "id": "ESP_TASK_WDT_EN",
+                        "name": "ESP_TASK_WDT_EN",
                         "range": null,
-                        "title": "Initialize Task Watchdog Timer on startup",
+                        "title": "Enable Task Watchdog Timer",
                         "type": "bool"
                     },
                     {
@@ -15729,8 +16477,8 @@
                     },
                     {
                         "children": [],
-                        "depends_on": "!BT_ENABLED && (IDF_TARGET_ESP32S2 || IDF_TARGET_ESP32C3)",
-                        "help": "If enabled, HW External coexistence arbitration is managed by GPIO pins.\nIt can support three types of wired combinations so far which are 1-wired/2-wired/3-wired.\nUser can select GPIO pins in application code with configure interfaces.\n\nThis function depends on BT-off\nbecause currently we don't support external coex and internal coex simultaneously.",
+                        "depends_on": "!(BT_ENABLED || NIMBLE_ENABLED) && !IDF_TARGET_ESP32",
+                        "help": "If enabled, HW External coexistence arbitration is managed by GPIO pins.\nIt can support three types of wired combinations so far which are 1-wired/2-wired/3-wired.\nUser can select GPIO pins in application code with configure interfaces.\n\nThis function depends on BT-off\nbecause currently we do not support external coex and internal coex simultaneously.",
                         "id": "ESP_WIFI_EXTERNAL_COEXIST_ENABLE",
                         "name": "ESP_WIFI_EXTERNAL_COEXIST_ENABLE",
                         "range": null,
@@ -15817,6 +16565,50 @@
                         "range": null,
                         "title": "Wifi sleep optimize when beacon lost",
                         "type": "bool"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "Maximum number of encrypted peers supported by espnow.\nThe number of hardware keys for encryption is fixed. And the espnow and SoftAP share the same\nhardware keys. So this configuration will affect the maximum connection number of SoftAP.\nMaximum espnow encrypted peers number + maximum number of connections of SoftAP = Max hardware keys number.\n\nWhen using ESP mesh, this value should be set to a maximum of 6.",
+                        "id": "ESP_WIFI_ESPNOW_MAX_ENCRYPT_NUM",
+                        "name": "ESP_WIFI_ESPNOW_MAX_ENCRYPT_NUM",
+                        "range": [
+                            0,
+                            17
+                        ],
+                        "title": "Maximum espnow encrypt peers number",
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": "SOC_WIFI_HE_SUPPORT",
+                        "help": "Enable Wi-Fi transmission statistics. Total support 4 access category. Each access category\nwill use 346 bytes memory.",
+                        "id": "ESP_WIFI_ENABLE_WIFI_TX_STATS",
+                        "name": "ESP_WIFI_ENABLE_WIFI_TX_STATS",
+                        "range": null,
+                        "title": "Enable Wi-Fi transmission statistics",
+                        "type": "bool"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": "ESP_WIFI_ENABLE_WIFI_RX_STATS",
+                                "help": "Enable Wi-Fi DL MU-MIMO and DL OFDMA reception statistics. Will use 10932 bytes memory.",
+                                "id": "ESP_WIFI_ENABLE_WIFI_RX_MU_STATS",
+                                "name": "ESP_WIFI_ENABLE_WIFI_RX_MU_STATS",
+                                "range": null,
+                                "title": "Enable Wi-Fi DL MU-MIMO and DL OFDMA reception statistics",
+                                "type": "bool"
+                            }
+                        ],
+                        "depends_on": "SOC_WIFI_HE_SUPPORT",
+                        "help": "Enable Wi-Fi reception statistics. Total support 2 access category. Each access category\nwill use 190 bytes memory.",
+                        "id": "ESP_WIFI_ENABLE_WIFI_RX_STATS",
+                        "name": "ESP_WIFI_ENABLE_WIFI_RX_STATS",
+                        "range": null,
+                        "title": "Enable Wi-Fi reception statistics",
+                        "type": "bool"
                     }
                 ],
                 "depends_on": null,
@@ -15830,7 +16622,7 @@
                         "children": [
                             {
                                 "children": [],
-                                "depends_on": "!SPIRAM_ALLOW_STACK_EXTERNAL_MEMORY && <choice ESP_COREDUMP_TO_FLASH_OR_UART>",
+                                "depends_on": "<choice ESP_COREDUMP_TO_FLASH_OR_UART>",
                                 "help": null,
                                 "id": "ESP_COREDUMP_ENABLE_TO_FLASH",
                                 "name": "ESP_COREDUMP_ENABLE_TO_FLASH",
@@ -15968,6 +16760,16 @@
                     },
                     {
                         "children": [],
+                        "depends_on": null,
+                        "help": "Force the use of a custom DRAM stack for coredump when Task stacks can be in PSRAM.",
+                        "id": "ESP_COREDUMP_USE_STACK_SIZE",
+                        "name": "ESP_COREDUMP_USE_STACK_SIZE",
+                        "range": null,
+                        "title": null,
+                        "type": "bool"
+                    },
+                    {
+                        "children": [],
                         "depends_on": "ESP_COREDUMP_ENABLE",
                         "help": "Size of the memory to be reserved for core dump stack. If 0 core dump process will run on\nthe stack of crashed task/ISR, otherwise special stack will be allocated.\nTo ensure that core dump itself will not overflow task/ISR stack set this to the value above 800.\nNOTE: It eats DRAM.",
                         "id": "ESP_COREDUMP_STACK_SIZE",
@@ -16051,32 +16853,52 @@
                         "children": [
                             {
                                 "children": [],
+                                "depends_on": "<choice FATFS_LONG_FILENAMES>",
+                                "help": null,
+                                "id": "FATFS_LFN_NONE",
+                                "name": "FATFS_LFN_NONE",
+                                "range": null,
+                                "title": "No long filenames",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "<choice FATFS_LONG_FILENAMES>",
+                                "help": null,
+                                "id": "FATFS_LFN_HEAP",
+                                "name": "FATFS_LFN_HEAP",
+                                "range": null,
+                                "title": "Long filename buffer in heap",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "<choice FATFS_LONG_FILENAMES>",
+                                "help": null,
+                                "id": "FATFS_LFN_STACK",
+                                "name": "FATFS_LFN_STACK",
+                                "range": null,
+                                "title": "Long filename buffer on stack",
+                                "type": "bool"
+                            }
+                        ],
+                        "depends_on": null,
+                        "help": "Support long filenames in FAT. Long filename data increases\nmemory usage. FATFS can be configured to store the buffer for\nlong filename data in stack or heap.",
+                        "id": "component-config-fat-filesystem-support-long-filename-support",
+                        "name": "FATFS_LONG_FILENAMES",
+                        "title": "Long filename support",
+                        "type": "choice"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
                                 "depends_on": "<choice FATFS_SECTOR_SIZE>",
                                 "help": null,
                                 "id": "FATFS_SECTOR_512",
                                 "name": "FATFS_SECTOR_512",
                                 "range": null,
                                 "title": "512",
-                                "type": "bool"
-                            },
-                            {
-                                "children": [],
-                                "depends_on": "<choice FATFS_SECTOR_SIZE>",
-                                "help": null,
-                                "id": "FATFS_SECTOR_1024",
-                                "name": "FATFS_SECTOR_1024",
-                                "range": null,
-                                "title": "1024",
-                                "type": "bool"
-                            },
-                            {
-                                "children": [],
-                                "depends_on": "<choice FATFS_SECTOR_SIZE>",
-                                "help": null,
-                                "id": "FATFS_SECTOR_2048",
-                                "name": "FATFS_SECTOR_2048",
-                                "range": null,
-                                "title": "2048",
                                 "type": "bool"
                             },
                             {
@@ -16095,96 +16917,6 @@
                         "id": "component-config-fat-filesystem-support-sector-size",
                         "name": "FATFS_SECTOR_SIZE",
                         "title": "Sector size",
-                        "type": "choice"
-                    },
-                    {
-                        "children": [
-                            {
-                                "children": [],
-                                "depends_on": "<choice FATFS_SECTORS_PER_CLUSTER>",
-                                "help": null,
-                                "id": "FATFS_SECTORS_PER_CLUSTER_1",
-                                "name": "FATFS_SECTORS_PER_CLUSTER_1",
-                                "range": null,
-                                "title": "1",
-                                "type": "bool"
-                            },
-                            {
-                                "children": [],
-                                "depends_on": "<choice FATFS_SECTORS_PER_CLUSTER>",
-                                "help": null,
-                                "id": "FATFS_SECTORS_PER_CLUSTER_2",
-                                "name": "FATFS_SECTORS_PER_CLUSTER_2",
-                                "range": null,
-                                "title": "2",
-                                "type": "bool"
-                            },
-                            {
-                                "children": [],
-                                "depends_on": "<choice FATFS_SECTORS_PER_CLUSTER>",
-                                "help": null,
-                                "id": "FATFS_SECTORS_PER_CLUSTER_4",
-                                "name": "FATFS_SECTORS_PER_CLUSTER_4",
-                                "range": null,
-                                "title": "4",
-                                "type": "bool"
-                            },
-                            {
-                                "children": [],
-                                "depends_on": "<choice FATFS_SECTORS_PER_CLUSTER>",
-                                "help": null,
-                                "id": "FATFS_SECTORS_PER_CLUSTER_8",
-                                "name": "FATFS_SECTORS_PER_CLUSTER_8",
-                                "range": null,
-                                "title": "8",
-                                "type": "bool"
-                            },
-                            {
-                                "children": [],
-                                "depends_on": "<choice FATFS_SECTORS_PER_CLUSTER>",
-                                "help": null,
-                                "id": "FATFS_SECTORS_PER_CLUSTER_16",
-                                "name": "FATFS_SECTORS_PER_CLUSTER_16",
-                                "range": null,
-                                "title": "16",
-                                "type": "bool"
-                            },
-                            {
-                                "children": [],
-                                "depends_on": "<choice FATFS_SECTORS_PER_CLUSTER>",
-                                "help": null,
-                                "id": "FATFS_SECTORS_PER_CLUSTER_32",
-                                "name": "FATFS_SECTORS_PER_CLUSTER_32",
-                                "range": null,
-                                "title": "32",
-                                "type": "bool"
-                            },
-                            {
-                                "children": [],
-                                "depends_on": "<choice FATFS_SECTORS_PER_CLUSTER>",
-                                "help": null,
-                                "id": "FATFS_SECTORS_PER_CLUSTER_64",
-                                "name": "FATFS_SECTORS_PER_CLUSTER_64",
-                                "range": null,
-                                "title": "64",
-                                "type": "bool"
-                            },
-                            {
-                                "children": [],
-                                "depends_on": "<choice FATFS_SECTORS_PER_CLUSTER>",
-                                "help": null,
-                                "id": "FATFS_SECTORS_PER_CLUSTER_128",
-                                "name": "FATFS_SECTORS_PER_CLUSTER_128",
-                                "range": null,
-                                "title": "128",
-                                "type": "bool"
-                            }
-                        ],
-                        "depends_on": null,
-                        "help": "This value specifies how many sectors there are in one cluster.",
-                        "id": "component-config-fat-filesystem-support-sectors-per-cluster",
-                        "name": "FATFS_SECTORS_PER_CLUSTER",
-                        "title": "Sectors per cluster",
                         "type": "choice"
                     },
                     {
@@ -16418,46 +17150,6 @@
                         "type": "choice"
                     },
                     {
-                        "children": [
-                            {
-                                "children": [],
-                                "depends_on": "<choice FATFS_CHOOSE_TYPE>",
-                                "help": null,
-                                "id": "FATFS_AUTO_TYPE",
-                                "name": "FATFS_AUTO_TYPE",
-                                "range": null,
-                                "title": "Select a suitable FATFS type automatically.",
-                                "type": "bool"
-                            },
-                            {
-                                "children": [],
-                                "depends_on": "<choice FATFS_CHOOSE_TYPE>",
-                                "help": null,
-                                "id": "FATFS_FAT12",
-                                "name": "FATFS_FAT12",
-                                "range": null,
-                                "title": "FAT12",
-                                "type": "bool"
-                            },
-                            {
-                                "children": [],
-                                "depends_on": "<choice FATFS_CHOOSE_TYPE>",
-                                "help": null,
-                                "id": "FATFS_FAT16",
-                                "name": "FATFS_FAT16",
-                                "range": null,
-                                "title": "FAT16",
-                                "type": "bool"
-                            }
-                        ],
-                        "depends_on": null,
-                        "help": "If user specifies automatic detection of the FAT type,\nthe FATFS generator will determine the type by the size.",
-                        "id": "component-config-fat-filesystem-support-fat-type",
-                        "name": "FATFS_CHOOSE_TYPE",
-                        "title": "FAT type",
-                        "type": "choice"
-                    },
-                    {
                         "children": [],
                         "depends_on": null,
                         "help": null,
@@ -16466,46 +17158,6 @@
                         "range": null,
                         "title": null,
                         "type": "int"
-                    },
-                    {
-                        "children": [
-                            {
-                                "children": [],
-                                "depends_on": "<choice FATFS_LONG_FILENAMES>",
-                                "help": null,
-                                "id": "FATFS_LFN_NONE",
-                                "name": "FATFS_LFN_NONE",
-                                "range": null,
-                                "title": "No long filenames",
-                                "type": "bool"
-                            },
-                            {
-                                "children": [],
-                                "depends_on": "<choice FATFS_LONG_FILENAMES>",
-                                "help": null,
-                                "id": "FATFS_LFN_HEAP",
-                                "name": "FATFS_LFN_HEAP",
-                                "range": null,
-                                "title": "Long filename buffer in heap",
-                                "type": "bool"
-                            },
-                            {
-                                "children": [],
-                                "depends_on": "<choice FATFS_LONG_FILENAMES>",
-                                "help": null,
-                                "id": "FATFS_LFN_STACK",
-                                "name": "FATFS_LFN_STACK",
-                                "range": null,
-                                "title": "Long filename buffer on stack",
-                                "type": "bool"
-                            }
-                        ],
-                        "depends_on": null,
-                        "help": "Support long filenames in FAT. Long filename data increases\nmemory usage. FATFS can be configured to store the buffer for\nlong filename data in stack or heap (Currently not supported by FATFS partition generator).",
-                        "id": "component-config-fat-filesystem-support-long-filename-support",
-                        "name": "FATFS_LONG_FILENAMES",
-                        "title": "Long filename support",
-                        "type": "choice"
                     },
                     {
                         "children": [],
@@ -16624,11 +17276,11 @@
                             {
                                 "children": [],
                                 "depends_on": null,
-                                "help": "This will cause the FreeRTOS component to compile with the SMP FreeRTOS kernel instead.\nTHIS FEATURE IS UNDER ACTIVE DEVELOPMENT, users use this at their own risk.",
+                                "help": "Amazon has released an SMP version of the FreeRTOS Kernel which can be found via the following link:\nhttps://github.com/FreeRTOS/FreeRTOS-Kernel/tree/smp\n\nIDF has added an experimental port of this SMP kernel located in\ncomponents/freertos/FreeRTOS-Kernel-SMP. Enabling this option will cause IDF to use the Amazon SMP\nkernel. Note that THIS FEATURE IS UNDER ACTIVE DEVELOPMENT, users use this at their own risk.\n\nLeaving this option disabled will mean the IDF FreeRTOS kernel is used instead, which is located in:\ncomponents/freertos/FreeRTOS-Kernel. Both kernel versions are SMP capable, but differ in\ntheir implementation and features.",
                                 "id": "FREERTOS_SMP",
                                 "name": "FREERTOS_SMP",
                                 "range": null,
-                                "title": "Run the SMP FreeRTOS kernel instead (FEATURE UNDER DEVELOPMENT)",
+                                "title": "Run the Amazon SMP FreeRTOS kernel instead (FEATURE UNDER DEVELOPMENT)",
                                 "type": "bool"
                             },
                             {
@@ -16657,7 +17309,7 @@
                             {
                                 "children": [],
                                 "depends_on": "FREERTOS_UNICORE",
-                                "help": "Enables port specific task selection method. This option can will speed up the search of ready tasks\nwhen scheduling (see configUSE_PORT_OPTIMISED_TASK_SELECTION documentation for more details).",
+                                "help": "Enables port specific task selection method. This option can speed up the search of ready tasks\nwhen scheduling (see configUSE_PORT_OPTIMISED_TASK_SELECTION documentation for more details).",
                                 "id": "FREERTOS_OPTIMIZED_SCHEDULER",
                                 "name": "FREERTOS_OPTIMIZED_SCHEDULER",
                                 "range": null,
@@ -16836,12 +17488,25 @@
                                 "type": "int"
                             },
                             {
+                                "children": [],
+                                "depends_on": null,
+                                "help": "Set the size of the task notification array of each task. When increasing this value, keep in\nmind that this means additional memory for each and every task on the system.\nHowever, task notifications in general are more light weight compared to alternatives\nsuch as semaphores.",
+                                "id": "FREERTOS_TASK_NOTIFICATION_ARRAY_ENTRIES",
+                                "name": "FREERTOS_TASK_NOTIFICATION_ARRAY_ENTRIES",
+                                "range": [
+                                    1,
+                                    32
+                                ],
+                                "title": "configTASK_NOTIFICATION_ARRAY_ENTRIES",
+                                "type": "int"
+                            },
+                            {
                                 "children": [
                                     {
                                         "children": [
                                             {
                                                 "children": [],
-                                                "depends_on": "FREERTOS_USE_STATS_FORMATTING_FUNCTIONS",
+                                                "depends_on": "!FREERTOS_SMP && FREERTOS_USE_STATS_FORMATTING_FUNCTIONS",
                                                 "help": "If enabled, this will include an extra column when vTaskList is called to display the CoreID the task\nis pinned to (0,1) or -1 if not pinned.",
                                                 "id": "FREERTOS_VTASKLIST_INCLUDE_COREID",
                                                 "name": "FREERTOS_VTASKLIST_INCLUDE_COREID",
@@ -16928,7 +17593,7 @@
                             },
                             {
                                 "children": [],
-                                "depends_on": "FREERTOS_SMP && FREERTOS_THREAD_LOCAL_STORAGE_POINTERS > 0",
+                                "depends_on": "FREERTOS_THREAD_LOCAL_STORAGE_POINTERS > 0",
                                 "help": "ESP-IDF provides users with the ability to free TLSP memory by registering TLSP deletion callbacks.\nThese callbacks are automatically called by FreeRTOS when a task is deleted. When this option is turned\non, the memory reserved for TLSPs in the TCB is doubled to make space for storing the deletion\ncallbacks. If the user does not wish to use TLSP deletion callbacks then this option could be turned\noff to save space in the TCB memory.",
                                 "id": "FREERTOS_TLSP_DELETION_CALLBACKS",
                                 "name": "FREERTOS_TLSP_DELETION_CALLBACKS",
@@ -16938,7 +17603,7 @@
                             },
                             {
                                 "children": [],
-                                "depends_on": "!FREERTOS_SMP",
+                                "depends_on": null,
                                 "help": "Enable this option to make FreeRTOS call the static task clean up hook when a task is deleted.\n\nNote: Users will need to provide a ``void vPortCleanUpTCB ( void *pxTCB )`` callback",
                                 "id": "FREERTOS_ENABLE_STATIC_TASK_CLEAN_UP",
                                 "name": "FREERTOS_ENABLE_STATIC_TASK_CLEAN_UP",
@@ -16948,7 +17613,7 @@
                             },
                             {
                                 "children": [],
-                                "depends_on": null,
+                                "depends_on": "!FREERTOS_SMP",
                                 "help": "If enabled, assert that when a mutex semaphore is given, the task giving the semaphore is the task\nwhich is currently holding the mutex.",
                                 "id": "FREERTOS_CHECK_MUTEX_GIVEN_BY_OWNER",
                                 "name": "FREERTOS_CHECK_MUTEX_GIVEN_BY_OWNER",
@@ -17137,16 +17802,6 @@
                                 "name": "FREERTOS_CHECK_PORT_CRITICAL_COMPLIANCE",
                                 "range": null,
                                 "title": "Tests compliance with Vanilla FreeRTOS port*_CRITICAL calls",
-                                "type": "bool"
-                            },
-                            {
-                                "children": [],
-                                "depends_on": null,
-                                "help": "Some functions in FreeRTOS have not been thoroughly tested yet when moving to the SMP implementation of\nFreeRTOS. When this option is enabled, these functions will throw an ``assert()``.",
-                                "id": "FREERTOS_ASSERT_ON_UNTESTED_FUNCTION",
-                                "name": "FREERTOS_ASSERT_ON_UNTESTED_FUNCTION",
-                                "range": null,
-                                "title": "Halt when an SMP-untested function is called",
                                 "type": "bool"
                             },
                             {
@@ -17518,6 +18173,16 @@
                         "range": null,
                         "title": null,
                         "type": "bool"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": "IEEE802154_ENABLED",
+                        "help": null,
+                        "id": "IEEE802154_RX_BUFFER_SIZE",
+                        "name": "IEEE802154_RX_BUFFER_SIZE",
+                        "range": null,
+                        "title": "The number of 802.15.4 receive buffers",
+                        "type": "int"
                     }
                 ],
                 "depends_on": null,
@@ -17758,11 +18423,21 @@
                     {
                         "children": [],
                         "depends_on": null,
-                        "help": "If Enable tcpip\u3000core locking,Creates a global mutex that is held\nduring TCPIP thread operations.Can be locked by client code to perform\nlwIP operations without changing into TCPIP thread using callbacks.\nSee LOCK_TCPIP_CORE() and UNLOCK_TCPIP_CORE().\n\nIf disable tcpip\u3000core locking,TCP IP will perform tasks through context switching\uff0e",
+                        "help": "If Enable tcpip core locking,Creates a global mutex that is held\nduring TCPIP thread operations.Can be locked by client code to perform\nlwIP operations without changing into TCPIP thread using callbacks.\nSee LOCK_TCPIP_CORE() and UNLOCK_TCPIP_CORE().\n\nIf disable tcpip core locking,TCP IP will perform tasks through context switching",
                         "id": "LWIP_TCPIP_CORE_LOCKING",
                         "name": "LWIP_TCPIP_CORE_LOCKING",
                         "range": null,
                         "title": "Enable tcpip core locking",
+                        "type": "bool"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "Enable to check that the project does not violate lwip thread safety.\nIf enabled, all lwip functions that require thread awareness run an assertion\nto verify that the TCP/IP core functionality is either locked or accessed\nfrom the correct thread.",
+                        "id": "LWIP_CHECK_THREAD_SAFETY",
+                        "name": "LWIP_CHECK_THREAD_SAFETY",
+                        "range": null,
+                        "title": "Checks that lwip API runs in expected context",
                         "type": "bool"
                     },
                     {
@@ -17918,6 +18593,19 @@
                         "range": null,
                         "title": "Enable reassembly incoming fragmented IP6 packets",
                         "type": "bool"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "Set the maximum amount of pbufs waiting to be reassembled.",
+                        "id": "LWIP_IP_REASS_MAX_PBUFS",
+                        "name": "LWIP_IP_REASS_MAX_PBUFS",
+                        "range": [
+                            10,
+                            100
+                        ],
+                        "title": "The maximum amount of pbufs waiting to be reassembled",
+                        "type": "int"
                     },
                     {
                         "children": [
@@ -18626,12 +19314,12 @@
                             }
                         ],
                         "depends_on": null,
-                        "help": "Enable PPP stack. Now only PPP over serial is possible.\n\nPPP over serial support is experimental and unsupported.",
+                        "help": "Enable PPP stack. Now only PPP over serial is possible.",
                         "id": "LWIP_PPP_SUPPORT",
                         "is_menuconfig": true,
                         "name": "LWIP_PPP_SUPPORT",
                         "range": null,
-                        "title": "Enable PPP support (new/experimental)",
+                        "title": "Enable PPP support",
                         "type": "menu"
                     },
                     {
@@ -19254,6 +19942,16 @@
                                 "children": [],
                                 "depends_on": "LWIP_DEBUG",
                                 "help": null,
+                                "id": "LWIP_UDP_DEBUG",
+                                "name": "LWIP_UDP_DEBUG",
+                                "range": null,
+                                "title": "Enable UDP debug messages",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "LWIP_DEBUG",
+                                "help": null,
                                 "id": "LWIP_SNTP_DEBUG",
                                 "name": "LWIP_SNTP_DEBUG",
                                 "range": null,
@@ -19268,6 +19966,16 @@
                                 "name": "LWIP_DNS_DEBUG",
                                 "range": null,
                                 "title": "Enable DNS debug messages",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "LWIP_DEBUG && LWIP_IPV4_NAPT",
+                                "help": null,
+                                "id": "LWIP_NAPT_DEBUG",
+                                "name": "LWIP_NAPT_DEBUG",
+                                "range": null,
+                                "title": "Enable NAPT debug messages",
                                 "type": "bool"
                             },
                             {
@@ -19533,14 +20241,52 @@
                             {
                                 "children": [
                                     {
-                                        "children": [],
+                                        "children": [
+                                            {
+                                                "children": [],
+                                                "depends_on": "MBEDTLS_SSL_PROTO_TLS1_3",
+                                                "help": null,
+                                                "id": "MBEDTLS_SSL_TLS1_3_COMPATIBILITY_MODE",
+                                                "name": "MBEDTLS_SSL_TLS1_3_COMPATIBILITY_MODE",
+                                                "range": null,
+                                                "title": "TLS 1.3 middlebox compatibility mode",
+                                                "type": "bool"
+                                            },
+                                            {
+                                                "children": [],
+                                                "depends_on": "MBEDTLS_SSL_PROTO_TLS1_3",
+                                                "help": null,
+                                                "id": "MBEDTLS_SSL_TLS1_3_KEXM_PSK",
+                                                "name": "MBEDTLS_SSL_TLS1_3_KEXM_PSK",
+                                                "range": null,
+                                                "title": "TLS 1.3 PSK key exchange mode",
+                                                "type": "bool"
+                                            },
+                                            {
+                                                "children": [],
+                                                "depends_on": "MBEDTLS_SSL_PROTO_TLS1_3",
+                                                "help": null,
+                                                "id": "MBEDTLS_SSL_TLS1_3_KEXM_EPHEMERAL",
+                                                "name": "MBEDTLS_SSL_TLS1_3_KEXM_EPHEMERAL",
+                                                "range": null,
+                                                "title": "TLS 1.3 ephemeral key exchange mode",
+                                                "type": "bool"
+                                            },
+                                            {
+                                                "children": [],
+                                                "depends_on": "MBEDTLS_SSL_PROTO_TLS1_3",
+                                                "help": null,
+                                                "id": "MBEDTLS_SSL_TLS1_3_KEXM_PSK_EPHEMERAL",
+                                                "name": "MBEDTLS_SSL_TLS1_3_KEXM_PSK_EPHEMERAL",
+                                                "range": null,
+                                                "title": "TLS 1.3 PSK ephemeral key exchange mode",
+                                                "type": "bool"
+                                            }
+                                        ],
                                         "depends_on": "MBEDTLS_SSL_PROTO_TLS1_3",
-                                        "help": null,
-                                        "id": "MBEDTLS_SSL_TLS1_3_COMPATIBILITY_MODE",
-                                        "name": "MBEDTLS_SSL_TLS1_3_COMPATIBILITY_MODE",
-                                        "range": null,
-                                        "title": "Enable TLS 1.3 middlebox compatibility mode",
-                                        "type": "bool"
+                                        "id": "component-config-mbedtls-mbedtls-v3-x-related-support-tls-1-3-protocol-tls-1-3-related-configurations",
+                                        "title": "TLS 1.3 related configurations",
+                                        "type": "menu"
                                     }
                                 ],
                                 "depends_on": "MBEDTLS_TLS_ENABLED && MBEDTLS_SSL_KEEP_PEER_CERTIFICATE && !MBEDTLS_DYNAMIC_BUFFER",
@@ -19583,7 +20329,7 @@
                             },
                             {
                                 "children": [],
-                                "depends_on": null,
+                                "depends_on": "MBEDTLS_GCM_C || MBEDTLS_CCM_C || MBEDTLS_CHACHAPOLY_C",
                                 "help": "Enable serialization of the TLS context structures\nThis is a local optimization in handling a single, potentially long-lived connection.\n\nSee mbedTLS documentation for required API and more details.\nDisabling this option will save some code size.",
                                 "id": "MBEDTLS_SSL_CONTEXT_SERIALIZATION",
                                 "name": "MBEDTLS_SSL_CONTEXT_SERIALIZATION",
@@ -19607,7 +20353,7 @@
                                         "children": [
                                             {
                                                 "children": [],
-                                                "depends_on": "MBEDTLS_SSL_DTLS_CONNECTION_ID",
+                                                "depends_on": "MBEDTLS_SSL_DTLS_CONNECTION_ID && MBEDTLS_SSL_PROTO_DTLS",
                                                 "help": "Maximum length of CIDs used for incoming DTLS messages",
                                                 "id": "MBEDTLS_SSL_CID_IN_LEN_MAX",
                                                 "name": "MBEDTLS_SSL_CID_IN_LEN_MAX",
@@ -19617,7 +20363,7 @@
                                             },
                                             {
                                                 "children": [],
-                                                "depends_on": "MBEDTLS_SSL_DTLS_CONNECTION_ID",
+                                                "depends_on": "MBEDTLS_SSL_DTLS_CONNECTION_ID && MBEDTLS_SSL_PROTO_DTLS",
                                                 "help": "Maximum length of CIDs used for outgoing DTLS messages",
                                                 "id": "MBEDTLS_SSL_CID_OUT_LEN_MAX",
                                                 "name": "MBEDTLS_SSL_CID_OUT_LEN_MAX",
@@ -19627,7 +20373,7 @@
                                             },
                                             {
                                                 "children": [],
-                                                "depends_on": "MBEDTLS_SSL_DTLS_CONNECTION_ID",
+                                                "depends_on": "MBEDTLS_SSL_DTLS_CONNECTION_ID && MBEDTLS_SSL_PROTO_DTLS",
                                                 "help": "Controls the use of record plaintext padding when\nusing the Connection ID extension in DTLS 1.2.\n\nThe padding will always be chosen so that the length of the\npadded plaintext is a multiple of the value of this option.\n\nNotes:\n    A value of 1 means that no padding will be used for outgoing records.\n    On systems lacking division instructions, a power of two should be preferred.",
                                                 "id": "MBEDTLS_SSL_CID_PADDING_GRANULARITY",
                                                 "name": "MBEDTLS_SSL_CID_PADDING_GRANULARITY",
@@ -19637,7 +20383,7 @@
                                             }
                                         ],
                                         "depends_on": "MBEDTLS_SSL_PROTO_DTLS",
-                                        "help": "Enable support for the DTLS Connection ID extension which allows to\nidentify DTLS connections across changes in the underlying transport.\nThe Connection ID extension is still in draft state.\nRefer: version draft-ietf-tls-dtls-connection-id-05",
+                                        "help": "Enable support for the DTLS Connection ID extension which allows to\nidentify DTLS connections across changes in the underlying transport.",
                                         "id": "MBEDTLS_SSL_DTLS_CONNECTION_ID",
                                         "name": "MBEDTLS_SSL_DTLS_CONNECTION_ID",
                                         "range": null,
@@ -19655,7 +20401,7 @@
                                         "type": "bool"
                                     }
                                 ],
-                                "depends_on": null,
+                                "depends_on": "MBEDTLS_SSL_PROTO_DTLS",
                                 "id": "component-config-mbedtls-mbedtls-v3-x-related-dtls-based-configurations",
                                 "title": "DTLS-based configurations",
                                 "type": "menu"
@@ -20222,7 +20968,7 @@
                     },
                     {
                         "children": [],
-                        "depends_on": "MBEDTLS_TLS_ENABLED",
+                        "depends_on": "MBEDTLS_TLS_ENABLED && (MBEDTLS_GCM_C || MBEDTLS_CCM_C || MBEDTLS_CHACHAPOLY_C)",
                         "help": "Server support for RFC 5077 session tickets. See mbedTLS documentation for more details.\nDisabling this option will save some code size.",
                         "id": "MBEDTLS_SERVER_SSL_SESSION_TICKETS",
                         "name": "MBEDTLS_SERVER_SSL_SESSION_TICKETS",
@@ -20831,6 +21577,16 @@
                                 "name": "MQTT_TASK_PRIORITY",
                                 "range": null,
                                 "title": "MQTT task priority",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "MQTT_USE_CUSTOM_CONFIG",
+                                "help": "A value higher than 1 enables multiple queued events.",
+                                "id": "MQTT_EVENT_QUEUE_SIZE",
+                                "name": "MQTT_EVENT_QUEUE_SIZE",
+                                "range": null,
+                                "title": "Number of queued events.",
                                 "type": "int"
                             }
                         ],
@@ -21548,17 +22304,7 @@
                     },
                     {
                         "children": [],
-                        "depends_on": "IDF_TARGET_ESP32S3 || IDF_TARGET_ESP32C3 || IDF_TARGET_ESP32C2",
-                        "help": null,
-                        "id": "SPI_FLASH_HAS_ROM_IMPL",
-                        "name": "SPI_FLASH_HAS_ROM_IMPL",
-                        "range": null,
-                        "title": null,
-                        "type": "bool"
-                    },
-                    {
-                        "children": [],
-                        "depends_on": "SPI_FLASH_HAS_ROM_IMPL",
+                        "depends_on": "ESP_ROM_HAS_SPI_FLASH",
                         "help": "Enable this flag to use new SPI flash driver functions from ROM instead of ESP-IDF.\n\nIf keeping this as \"n\" in your project, you will have less free IRAM.\nBut you can use all of our flash features.\n\nIf making this as \"y\" in your project, you will increase free IRAM.\nBut you may miss out on some flash features and support for new flash chips.\n\nCurrently the ROM cannot support the following features:\n\n- SPI_FLASH_AUTO_SUSPEND (C3, S3)",
                         "id": "SPI_FLASH_ROM_IMPL",
                         "name": "SPI_FLASH_ROM_IMPL",
@@ -22604,6 +23350,36 @@
                         "range": null,
                         "title": "Keep BT on after provisioning is done",
                         "type": "bool"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": "<choice WIFI_PROV_STA_SCAN_METHOD>",
+                                "help": "Scan will end after scanning the entire channel. This option is useful in Mesh WiFi Systems.",
+                                "id": "WIFI_PROV_STA_ALL_CHANNEL_SCAN",
+                                "name": "WIFI_PROV_STA_ALL_CHANNEL_SCAN",
+                                "range": null,
+                                "title": "All Channel Scan",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "<choice WIFI_PROV_STA_SCAN_METHOD>",
+                                "help": "Scan will end after an AP matching with the SSID has been detected.",
+                                "id": "WIFI_PROV_STA_FAST_SCAN",
+                                "name": "WIFI_PROV_STA_FAST_SCAN",
+                                "range": null,
+                                "title": "Fast Scan",
+                                "type": "bool"
+                            }
+                        ],
+                        "depends_on": null,
+                        "help": null,
+                        "id": "component-config-wi-fi-provisioning-manager-wifi-provisioning-scan-method",
+                        "name": "WIFI_PROV_STA_SCAN_METHOD",
+                        "title": "Wifi Provisioning Scan Method",
+                        "type": "choice"
                     }
                 ],
                 "depends_on": null,

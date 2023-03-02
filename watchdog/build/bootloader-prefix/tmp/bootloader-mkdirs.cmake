@@ -4,19 +4,19 @@
 cmake_minimum_required(VERSION 3.5)
 
 file(MAKE_DIRECTORY
-  "D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/components/bootloader/subproject"
-  "D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/sr_design/build/bootloader"
-  "D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/sr_design/build/bootloader-prefix"
-  "D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/sr_design/build/bootloader-prefix/tmp"
-  "D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/sr_design/build/bootloader-prefix/src/bootloader-stamp"
-  "D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/sr_design/build/bootloader-prefix/src"
-  "D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/sr_design/build/bootloader-prefix/src/bootloader-stamp"
+  "/Users/alexzhou13/Documents/spring2023/EC464/esp/esp-idf/components/bootloader/subproject"
+  "/Users/alexzhou13/Documents/spring2023/EC464/esp/watchdog/build/bootloader"
+  "/Users/alexzhou13/Documents/spring2023/EC464/esp/watchdog/build/bootloader-prefix"
+  "/Users/alexzhou13/Documents/spring2023/EC464/esp/watchdog/build/bootloader-prefix/tmp"
+  "/Users/alexzhou13/Documents/spring2023/EC464/esp/watchdog/build/bootloader-prefix/src/bootloader-stamp"
+  "/Users/alexzhou13/Documents/spring2023/EC464/esp/watchdog/build/bootloader-prefix/src"
+  "/Users/alexzhou13/Documents/spring2023/EC464/esp/watchdog/build/bootloader-prefix/src/bootloader-stamp"
 )
 
 set(configSubDirs )
 foreach(subDir IN LISTS configSubDirs)
-    file(MAKE_DIRECTORY "D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/sr_design/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
+    file(MAKE_DIRECTORY "/Users/alexzhou13/Documents/spring2023/EC464/esp/watchdog/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
 endforeach()
 if(cfgdir)
-  file(MAKE_DIRECTORY "D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/sr_design/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
+  file(MAKE_DIRECTORY "/Users/alexzhou13/Documents/spring2023/EC464/esp/watchdog/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
 endif()

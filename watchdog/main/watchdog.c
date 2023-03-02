@@ -108,15 +108,15 @@ void app_main(void)
         v_left *= 2, v_right *= 2; // because the effective range is 0-3.1v, we used a 0.5 voltage divider to accomodate 0.5-4.5 (0.25-2.75).
 
         // Evaluate values
-        // if (v_left >= THRESHOLD || v_right >= THRESHOLD) {
-        //     speed_sum += (((v_left > v_right) ? v_left : v_right) - THRESHOLD) * (double) TIMESTEP/1000
-        // } else {
-        //     speed_sum = 0;
-        // }
+        if (v_left >= THRESHOLD || v_right >= THRESHOLD) {
+            speed_sum += (((v_left > v_right) ? v_left : v_right) - THRESHOLD) * (double) TIMESTEP/1000;
+        } else {
+            speed_sum = 0;
+        }
 
-        // if (speed_sum > DURATION) {
-        //     break; // excessive speed, must break and shut down system
-        // }
+        if (speed_sum > DURATION) {
+            break; // excessive speed, must break and shut down system
+        }
 
         // Print to console
         printf("Voltage Left\t%.2f\n", v_left);

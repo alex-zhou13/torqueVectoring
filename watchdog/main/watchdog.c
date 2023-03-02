@@ -58,6 +58,11 @@ static const adc_unit_t unit = ADC_UNIT_1;
 
 void app_main(void)
 {
+    // Config GPIO
+    gpio_reset_pin(RELAY_GPIO);
+    gpio_set_direction(RELAY_GPIO, GPIO_MODE_OUTPUT);
+
+    
     // Configure ADC
     if (unit == ADC_UNIT_1)
     {
@@ -74,7 +79,7 @@ void app_main(void)
     double speed_sum = 0;
 
     // close relay to send power to next component
-    gpio_set_level(CONFIG_RELAY_GPIO, 1);
+    gpio_set_level(RELAY_GPIO, 1);
 
     // Config and set board LED to green
     // configure_led();
@@ -124,7 +129,7 @@ void app_main(void)
     // Blink LED red and open Relay
     while (1) {
         // set_led(255,0,0);
-        gpio_set_level(CONFIG_RELAY_GPIO, 0);
+        gpio_set_level(RELAY_GPIO, 0);
         /* Toggle the LED state */
         // s_led_state = !s_led_state;
         vTaskDelay(pdMS_TO_TICKS(250));

@@ -8,6 +8,9 @@
 #define FRIC_COEF   0.8
 #define WEIGHT      250
 #define TIMESTEP    100 // ms
+#define LENGTH      2 // m
+#define WIDTH       1.5
+
 
 
 void 

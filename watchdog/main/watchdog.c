@@ -21,8 +21,8 @@
 #define DEFAULT_VREF    3300        //Use adc1_vref_to_gpio() to obtain a better estimate
 #define NO_OF_SAMPLES   64          //Multisampling
 static esp_adc_cal_characteristics_t *adc_chars;
-static const adc_channel_t V_LEFT_CHANNEL = ADC_CHANNEL_8, // adc1_0 GPIO11
-                           V_RIGHT_CHANNEL = ADC_CHANNEL_9; // adc1_1 GPIO12
+static const adc_channel_t V_LEFT_CHANNEL = ADC_CHANNEL_8, // adc1_8 GPIO19
+                           V_RIGHT_CHANNEL = ADC_CHANNEL_9; // adc1_9 GPIO10
 static const adc_atten_t atten = ADC_ATTEN_DB_11;
 static const adc_unit_t unit = ADC_UNIT_1;
 

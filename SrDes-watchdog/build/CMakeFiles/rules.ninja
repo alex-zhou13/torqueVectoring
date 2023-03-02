@@ -1381,7 +1381,7 @@ rule C_STATIC_LIBRARY_LINKER____idf_main_
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = D:\Users\curse\.espressif\tools\cmake\3.24.0\bin\cmake.exe --regenerate-during-build -SD:\Users\curse\.espressif\frameworks\esp-idf-v5.0\sr_design -BD:\Users\curse\.espressif\frameworks\esp-idf-v5.0\sr_design\build
+  command = D:\Users\curse\.espressif\tools\cmake\3.24.0\bin\cmake.exe --regenerate-during-build -SD:\Users\curse\.espressif\frameworks\esp-idf-v5.0\SrDes-watchdog -BD:\Users\curse\.espressif\frameworks\esp-idf-v5.0\SrDes-watchdog\build
   description = Re-running CMake...
   generator = 1
 

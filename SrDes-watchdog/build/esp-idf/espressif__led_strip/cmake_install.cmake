@@ -1,4 +1,4 @@
-# Install script for directory: D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/sr_design/managed_components/espressif__led_strip
+# Install script for directory: D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/SrDes-watchdog/managed_components/espressif__led_strip
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

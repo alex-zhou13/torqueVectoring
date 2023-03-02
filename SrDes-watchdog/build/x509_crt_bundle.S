@@ -1,4 +1,4 @@
-/* * Data converted from D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/sr_design/build/esp-idf/mbedtls/x509_crt_bundle
+/* * Data converted from D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/SrDes-watchdog/build/esp-idf/mbedtls/x509_crt_bundle
  */
 .data
 .section .rodata.embedded

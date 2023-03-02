@@ -1,13 +1,13 @@
 # Target labels
  bootloader
 # Source files and their labels
-D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/sr_design/build/CMakeFiles/bootloader
-D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/sr_design/build/CMakeFiles/bootloader.rule
-D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/sr_design/build/CMakeFiles/bootloader-complete.rule
-D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/sr_design/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
-D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/sr_design/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
-D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/sr_design/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
-D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/sr_design/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
-D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/sr_design/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
-D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/sr_design/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
-D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/sr_design/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule
+D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/SrDes-watchdog/build/CMakeFiles/bootloader
+D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/SrDes-watchdog/build/CMakeFiles/bootloader.rule
+D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/SrDes-watchdog/build/CMakeFiles/bootloader-complete.rule
+D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/SrDes-watchdog/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
+D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/SrDes-watchdog/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/SrDes-watchdog/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/SrDes-watchdog/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/SrDes-watchdog/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/SrDes-watchdog/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/SrDes-watchdog/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule

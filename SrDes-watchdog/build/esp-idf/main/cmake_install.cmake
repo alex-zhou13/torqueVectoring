@@ -1,4 +1,4 @@
-# Install script for directory: D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/sr_design/main
+# Install script for directory: D:/Users/curse/.espressif/frameworks/esp-idf-v5.0/SrDes-watchdog/main
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

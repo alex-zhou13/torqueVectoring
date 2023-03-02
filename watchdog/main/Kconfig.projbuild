@@ -1,0 +1,25 @@
+menu "watchdog Configuration"
+
+    config RELAY_GPIO
+        int "Safety Shutdown Relay GPIO number"
+        range 0 47
+        default 10
+
+    config BLINK_GPIO
+        int "LED GPIO number"
+        range 0 47
+        default 38
+
+    config BLINK_LED_RMT_CHANNEL
+        depends on BLINK_LED_RMT
+        int "RMT Channel"
+        range 0 7
+        default 0
+        help
+            Set the RMT peripheral channel.
+            ESP32 RMT channel from 0 to 7
+            ESP32-S2 RMT channel from 0 to 3
+            ESP32-S3 RMT channel from 0 to 3
+            ESP32-C3 RMT channel from 0 to 1
+
+endmenu

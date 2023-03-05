@@ -25,7 +25,6 @@
 #define LENGTH      2       // m
 #define WIDTH       1.5
 
-
 // TEST INPUT
 #define DEFAULT_VREF    3300        //Use adc1_vref_to_gpio() to obtain a better estimate
 #define NO_OF_SAMPLES   64          //Multisampling

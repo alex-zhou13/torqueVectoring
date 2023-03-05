@@ -1,6 +1,6 @@
 # Ignore everything, and specifically the build folder
 *
-#SrDes*/build/
+SrDes*/build/
 
 # But not these files and directories...
 !.gitignore

@@ -1,2 +1,10 @@
-idf_component_register(SRCS "main_controller.c" "mcp4725.c" "mcp4725.h"
+idf_component_register(SRCS "main_controller.c" 
+"mcp4725.c" 
+"mcp4725.h" 
+"Linear_Model_V3/Linear_Model.h" 
+"Linear_Model_V3/Linear_Model.c" 
+"Linear_Model_V3/Linear_Model_data.c" 
+"Linear_Model_V3/rt_nonfinite.c" 
+"Linear_Model_V3/rtGetInf.c"
+"Linear_Model_V3/rtGetNaN.c"
                     INCLUDE_DIRS ".")

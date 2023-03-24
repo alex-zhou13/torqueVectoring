@@ -18,6 +18,9 @@
 #include "esp_adc_cal.h"
 #include "mcp4725.h" // dac_left device driver
 
+// PI controller
+#include "Linear_Model_V3/Linear_Model.h"
+
 /////////////// GPIO DEF ////////////////
 #define RELAY_GPIO 1 // Default GPIO 1
 
@@ -226,6 +229,7 @@ void app_main() {
     i2c_setup();
     gpio_init();
     uart_init();
+    Linear_Model_initialize();
 
     xTaskCreate(mcp4725_task,"mcp4725_task",2048,NULL,5,NULL);
     xTaskCreate(uart_rx_task,"uart_rx_task",2048,NULL,5,NULL);

@@ -19,7 +19,7 @@
 #include "mcp4725.h" // dac_left device driver
 
 // PI controller
-#include "Linear_Model_V3/Linear_Model.h"
+#include "Linear_Model.h"
 
 /////////////// GPIO DEF ////////////////
 #define RELAY_GPIO 1 // Default GPIO 1

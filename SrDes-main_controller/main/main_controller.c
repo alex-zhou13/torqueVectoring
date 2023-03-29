@@ -26,7 +26,7 @@
 #include <string.h>
 
 /////////////// GPIO DEF ////////////////
-#define RELAY_GPIO 1 // Default GPIO 1
+#define RELAY_GPIO 19 // Changed to 19
 
 /////////////// VEHIC PARAMS DEF //////////////
 #define SIM_WHEEL_DIAM  0.5     // m
@@ -42,16 +42,16 @@
 #define SIM_WIDTH       1.5
 
 /////////////// I2C DEF ////////////////
-#define SDA_PIN 18
-#define SCL_PIN 19
+#define SDA_PIN 9
+#define SCL_PIN 10
 #define I2C_CLK_SPEED 400000 // 400 KHz
 
 #define MCP4725_LEFT_ADDRESS 0x62 // default address
 #define MCP4725_MAX_TICKS (10/portTICK_PERIOD_MS) // max ticks for i2c
 
 /////////////// UART DEF ////////////////
-#define TXD GPIO_NUM_16 // Send
-#define RXD GPIO_NUM_17 // Recieve 
+#define TXD GPIO_NUM_17 // Send
+#define RXD GPIO_NUM_18 // Recieve 
 #define UART_RTS (UART_PIN_NO_CHANGE)
 #define UART_CTS (UART_PIN_NO_CHANGE)
 

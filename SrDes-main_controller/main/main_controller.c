@@ -5,6 +5,8 @@
 #include "esp_vfs_dev.h"
 #include "esp_log.h"
 #include "esp_types.h"
+#include <math.h>
+#include <unistd.h>
 
 // RTOS
 #include "freertos/FreeRTOS.h"
@@ -68,18 +70,15 @@ int len_out = 4;
 // static xQueueHandle dac_left_evt_queue_send = NULL;
 
 /////////////// GLOBAL VARS DEF ////////////////
-double throttle_scaled = 1;
-double thr_left_scaled = 0;
-double thr_rigt_scaled = 0;
-double steering_scaled = 2;
-double speed_scaled = 3; // as input, where do we get these?
+double throttle_scaled;
+double thr_left_scaled;
+double thr_rigt_scaled;
+double steering_scaled;
+double speed_scaled; // as input, where do we get these?
 
-// input signals from UART
-char* accel_x;
-char* accel_y;
-char* accel_z;
-char* steer;
-char* throttle;
+
+// global variables for input signal
+//float current_speed_input, steering, throttle;
 
 double something = 0;
 
@@ -245,8 +244,8 @@ void Linear_Model_step(void)
     real_T tmp_0;
     real_T tmp_1;
     real_T tmp_2;
-    real_T yawRate;
-    real_T yawRate_max;
+    float yawRate;
+    float yawRate_max;
     if (rtmIsMajorTimeStep(Linear_Model_M)) {
         /* set solver stop time */
         if (!(Linear_Model_M->Timing.clockTick0+1)) {
@@ -286,6 +285,8 @@ void Linear_Model_step(void)
     /* :  yawRate = V_CG/((l_r+l_f)+K_u+V_CG^2) * steering_Angle; */
     yawRate = speed_scaled / (speed_scaled * speed_scaled +
         1.6460000000000001) * steering_scaled;
+		
+	//printf("The value of yawRate on line 289 is %.2f\n", yawRate);
 
     /* :  if (yawRate <= yawRate_max) */
     if (yawRate <= yawRate_max) {
@@ -336,6 +337,8 @@ void Linear_Model_step(void)
     /* Sum: '<S46>/Sum' */
     Linear_Model_B.Sum_h = (Linear_Model_B.PProdOut + Linear_Model_B.Integrator) +
         Linear_Model_B.NProdOut;
+		
+	//printf("Linear_Model_B.PProdOut is %.2f, Linear_Model_B.Integrator is %.2f, Linear_Model_B.NProdOut is %.2f\n", Linear_Model_B.PProdOut, Linear_Model_B.Integrator, Linear_Model_B.NProdOut);
 
     /* MATLAB Function: '<Root>/MATLAB Function' incorporates:
     *  Constant: '<Root>/Max Toque of Motors (N*m)'
@@ -356,6 +359,8 @@ void Linear_Model_step(void)
         /* :  right_Motor_Control = throttle_Input*motor_Control_Voltage_Max; */
         yawRate = throttle_scaled * Linear_Model_P.MaxVoltage_Value;
 
+		//printf("The value of yawRate on line 360(neg) is %.2f\n", yawRate);
+
         /* :  left_Motor_Control = right_Motor_Control - torque_Diff/max_Torque_Scale*motor_Control_Voltage_Max; */
         yawRate_max = yawRate - Linear_Model_B.Sum_h /
         Linear_Model_P.MaxToqueofMotorsNm_Value * Linear_Model_P.MaxVoltage_Value;
@@ -372,8 +377,11 @@ void Linear_Model_step(void)
         Linear_Model_P.MaxVoltage_Value;
 
         /* :  right_Motor_Control = left_Motor_Control - torque_Diff/max_Torque_Scale*motor_Control_Voltage_Max; */
-        yawRate = yawRate_max - Linear_Model_B.Sum_h /
+        yawRate = yawRate_max - /*Linear_Model_B.Sum_h*/ 1 /
         Linear_Model_P.MaxToqueofMotorsNm_Value * Linear_Model_P.MaxVoltage_Value;
+
+		//printf("The value of yawRate_max is %.2f, Linear_Model_B.Sum_h is %.2f, Linear_Model_P.MaxToqueofMotorsNm_Value is %.2f, Linear_Model_P.MaxVoltage_Value is %.2f\n", yawRate_max, Linear_Model_B.Sum_h, Linear_Model_P.MaxToqueofMotorsNm_Value, Linear_Model_P.MaxVoltage_Value);
+		//printf("The value of yawRate on line 381(pos) is %.2f\n", yawRate);
 
         /* :  if right_Motor_Control < 0 */
         if (yawRate < 0.0) {
@@ -383,7 +391,9 @@ void Linear_Model_step(void)
     }
 
     Linear_Model_B.right_Motor_Control = yawRate;
+	//printf("The value of yawRate(right) is %f\n", yawRate);
     Linear_Model_B.left_Motor_Control = yawRate_max;
+	//printf("The value of yawRate_max(left) is %f\n", yawRate_max);
 
     /* End of MATLAB Function: '<Root>/MATLAB Function' */
 
@@ -851,29 +861,8 @@ static void uart_init() {
     return;
 }
 
-void split_rx(char input[]) {
-  char *token;
-  char tokens[5][20];
-  int i = 0;
-  
-  token = strtok(input, ",");
-  while (token != NULL) {
-      strcpy(tokens[i], token);
-      token = strtok(NULL, ",");
-      i++;
-  }
-  accel_x = tokens[0];
-  accel_y = tokens[1];
-  accel_z = tokens[2];
-  steer = tokens[3];
-  throttle = tokens[4];
-  printf("%s\n", accel_x);
-  printf("%s\n", accel_y); 
-  printf("%s\n", accel_z); 
-  printf("%s\n", steer); 
-  printf("%s\n", throttle);
-}
 
+/*
 static void uart_rx_task() {
     // Configure a temporary buffer for the incoming data
     // uint8_t *data = (uint8_t *) malloc(BUF_SIZE);
@@ -885,9 +874,18 @@ static void uart_rx_task() {
         if (len_in > 0) {
           data_in[len_in] = '\0';
           ESP_LOGI(RX_TASK_TAG, "Read %d bytes: \n'%s'", len_in, data_in);
-          split_rx(data_in);
-          something = (double)*accel_x;
-          printf("Something: %f\n", something);
+		  
+
+		  // Use sscanf to extract the float values from the string
+		  sscanf(data_in, "%f,%f,%f,%f,%f", &x_dir, &y_dir, &z_dir, &steering, &throttle);
+
+		  // Print the values to verify
+		  printf("x_dir = %f, y_dir = %f, z_dir = %f, steering = %f, throttle = %f\n", x_dir, y_dir, z_dir, steering, throttle);
+		
+		
+          //split_rx(data_in);
+          //something = (double)*accel_x;
+          //printf("Something: %f\n", something);
             // if (data_in[0] == start) {
             //     int throttle_mv_lower = data_in[1];
             //     int throttle_mv_upper = data_in[2];
@@ -914,6 +912,40 @@ static void uart_rx_task() {
     }
     free(data_in);
 }
+*/
+
+static void uart_rx_task() {
+    static const char *RX_TASK_TAG = "RX_TASK";
+    char *data_in = (char *) malloc(BUF_SIZE);
+	float t = 0.1;
+	float vx_current = 0.0;
+	float vy_current = 0.0;
+    while (1) {
+        int len_in = uart_read_bytes(UART_PORT_NUM, data_in, (BUF_SIZE - 1), 100 / portTICK_PERIOD_MS);
+        if (len_in > 0) {
+          data_in[len_in] = '\0';
+          ESP_LOGI(RX_TASK_TAG, "Read %d bytes: \n'%s'", len_in, data_in);
+		  float x_dir, y_dir, z_dir, steering, throttle;
+		  sscanf(data_in, "%f,%f,%f,%f,%f", &x_dir, &y_dir, &z_dir, &steering, &throttle);
+		  //printf("x_dir = %f, y_dir = %f, z_dir = %f, steering = %f, throttle = %f\n", x_dir, y_dir, z_dir, steering, throttle);
+		  float vx_next = vx_current + x_dir * t;
+		  float vy_next = vy_current + y_dir * t;
+		  //printf("vx_next = %f, vx_current = %f, x_dir = %f, vy_next = %f, vy_current = %f, y_dir = %f, t = %f\n", vx_next, vx_current, x_dir, vy_next, vy_current, y_dir, t);
+		  vx_current = vx_next;
+		  vy_current = vy_next;
+		  float current_speed_input = sqrt(vx_next * vx_next + vy_next * vy_next);
+		  steering_scaled = steering / 1024 - 0.5;
+		  throttle_scaled = throttle / 1024;
+		  speed_scaled = current_speed_input;
+		  printf("steering_scaled = %f, throttle_scaled = %f, speed_scaled = %f\n", steering_scaled, throttle_scaled, speed_scaled);
+		  //printf("Current velocity: %f m/s\n", current_speed_input);
+		  //usleep(100000);
+        }
+        vTaskDelay(pdMS_TO_TICKS(5));
+    }
+    free(data_in);
+}
+
 
 ///////////////// GPIO FUNCS //////////////////
 static void gpio_init() {
@@ -946,7 +978,7 @@ static void temp_PID_task() {
         // Notify dac_left
         // xQueueSend(dac_left_evt_queue_send, &mv_thr_send, 10);
         vTaskDelay(pdMS_TO_TICKS(1000));
-        printf("Linear Left: %.2f, linear right: %.2f\n", thr_left_scaled, thr_rigt_scaled);
+        //printf("Linear Left: %.2f, linear right: %.2f\n", thr_left_scaled, thr_rigt_scaled);
     }
     
     Linear_Model_terminate();
@@ -968,7 +1000,7 @@ static void speed_emulator_task () {
     while (1) {
         speed = calc_speed(speed, thr_left_scaled, thr_rigt_scaled);
         printf("Throttle Left\t%.3f\tRight\t%.3f\n", thr_left_scaled, thr_rigt_scaled);
-        printf("Speed: %f m\\s\n", speed);
+        //printf("Speed: %f m\\s\n", speed);
         vTaskDelay(pdMS_TO_TICKS(SIM_TIMESTEP));
     }
 }
@@ -979,7 +1011,7 @@ void app_main() {
     uart_init();
 
     // xTaskCreate(mcp4725_task,"mcp4725_task",2048,NULL,5,NULL);
-    xTaskCreate(uart_rx_task,"uart_rx_task",2048,NULL,5,NULL);
-    // xTaskCreate(temp_PID_task,"temp_PID_task",2048,NULL,5,NULL);
-    // xTaskCreate(speed_emulator_task,"speed_emulator_task",2048,NULL,5,NULL);
+    xTaskCreate(uart_rx_task,"uart_rx_task",4096,NULL,5,NULL);
+    xTaskCreate(temp_PID_task,"temp_PID_task",4096,NULL,5,NULL);
+    xTaskCreate(speed_emulator_task,"speed_emulator_task",4096,NULL,5,NULL);
 }

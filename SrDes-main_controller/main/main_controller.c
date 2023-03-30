@@ -48,7 +48,8 @@
 #define SCL_PIN 10
 #define I2C_CLK_SPEED 400000 // 400 KHz
 
-#define MCP4725_LEFT_ADDRESS 0x62 // default address
+#define MCP4725_LEFT_ADDRESS 0x63 // default address
+#define MCP4725_RIGHT_ADDRESS 0x63 // default address
 #define MCP4725_MAX_TICKS (10/portTICK_PERIOD_MS) // max ticks for i2c
 
 /////////////// UART DEF ////////////////
@@ -82,7 +83,10 @@ double speed_scaled; // as input, where do we get these?
 
 double something = 0;
 
-///////////// PI funcs ///////////////////////////
+// Boolean value to put the program into testing mode
+bool testing_mode = 1;
+
+/////////////// SIMULINK PI DEFS AND FUNCS ///////////////
 /* Block signals (default storage) */
 B_Linear_Model_T Linear_Model_B;
 
@@ -796,30 +800,36 @@ static void mcp4725_task() {
         .ticks_to_wait  = MCP4725_MAX_TICKS
     }; // dac_left configuration
 
-    // mcp4725_config_t dac_right = {
-    //     .i2c_bus        = I2C_NUM_0,
-    //     .address        = MCP4725_LEFT_ADDRESS,
-    //     .ticks_to_wait  = MCP4725_MAX_TICKS
-    // }; // dac_right configuration
+    mcp4725_config_t dac_right = {
+        .i2c_bus        = I2C_NUM_0,
+        .address        = MCP4725_RIGHT_ADDRESS,
+        .ticks_to_wait  = MCP4725_MAX_TICKS
+    }; // dac_right configuration
 
     mcp4725_eeprom_t eeprom_write = {
         .power_down_mode = MCP4725_POWER_DOWN_100, // power down, 100K resistor, 2 
         .input_data = 2047 
     }; // values to write to eeprom, will be set on reboot
 
-    mcp4725_eeprom_t eeprom_read; // structure to hold the eeprom after we read it
+    mcp4725_eeprom_t eeprom_read_left; // structure to hold the eeprom after we read it
+    // mcp4725_eeprom_t eeprom_read_right; // structure to hold the eeprom after we read it
 
     ESP_ERROR_CHECK(mcp4725_write_eeprom(dac_left,eeprom_write)); // write the above configuration
+    // ESP_ERROR_CHECK(mcp4725_write_eeprom(dac_right,eeprom_write)); // write the above configuration
     vTaskDelay(50 / portTICK_PERIOD_MS); // wait for device
-    ESP_ERROR_CHECK(mcp4725_read_eeprom(dac_left,&eeprom_read)); // read the eeprom
+    ESP_ERROR_CHECK(mcp4725_read_eeprom(dac_left,&eeprom_read_left)); // read the eeprom
+    // ESP_ERROR_CHECK(mcp4725_read_eeprom(dac_right,&eeprom_read_right)); // read the eeprom
 
-    ESP_LOGI(TAG,"Power_Down_Mode Saved: %i",eeprom_read.power_down_mode); // print the saved configuration
-    ESP_LOGI(TAG,"Input_Data Saved: %i",eeprom_read.input_data);
+    ESP_LOGI(TAG,"Power_Down_Mode Left Saved: %i",eeprom_read_left.power_down_mode); // print the saved configuration
+    // ESP_LOGI(TAG,"Power_Down_Mode Right Saved: %i",eeprom_read_right.power_down_mode); // print the saved configuration
+    ESP_LOGI(TAG,"Input_Data Left Saved: %i",eeprom_read_left.input_data);
+    // ESP_LOGI(TAG,"Input_Data Right Saved: %i",eeprom_read_right.input_data);
     // Continuously write values as they arrive via UART
     while (1) {
       int messageData[4] = {0};
         // if xQueueReceive(dac_left_evt_queue_send, &messageData, 100 / portTICK_PERIOD_MS)) {
             ESP_ERROR_CHECK(mcp4725_set_voltage(dac_left,thr_left_scaled*(double) 4095)); // scale from 0-1 to 0-4095 = 5v
+            // ESP_ERROR_CHECK(mcp4725_set_voltage(dac_right,thr_rigt_scaled*(double) 4095)); // scale from 0-1 to 0-4095 = 5v
             vTaskDelay(pdMS_TO_TICKS(10));
         // }
     }
@@ -970,8 +980,11 @@ static void temp_PID_task() {
         // thr_rigt_scaled = throttle_scaled - ((steering_scaled > 0) ? steering_scaled : 0);
         // thr_left_scaled = throttle_scaled;
         // thr_rigt_scaled = throttle_scaled;
-        thr_left_scaled = Linear_Model_Y.left_Motor_Control;
-        thr_rigt_scaled = Linear_Model_Y.right_Motor_Control;
+        // In testing mode, the throttle signal is stepped progressively from 0-1
+        if (!testing_mode) {
+            thr_left_scaled = Linear_Model_Y.left_Motor_Control;
+            thr_rigt_scaled = Linear_Model_Y.right_Motor_Control;
+        }
 
         // Notify dac_left
         // xQueueSend(dac_left_evt_queue_send, &mv_thr_send, 10);
@@ -983,6 +996,8 @@ static void temp_PID_task() {
 
 }
 
+
+///////////////// DEBUGGING/TESTING DUMMY FUNCS //////////////////
 double calc_speed(double speed, double t_left, double t_right) {
     double FL = (double) 72*SIM_RATIO/(SIM_WHEEL_DIAM/2)*t_left;
     double FR = (double) 72*SIM_RATIO/(SIM_WHEEL_DIAM/2)*t_right;
@@ -997,19 +1012,33 @@ static void speed_emulator_task () {
     double speed = 0;
     while (1) {
         speed = calc_speed(speed, thr_left_scaled, thr_rigt_scaled);
-        //printf("Throttle Left\t%.3f\tRight\t%.3f\n", thr_left_scaled, thr_rigt_scaled);
-        //printf("Speed: %f m\\s\n", speed);
+        printf("Throttle Left\t%.3f\tRight\t%.3f\n", thr_left_scaled, thr_rigt_scaled);
+        printf("Speed: %f m\\s\n", speed);
         vTaskDelay(pdMS_TO_TICKS(SIM_TIMESTEP));
     }
 }
 
+void throttle_emulator_task() {
+    int i = 0;
+    while (1) {
+        thr_left_scaled = (float) i/10.0;
+        thr_rigt_scaled = (float) i/10.0;
+        vTaskDelay(pdMS_TO_TICKS(1000));
+        i = (i+1)%11;
+    }
+}
+
+///////////////// MAIN FUNC //////////////////
 void app_main() {
     i2c_setup();
     gpio_init();
     uart_init();
 
-    // xTaskCreate(mcp4725_task,"mcp4725_task",2048,NULL,5,NULL);
+    xTaskCreate(mcp4725_task,"mcp4725_task",2048,NULL,5,NULL);
     xTaskCreate(uart_rx_task,"uart_rx_task",4096,NULL,5,NULL);
     xTaskCreate(temp_PID_task,"temp_PID_task",4096,NULL,5,NULL);
     xTaskCreate(speed_emulator_task,"speed_emulator_task",4096,NULL,5,NULL);
+
+    if (testing_mode)
+        xTaskCreate(throttle_emulator_task,"throttle_emulator_task",4096,NULL,5,NULL);
 }

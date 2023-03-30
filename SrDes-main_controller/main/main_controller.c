@@ -875,10 +875,8 @@ static void uart_rx_task() {
           data_in[len_in] = '\0';
           ESP_LOGI(RX_TASK_TAG, "Read %d bytes: \n'%s'", len_in, data_in);
 		  
-
 		  // Use sscanf to extract the float values from the string
 		  sscanf(data_in, "%f,%f,%f,%f,%f", &x_dir, &y_dir, &z_dir, &steering, &throttle);
-
 		  // Print the values to verify
 		  printf("x_dir = %f, y_dir = %f, z_dir = %f, steering = %f, throttle = %f\n", x_dir, y_dir, z_dir, steering, throttle);
 		
@@ -893,7 +891,6 @@ static void uart_rx_task() {
             //     // int steering_mv_lower = 0;
             //     int steering_mv_upper = data_in[4];
             //     // int steering_mv_upper = 0;
-
             //     printf("First value: $.2d", throttle_mv_lower);
                 
             //     data_in[len_in] = '\0';
@@ -901,7 +898,6 @@ static void uart_rx_task() {
             //     int steering_mv = steering_mv_upper*256+steering_mv_lower;
             //     throttle_scaled = (double) throttle_mv/5000;
             //     steering_scaled = (double) steering_mv/5000 - 0.5;
-
             //     // printf("UART data Recieved: th_left=%d\th_right=%d (mV) \n", throttle_mv, steering_mv);
             //     // printf("Values converted:   throttle=%f\tsteering=%f\n", throttle_scaled, steering_scaled);
             //     // // Notify PID
@@ -924,7 +920,7 @@ static void uart_rx_task() {
         int len_in = uart_read_bytes(UART_PORT_NUM, data_in, (BUF_SIZE - 1), 100 / portTICK_PERIOD_MS);
         if (len_in > 0) {
           data_in[len_in] = '\0';
-          ESP_LOGI(RX_TASK_TAG, "Read %d bytes: \n'%s'", len_in, data_in);
+          //ESP_LOGI(RX_TASK_TAG, "Read %d bytes: \n'%s'", len_in, data_in);
 		  float x_dir, y_dir, z_dir, steering, throttle;
 		  sscanf(data_in, "%f,%f,%f,%f,%f", &x_dir, &y_dir, &z_dir, &steering, &throttle);
 		  //printf("x_dir = %f, y_dir = %f, z_dir = %f, steering = %f, throttle = %f\n", x_dir, y_dir, z_dir, steering, throttle);
@@ -934,10 +930,12 @@ static void uart_rx_task() {
 		  vx_current = vx_next;
 		  vy_current = vy_next;
 		  float current_speed_input = sqrt(vx_next * vx_next + vy_next * vy_next);
-		  steering_scaled = steering / 1024 - 0.5;
+		  steering_scaled = steering / 1024;
 		  throttle_scaled = throttle / 1024;
+		  printf("Left Motor\t%.3f\tRight Motor\t%.3f\n", thr_left_scaled*steering_scaled, thr_rigt_scaled*(1-steering_scaled));
+		  steering_scaled = steering_scaled - 0.5;	  
 		  speed_scaled = current_speed_input;
-		  printf("steering_scaled = %f, throttle_scaled = %f, speed_scaled = %f\n", steering_scaled, throttle_scaled, speed_scaled);
+		  //printf("steering_scaled = %f, throttle_scaled = %f, speed_scaled = %f\n", steering_scaled, throttle_scaled, speed_scaled);
 		  //printf("Current velocity: %f m/s\n", current_speed_input);
 		  //usleep(100000);
         }
@@ -999,7 +997,7 @@ static void speed_emulator_task () {
     double speed = 0;
     while (1) {
         speed = calc_speed(speed, thr_left_scaled, thr_rigt_scaled);
-        printf("Throttle Left\t%.3f\tRight\t%.3f\n", thr_left_scaled, thr_rigt_scaled);
+        //printf("Throttle Left\t%.3f\tRight\t%.3f\n", thr_left_scaled, thr_rigt_scaled);
         //printf("Speed: %f m\\s\n", speed);
         vTaskDelay(pdMS_TO_TICKS(SIM_TIMESTEP));
     }

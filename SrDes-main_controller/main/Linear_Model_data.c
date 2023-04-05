@@ -7,9 +7,9 @@
  *
  * Code generation for model "Linear_Model".
  *
- * Model version              : 1.11
+ * Model version              : 1.12
  * Simulink Coder version : 9.7 (R2022a) 13-Nov-2021
- * C source code generated on : Thu Mar 23 16:30:31 2023
+ * C source code generated on : Thu Mar 30 15:39:01 2023
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -37,10 +37,11 @@ P_Linear_Model_T Linear_Model_P = {
    */
   0.0,
 
-  /* Expression: [250, 300, 275, 294, 300, 275, 350]
+  /* Expression: [305, 395, 450, 500, 510, 475, 450]/19
    * Referenced by: '<Root>/1-D Lookup Table'
    */
-  { 250.0, 300.0, 275.0, 294.0, 300.0, 275.0, 350.0 },
+  { 16.05263157894737, 20.789473684210527, 23.684210526315791,
+    26.315789473684209, 26.842105263157894, 25.0, 23.684210526315791 },
 
   /* Expression: [6, 9, 12, 15, 18, 21, 24]
    * Referenced by: '<Root>/1-D Lookup Table'
@@ -62,10 +63,11 @@ P_Linear_Model_T Linear_Model_P = {
    */
   5.0,
 
-  /* Expression: [12000, 11000, 12500, 20000, 10000, 20000, 14000]
+  /* Expression: [1.2, 1, 0.8, 0.6, 0.4, 0.2, 1]*0.7
    * Referenced by: '<Root>/1-D Lookup Table1'
    */
-  { 12000.0, 11000.0, 12500.0, 20000.0, 10000.0, 20000.0, 14000.0 },
+  { 0.84, 0.7, 0.55999999999999994, 0.42, 0.27999999999999997,
+    0.13999999999999999, 0.7 },
 
   /* Expression: [6, 9, 12, 15, 18, 21, 24]
    * Referenced by: '<Root>/1-D Lookup Table1'

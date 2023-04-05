@@ -244,315 +244,324 @@ static void rt_ertODEUpdateContinuousStates(RTWSolverInfo *si )
 /* Model step function */
 void Linear_Model_step(void)
 {
-    real_T tmp;
-    real_T tmp_0;
-    real_T tmp_1;
-    real_T tmp_2;
-    float yawRate;
-    float yawRate_max;
-    if (rtmIsMajorTimeStep(Linear_Model_M)) {
-        /* set solver stop time */
-        if (!(Linear_Model_M->Timing.clockTick0+1)) {
-        rtsiSetSolverStopTime(&Linear_Model_M->solverInfo,
-                                ((Linear_Model_M->Timing.clockTickH0 + 1) *
-            Linear_Model_M->Timing.stepSize0 * 4294967296.0));
-        } else {
-        rtsiSetSolverStopTime(&Linear_Model_M->solverInfo,
-                                ((Linear_Model_M->Timing.clockTick0 + 1) *
-            Linear_Model_M->Timing.stepSize0 + Linear_Model_M->Timing.clockTickH0 *
-            Linear_Model_M->Timing.stepSize0 * 4294967296.0));
-        }
-    }                                    /* end MajorTimeStep */
-
-    /* Update absolute time of base rate at minor time step */
-    if (rtmIsMinorTimeStep(Linear_Model_M)) {
-        Linear_Model_M->Timing.t[0] = rtsiGetT(&Linear_Model_M->solverInfo);
-    }
-
-    /* MATLAB Function: '<Root>/Desired_yawRate' incorporates:
-    *  Inport: '<Root>/Steering Angle Encoder'
-    *  Inport: '<Root>/V_CG'
-    */
-    /* :  g = 9.81; */
-    /* :  Cyf = 20; */
-    /* :  Cyr = 1; */
-    /* :  m = 500; */
-    /* :  l_f = 0.813; */
-    /* :  l_r = 0.783; */
-    /* :  Izz = 190.701; */
-    /* :  K_u = 0.05; */
-    /* :  tire_road_coeff = 1; */
-    /* :  sig = 1; */
-    /* :  yawRate_max = sig*tire_road_coeff*g/V_CG; */
-    yawRate_max = 9.81 / speed_scaled;
-
-    /* :  yawRate = V_CG/((l_r+l_f)+K_u+V_CG^2) * steering_Angle; */
-    yawRate = speed_scaled / (speed_scaled * speed_scaled +
-        1.6460000000000001) * steering_scaled;
-		
-	//printf("The value of yawRate on line 289 is %.2f\n", yawRate);
-
-    /* :  if (yawRate <= yawRate_max) */
-    if (yawRate <= yawRate_max) {
-        /* :  des_yawRate = yawRate; */
-        Linear_Model_B.des_yawRate = yawRate;
+  real_T tmp;
+  real_T tmp_0;
+  real_T tmp_1;
+  real_T tmp_2;
+  real_T yawRate;
+  real_T yawRate_max;
+  if (rtmIsMajorTimeStep(Linear_Model_M)) {
+    /* set solver stop time */
+    if (!(Linear_Model_M->Timing.clockTick0+1)) {
+      rtsiSetSolverStopTime(&Linear_Model_M->solverInfo,
+                            ((Linear_Model_M->Timing.clockTickH0 + 1) *
+        Linear_Model_M->Timing.stepSize0 * 4294967296.0));
     } else {
-        /* :  else */
-        /* :  des_yawRate = yawRate_max; */
-        Linear_Model_B.des_yawRate = yawRate_max;
+      rtsiSetSolverStopTime(&Linear_Model_M->solverInfo,
+                            ((Linear_Model_M->Timing.clockTick0 + 1) *
+        Linear_Model_M->Timing.stepSize0 + Linear_Model_M->Timing.clockTickH0 *
+        Linear_Model_M->Timing.stepSize0 * 4294967296.0));
+    }
+  }                                    /* end MajorTimeStep */
+
+  /* Update absolute time of base rate at minor time step */
+  if (rtmIsMinorTimeStep(Linear_Model_M)) {
+    Linear_Model_M->Timing.t[0] = rtsiGetT(&Linear_Model_M->solverInfo);
+  }
+
+  /* MATLAB Function: '<Root>/Desired_yawRate' incorporates:
+   *  Inport: '<Root>/Steering Angle Encoder'
+   *  Inport: '<Root>/V_CG'
+   */
+  /* :  g = 9.81; */
+  /* :  Cyf = 20; */
+  /* :  Cyr = 1; */
+  /* :  m = 500; */
+  /* :  l_f = 0.813; */
+  /* :  l_r = 0.783; */
+  /* :  Izz = 190.701; */
+  /* :  K_u = 0.05; */
+  /* :  tire_road_coeff = 1; */
+  /* :  sig = 1; */
+  /* :  steering_Angle = steering_In*2*90/180*pi; */
+  /* :  yawRate_max = sig*tire_road_coeff*g/V_CG; */
+  yawRate_max = 9.81 / speed_scaled;
+
+  /* :  yawRate = V_CG/((l_r+l_f)+K_u*V_CG^2) * steering_Angle; */
+  yawRate = speed_scaled / (speed_scaled * speed_scaled *
+    0.05 + 1.596) * (steering_scaled * 2.0 * 90.0 / 180.0 *
+                     3.1415926535897931);
+
+  /* :  if (abs(yawRate) <= abs(yawRate_max)) */
+  if (fabs(yawRate) <= fabs(yawRate_max)) {
+    /* :  des_yawRate = yawRate; */
+    Linear_Model_B.des_yawRate = yawRate;
+  } else {
+    /* :  else */
+    /* :  if (sign(yawRate) == 1) */
+    if (!rtIsNaN(yawRate)) {
+      if (yawRate < 0.0) {
+        yawRate = -1.0;
+      } else {
+        yawRate = (yawRate > 0.0);
+      }
     }
 
-    /* End of MATLAB Function: '<Root>/Desired_yawRate' */
-
-    /* Integrator: '<S5>/Integrator' */
-    Linear_Model_B.x[0] = Linear_Model_X.VyYaw_rate[0];
-    Linear_Model_B.x[1] = Linear_Model_X.VyYaw_rate[1];
-
-    /* Sum: '<Root>/Sum' */
-    Linear_Model_B.Sum = Linear_Model_B.des_yawRate - Linear_Model_B.x[1];
-
-    /* Lookup_n-D: '<Root>/1-D Lookup Table' incorporates:
-    *  Inport: '<Root>/V_CG'
-    */
-    Linear_Model_B.uDLookupTable = look1_binlxpw(speed_scaled,
-        Linear_Model_P.uDLookupTable_bp01Data,
-        Linear_Model_P.uDLookupTable_tableData, 6U);
-
-    /* Product: '<S42>/PProd Out' */
-    Linear_Model_B.PProdOut = Linear_Model_B.Sum * Linear_Model_B.uDLookupTable;
-
-    /* Integrator: '<S37>/Integrator' */
-    Linear_Model_B.Integrator = Linear_Model_X.Integrator_CSTATE;
-
-    /* Product: '<S31>/DProd Out' incorporates:
-    *  Constant: '<Root>/Constant3'
-    */
-    Linear_Model_B.DProdOut = Linear_Model_B.Sum * Linear_Model_P.Constant3_Value;
-
-    /* Integrator: '<S32>/Filter' */
-    Linear_Model_B.Filter = Linear_Model_X.Filter_CSTATE;
-
-    /* Sum: '<S32>/SumD' */
-    Linear_Model_B.SumD = Linear_Model_B.DProdOut - Linear_Model_B.Filter;
-
-    /* Product: '<S40>/NProd Out' */
-    Linear_Model_B.NProdOut = Linear_Model_B.SumD * 0.0;
-
-    /* Sum: '<S46>/Sum' */
-    Linear_Model_B.Sum_h = (Linear_Model_B.PProdOut + Linear_Model_B.Integrator) +
-        Linear_Model_B.NProdOut;
-		
-	//printf("Linear_Model_B.PProdOut is %.2f, Linear_Model_B.Integrator is %.2f, Linear_Model_B.NProdOut is %.2f\n", Linear_Model_B.PProdOut, Linear_Model_B.Integrator, Linear_Model_B.NProdOut);
-
-    /* MATLAB Function: '<Root>/MATLAB Function' incorporates:
-    *  Constant: '<Root>/Max Toque of Motors (N*m)'
-    *  Constant: '<Root>/Max Voltage'
-    *  Inport: '<Root>/throttle_Input'
-    */
-    /* :  if (sign(torque_Diff) == -1) */
-    yawRate_max = Linear_Model_B.Sum_h;
-    if (!rtIsNaN(yawRate_max)) {
-        if (yawRate_max < 0.0) {
-        yawRate_max = -1.0;
-        } else {
-        yawRate_max = (yawRate_max > 0.0);
-        }
-    }
-
-    if (yawRate_max == -1.0) {
-        /* :  right_Motor_Control = throttle_Input*motor_Control_Voltage_Max; */
-        yawRate = throttle_scaled * Linear_Model_P.MaxVoltage_Value;
-
-		//printf("The value of yawRate on line 360(neg) is %.2f\n", yawRate);
-
-        /* :  left_Motor_Control = right_Motor_Control - torque_Diff/max_Torque_Scale*motor_Control_Voltage_Max; */
-        yawRate_max = yawRate - Linear_Model_B.Sum_h /
-        Linear_Model_P.MaxToqueofMotorsNm_Value * Linear_Model_P.MaxVoltage_Value;
-
-        /* :  if left_Motor_Control < 0 */
-        if (yawRate_max < 0.0) {
-        /* :  left_Motor_Control = 0; */
-        yawRate_max = 0.0;
-        }
+    if (yawRate == 1.0) {
+      /* :  des_yawRate = yawRate_max; */
+      Linear_Model_B.des_yawRate = yawRate_max;
     } else {
-        /* :  else */
-        /* :  left_Motor_Control = throttle_Input*motor_Control_Voltage_Max; */
-        yawRate_max = throttle_scaled *
-        Linear_Model_P.MaxVoltage_Value;
+      /* :  else */
+      /* :  des_yawRate = -yawRate_max; */
+      Linear_Model_B.des_yawRate = -yawRate_max;
+    }
+  }
 
-        /* :  right_Motor_Control = left_Motor_Control - torque_Diff/max_Torque_Scale*motor_Control_Voltage_Max; */
-        yawRate = yawRate_max - /*Linear_Model_B.Sum_h*/ 1 /
-        Linear_Model_P.MaxToqueofMotorsNm_Value * Linear_Model_P.MaxVoltage_Value;
+  /* End of MATLAB Function: '<Root>/Desired_yawRate' */
 
-		//printf("The value of yawRate_max is %.2f, Linear_Model_B.Sum_h is %.2f, Linear_Model_P.MaxToqueofMotorsNm_Value is %.2f, Linear_Model_P.MaxVoltage_Value is %.2f\n", yawRate_max, Linear_Model_B.Sum_h, Linear_Model_P.MaxToqueofMotorsNm_Value, Linear_Model_P.MaxVoltage_Value);
-		//printf("The value of yawRate on line 381(pos) is %.2f\n", yawRate);
+  /* Integrator: '<S5>/Integrator' */
+  Linear_Model_B.x[0] = Linear_Model_X.VyYaw_rate[0];
+  Linear_Model_B.x[1] = Linear_Model_X.VyYaw_rate[1];
 
-        /* :  if right_Motor_Control < 0 */
-        if (yawRate < 0.0) {
-        /* :  right_Motor_Control = 0; */
-        yawRate = 0.0;
-        }
+  /* Sum: '<Root>/Sum' */
+  Linear_Model_B.Sum = Linear_Model_B.des_yawRate - Linear_Model_B.x[1];
+
+  /* Lookup_n-D: '<Root>/1-D Lookup Table' incorporates:
+   *  Inport: '<Root>/V_CG'
+   */
+  Linear_Model_B.uDLookupTable = look1_binlxpw(speed_scaled,
+    Linear_Model_P.uDLookupTable_bp01Data,
+    Linear_Model_P.uDLookupTable_tableData, 6U);
+
+  /* Product: '<S42>/PProd Out' */
+  Linear_Model_B.PProdOut = Linear_Model_B.Sum * Linear_Model_B.uDLookupTable;
+
+  /* Integrator: '<S37>/Integrator' */
+  Linear_Model_B.Integrator = Linear_Model_X.Integrator_CSTATE;
+
+  /* Product: '<S31>/DProd Out' incorporates:
+   *  Constant: '<Root>/Constant3'
+   */
+  Linear_Model_B.DProdOut = Linear_Model_B.Sum * Linear_Model_P.Constant3_Value;
+
+  /* Integrator: '<S32>/Filter' */
+  Linear_Model_B.Filter = Linear_Model_X.Filter_CSTATE;
+
+  /* Sum: '<S32>/SumD' */
+  Linear_Model_B.SumD = Linear_Model_B.DProdOut - Linear_Model_B.Filter;
+
+  /* Product: '<S40>/NProd Out' */
+  Linear_Model_B.NProdOut = Linear_Model_B.SumD * 0.0;
+
+  /* Sum: '<S46>/Sum' */
+  Linear_Model_B.Sum_h = (Linear_Model_B.PProdOut + Linear_Model_B.Integrator) +
+    Linear_Model_B.NProdOut;
+
+  /* MATLAB Function: '<Root>/MATLAB Function' incorporates:
+   *  Constant: '<Root>/Max Toque of Motors (N*m)'
+   *  Constant: '<Root>/Max Voltage'
+   *  Inport: '<Root>/Steering Angle Encoder'
+   *  Inport: '<Root>/throttle_Input'
+   */
+  /* :  if (sign(steering_In) == 1) */
+  yawRate_max = steering_scaled;
+  if (!rtIsNaN(yawRate_max)) {
+    if (yawRate_max < 0.0) {
+      yawRate_max = -1.0;
+    } else {
+      yawRate_max = (yawRate_max > 0.0);
+    }
+  }
+
+  if (yawRate_max == 1.0) {
+    /* :  right_Motor_Control = throttle_Input*motor_Control_Voltage_Max; */
+    yawRate = throttle_scaled * Linear_Model_P.MaxVoltage_Value;
+
+    /* :  left_Motor_Control = right_Motor_Control - torque_Diff/max_Torque_Scale*motor_Control_Voltage_Max; */
+    yawRate_max = yawRate - Linear_Model_B.Sum_h /
+      Linear_Model_P.MaxToqueofMotorsNm_Value * Linear_Model_P.MaxVoltage_Value;
+
+    /* :  if left_Motor_Control < 0 */
+    if (yawRate_max < 0.0) {
+      /* :  left_Motor_Control = 0; */
+      yawRate_max = 0.0;
+    }
+  } else {
+    /* :  else */
+    /* :  left_Motor_Control = throttle_Input*motor_Control_Voltage_Max; */
+    yawRate_max = throttle_scaled *
+      Linear_Model_P.MaxVoltage_Value;
+
+    /* :  right_Motor_Control = left_Motor_Control - torque_Diff/max_Torque_Scale*motor_Control_Voltage_Max; */
+    yawRate = yawRate_max - Linear_Model_B.Sum_h /
+      Linear_Model_P.MaxToqueofMotorsNm_Value * Linear_Model_P.MaxVoltage_Value;
+
+    /* :  if right_Motor_Control < 0 */
+    if (yawRate < 0.0) {
+      /* :  right_Motor_Control = 0; */
+      yawRate = 0.0;
+    }
+  }
+
+  Linear_Model_B.right_Motor_Control = yawRate;
+  printf("Right: %f", Linear_Model_B.right_Motor_Control);
+  Linear_Model_B.left_Motor_Control = yawRate_max;
+  printf("Left: %f", Linear_Model_B.left_Motor_Control);
+
+  /* End of MATLAB Function: '<Root>/MATLAB Function' */
+
+  /* Outport: '<Root>/right_Motor_Control' */
+  Linear_Model_Y.right_Motor_Control = Linear_Model_B.right_Motor_Control;
+
+  /* Outport: '<Root>/left_Motor_Control' */
+  Linear_Model_Y.left_Motor_Control = Linear_Model_B.left_Motor_Control;
+
+  /* Lookup_n-D: '<Root>/1-D Lookup Table1' incorporates:
+   *  Inport: '<Root>/V_CG'
+   */
+  Linear_Model_B.uDLookupTable1 = look1_binlxpw(speed_scaled,
+    Linear_Model_P.uDLookupTable1_bp01Data,
+    Linear_Model_P.uDLookupTable1_tableData, 6U);
+
+  /* MATLAB Function: '<Root>/MATLAB Function1' incorporates:
+   *  Inport: '<Root>/V_CG'
+   */
+  /* :  g = 9.81; */
+  /* :  Cyf = 20; */
+  /* :  Cyr = 1; */
+  /* :  m = 500; */
+  /* :  l_f = 0.813; */
+  /* :  l_r = 0.783; */
+  /* :  Izz = 190.701; */
+  /* :  K_u = 0.05; */
+  /* :  tr = 0.645; */
+  /* :  Gr = 3.6; */
+  /* :  Rw = 0.25; */
+  /* :  A =[-(Cyf+Cyr)/(m*Vx0), (-l_f*Cyf+l_r*Cyr)/(m*Vx0)-Vx0; (-l_f*Cyf+l_r*Cyr)/... */
+  /* :      (Izz*Vx0), -(l_f^2*Cyf+l_r^2*Cyr)/(Izz*Vx0)]; */
+  Linear_Model_B.A[0] = -21.0 / (500.0 * speed_scaled);
+  Linear_Model_B.A[2] = -15.476999999999999 / (500.0 * speed_scaled) -
+    speed_scaled;
+  Linear_Model_B.A[1] = -15.476999999999999 / (190.701 * speed_scaled);
+  Linear_Model_B.A[3] = -13.832468999999998 / (190.701 * speed_scaled);
+
+  /* :  B = [Cyf/(m*Vx0), 0; (l_f*Cyf)/Izz, 1/(Rw/(2*tr*Gr)*Izz)]; */
+  Linear_Model_B.B[0] = 20.0 / (500.0 * speed_scaled);
+  Linear_Model_B.B[2] = 0.0;
+
+  /* :  C = [1, 1]; */
+  /* :  D = [0, 0]; */
+  Linear_Model_B.B[1] = 0.085264366731165539;
+  Linear_Model_B.C[0] = 1.0;
+  Linear_Model_B.D[0] = 0.0;
+  Linear_Model_B.B[3] = 0.097409032988814967;
+  Linear_Model_B.C[1] = 1.0;
+  Linear_Model_B.D[1] = 0.0;
+
+  /* Product: '<S34>/IProd Out' */
+  Linear_Model_B.IProdOut = Linear_Model_B.Sum * Linear_Model_B.uDLookupTable1;
+
+  /* SignalConversion generated from: '<S5>/Product' incorporates:
+   *  Inport: '<Root>/Steering Angle Encoder'
+   */
+  Linear_Model_B.TmpSignalConversionAtProductInp[0] =
+    steering_scaled;
+  Linear_Model_B.TmpSignalConversionAtProductInp[1] = Linear_Model_B.Sum_h;
+
+  /* Product: '<S5>/Product' */
+  yawRate_max = Linear_Model_B.B[0];
+  yawRate = Linear_Model_B.TmpSignalConversionAtProductInp[0];
+  tmp_0 = Linear_Model_B.TmpSignalConversionAtProductInp[1];
+  yawRate_max *= yawRate;
+  yawRate_max += 0.0 * tmp_0;
+
+  /* Product: '<S5>/Product' */
+  Linear_Model_B.Bu[0] = yawRate_max;
+
+  /* Product: '<S5>/Product' */
+  tmp_1 = 0.085264366731165539 * yawRate;
+  tmp_1 += 0.097409032988814967 * tmp_0;
+
+  /* Product: '<S5>/Product' */
+  Linear_Model_B.Bu[1] = tmp_1;
+
+  /* Product: '<S5>/Product1' */
+  yawRate_max = Linear_Model_B.A[0];
+  tmp_1 = Linear_Model_B.A[1];
+  tmp = Linear_Model_B.A[2];
+  tmp_2 = Linear_Model_B.A[3];
+  yawRate = Linear_Model_B.x[0];
+  tmp_0 = Linear_Model_B.x[1];
+  yawRate_max *= yawRate;
+  yawRate_max += tmp * tmp_0;
+
+  /* Product: '<S5>/Product1' */
+  Linear_Model_B.Ax[0] = yawRate_max;
+
+  /* Sum: '<S5>/Sum' */
+  Linear_Model_B.dx[0] = Linear_Model_B.Bu[0] + Linear_Model_B.Ax[0];
+
+  /* Product: '<S5>/Product1' */
+  tmp_1 *= yawRate;
+  tmp_1 += tmp_2 * tmp_0;
+
+  /* Product: '<S5>/Product1' */
+  Linear_Model_B.Ax[1] = tmp_1;
+
+  /* Sum: '<S5>/Sum' */
+  Linear_Model_B.dx[1] = Linear_Model_B.Bu[1] + Linear_Model_B.Ax[1];
+  if (rtmIsMajorTimeStep(Linear_Model_M)) {
+    /* Matfile logging */
+    // rt_UpdateTXYLogVars(Linear_Model_M->rtwLogInfo, (Linear_Model_M->Timing.t));
+  }                                    /* end MajorTimeStep */
+
+  if (rtmIsMajorTimeStep(Linear_Model_M)) {
+    /* signal main to stop simulation */
+    {                                  /* Sample time: [0.0s, 0.0s] */
+      if ((rtmGetTFinal(Linear_Model_M)!=-1) &&
+          !((rtmGetTFinal(Linear_Model_M)-(((Linear_Model_M->Timing.clockTick1+
+               Linear_Model_M->Timing.clockTickH1* 4294967296.0)) * 0.2)) >
+            (((Linear_Model_M->Timing.clockTick1+
+               Linear_Model_M->Timing.clockTickH1* 4294967296.0)) * 0.2) *
+            (DBL_EPSILON))) {
+        rtmSetErrorStatus(Linear_Model_M, "Simulation finished");
+      }
     }
 
-    Linear_Model_B.right_Motor_Control = yawRate;
-	//printf("The value of yawRate(right) is %f\n", yawRate);
-    Linear_Model_B.left_Motor_Control = yawRate_max;
-	//printf("The value of yawRate_max(left) is %f\n", yawRate_max);
+    rt_ertODEUpdateContinuousStates(&Linear_Model_M->solverInfo);
 
-    /* End of MATLAB Function: '<Root>/MATLAB Function' */
+    /* Update absolute time for base rate */
+    /* The "clockTick0" counts the number of times the code of this task has
+     * been executed. The absolute time is the multiplication of "clockTick0"
+     * and "Timing.stepSize0". Size of "clockTick0" ensures timer will not
+     * overflow during the application lifespan selected.
+     * Timer of this task consists of two 32 bit unsigned integers.
+     * The two integers represent the low bits Timing.clockTick0 and the high bits
+     * Timing.clockTickH0. When the low bit overflows to 0, the high bits increment.
+     */
+    if (!(++Linear_Model_M->Timing.clockTick0)) {
+      ++Linear_Model_M->Timing.clockTickH0;
+    }
 
-    /* Outport: '<Root>/right_Motor_Control' */
-    Linear_Model_Y.right_Motor_Control = Linear_Model_B.right_Motor_Control;
+    Linear_Model_M->Timing.t[0] = rtsiGetSolverStopTime
+      (&Linear_Model_M->solverInfo);
 
-    /* Outport: '<Root>/left_Motor_Control' */
-    Linear_Model_Y.left_Motor_Control = Linear_Model_B.left_Motor_Control;
-
-    /* Lookup_n-D: '<Root>/1-D Lookup Table1' incorporates:
-    *  Inport: '<Root>/V_CG'
-    */
-    Linear_Model_B.uDLookupTable1 = look1_binlxpw(speed_scaled,
-        Linear_Model_P.uDLookupTable1_bp01Data,
-        Linear_Model_P.uDLookupTable1_tableData, 6U);
-
-    /* MATLAB Function: '<Root>/MATLAB Function1' incorporates:
-    *  Inport: '<Root>/V_CG'
-    */
-    /* :  g = 9.81; */
-    /* :  Cyf = 20; */
-    /* :  Cyr = 1; */
-    /* :  m = 500; */
-    /* :  l_f = 0.813; */
-    /* :  l_r = 0.783; */
-    /* :  Izz = 190.701; */
-    /* :  K_u = 0.05; */
-    /* :  tr = 0.645; */
-    /* :  Gr = 3.6; */
-    /* :  Rw = 0.25; */
-    /* :  A =[-(Cyf+Cyr)/(m*Vx0), (-l_f*Cyf+l_r*Cyr)/(m*Vx0)-Vx0; (-l_f*Cyf+l_r*Cyr)/... */
-    /* :      (Izz*Vx0), -(l_f^2*Cyf+l_r^2*Cyr)/(Izz*Vx0)]; */
-    Linear_Model_B.A[0] = -21.0 / (500.0 * speed_scaled);
-    Linear_Model_B.A[2] = -15.476999999999999 / (500.0 * speed_scaled) -
-        speed_scaled;
-    Linear_Model_B.A[1] = -15.476999999999999 / (190.701 * speed_scaled);
-    Linear_Model_B.A[3] = -13.832468999999998 / (190.701 * speed_scaled);
-
-    /* :  B = [Cyf/(m*Vx0), 0; (l_f*Cyf)/Izz, 1/(Rw/(2*tr*Gr)*Izz)]; */
-    Linear_Model_B.B[0] = 20.0 / (500.0 * speed_scaled);
-    Linear_Model_B.B[2] = 0.0;
-
-    /* :  C = [1, 1]; */
-    /* :  D = [0, 0]; */
-    Linear_Model_B.B[1] = 0.085264366731165539;
-    Linear_Model_B.C[0] = 1.0;
-    Linear_Model_B.D[0] = 0.0;
-    Linear_Model_B.B[3] = 0.097409032988814967;
-    Linear_Model_B.C[1] = 1.0;
-    Linear_Model_B.D[1] = 0.0;
-
-    /* Product: '<S34>/IProd Out' */
-    Linear_Model_B.IProdOut = Linear_Model_B.Sum * Linear_Model_B.uDLookupTable1;
-
-    /* SignalConversion generated from: '<S5>/Product' incorporates:
-    *  Inport: '<Root>/Steering Angle Encoder'
-    */
-    Linear_Model_B.TmpSignalConversionAtProductInp[0] =
-        steering_scaled;
-    Linear_Model_B.TmpSignalConversionAtProductInp[1] = Linear_Model_B.Sum_h;
-
-    /* Product: '<S5>/Product' */
-    yawRate_max = Linear_Model_B.B[0];
-    yawRate = Linear_Model_B.TmpSignalConversionAtProductInp[0];
-    tmp_0 = Linear_Model_B.TmpSignalConversionAtProductInp[1];
-    yawRate_max *= yawRate;
-    yawRate_max += 0.0 * tmp_0;
-
-    /* Product: '<S5>/Product' */
-    Linear_Model_B.Bu[0] = yawRate_max;
-
-    /* Product: '<S5>/Product' */
-    tmp_1 = 0.085264366731165539 * yawRate;
-    tmp_1 += 0.097409032988814967 * tmp_0;
-
-    /* Product: '<S5>/Product' */
-    Linear_Model_B.Bu[1] = tmp_1;
-
-    /* Product: '<S5>/Product1' */
-    yawRate_max = Linear_Model_B.A[0];
-    tmp_1 = Linear_Model_B.A[1];
-    tmp = Linear_Model_B.A[2];
-    tmp_2 = Linear_Model_B.A[3];
-    yawRate = Linear_Model_B.x[0];
-    tmp_0 = Linear_Model_B.x[1];
-    yawRate_max *= yawRate;
-    yawRate_max += tmp * tmp_0;
-
-    /* Product: '<S5>/Product1' */
-    Linear_Model_B.Ax[0] = yawRate_max;
-
-    /* Sum: '<S5>/Sum' */
-    Linear_Model_B.dx[0] = Linear_Model_B.Bu[0] + Linear_Model_B.Ax[0];
-
-    /* Product: '<S5>/Product1' */
-    tmp_1 *= yawRate;
-    tmp_1 += tmp_2 * tmp_0;
-
-    /* Product: '<S5>/Product1' */
-    Linear_Model_B.Ax[1] = tmp_1;
-
-    /* Sum: '<S5>/Sum' */
-    Linear_Model_B.dx[1] = Linear_Model_B.Bu[1] + Linear_Model_B.Ax[1];
-    if (rtmIsMajorTimeStep(Linear_Model_M)) {
-        // /* Matfile logging */
-        // rt_UpdateTXYLogVars(Linear_Model_M->rtwLogInfo, (Linear_Model_M->Timing.t));
-    }                                    /* end MajorTimeStep */
-
-    if (rtmIsMajorTimeStep(Linear_Model_M)) {
-        /* signal main to stop simulation */
-        {                                  /* Sample time: [0.0s, 0.0s] */
-        if ((rtmGetTFinal(Linear_Model_M)!=-1) &&
-            !((rtmGetTFinal(Linear_Model_M)-(((Linear_Model_M->Timing.clockTick1+
-                Linear_Model_M->Timing.clockTickH1* 4294967296.0)) * 0.2)) >
-                (((Linear_Model_M->Timing.clockTick1+
-                Linear_Model_M->Timing.clockTickH1* 4294967296.0)) * 0.2) *
-                (DBL_EPSILON))) {
-            rtmSetErrorStatus(Linear_Model_M, "Simulation finished");
-        }
-        }
-
-        rt_ertODEUpdateContinuousStates(&Linear_Model_M->solverInfo);
-
-        /* Update absolute time for base rate */
-        /* The "clockTick0" counts the number of times the code of this task has
-        * been executed. The absolute time is the multiplication of "clockTick0"
-        * and "Timing.stepSize0". Size of "clockTick0" ensures timer will not
-        * overflow during the application lifespan selected.
-        * Timer of this task consists of two 32 bit unsigned integers.
-        * The two integers represent the low bits Timing.clockTick0 and the high bits
-        * Timing.clockTickH0. When the low bit overflows to 0, the high bits increment.
-        */
-        if (!(++Linear_Model_M->Timing.clockTick0)) {
-        ++Linear_Model_M->Timing.clockTickH0;
-        }
-
-        Linear_Model_M->Timing.t[0] = rtsiGetSolverStopTime
-        (&Linear_Model_M->solverInfo);
-
-        {
-        /* Update absolute timer for sample time: [0.2s, 0.0s] */
-        /* The "clockTick1" counts the number of times the code of this task has
-        * been executed. The resolution of this integer timer is 0.2, which is the step size
-        * of the task. Size of "clockTick1" ensures timer will not overflow during the
-        * application lifespan selected.
-        * Timer of this task consists of two 32 bit unsigned integers.
-        * The two integers represent the low bits Timing.clockTick1 and the high bits
-        * Timing.clockTickH1. When the low bit overflows to 0, the high bits increment.
-        */
-        Linear_Model_M->Timing.clockTick1++;
-        if (!Linear_Model_M->Timing.clockTick1) {
-            Linear_Model_M->Timing.clockTickH1++;
-        }
-        }
-    } 
+    {
+      /* Update absolute timer for sample time: [0.2s, 0.0s] */
+      /* The "clockTick1" counts the number of times the code of this task has
+       * been executed. The resolution of this integer timer is 0.2, which is the step size
+       * of the task. Size of "clockTick1" ensures timer will not overflow during the
+       * application lifespan selected.
+       * Timer of this task consists of two 32 bit unsigned integers.
+       * The two integers represent the low bits Timing.clockTick1 and the high bits
+       * Timing.clockTickH1. When the low bit overflows to 0, the high bits increment.
+       */
+      Linear_Model_M->Timing.clockTick1++;
+      if (!Linear_Model_M->Timing.clockTick1) {
+        Linear_Model_M->Timing.clockTickH1++;
+      }
+    }
+  }                                    /* end MajorTimeStep */
 }
 
 /* Derivatives for root system: '<Root>' */
@@ -767,7 +776,7 @@ void Linear_Model_initialize(void)
   /* external outputs */
   (void)memset(&Linear_Model_Y, 0, sizeof(ExtY_Linear_Model_T));
 
-  // /* Matfile logging */
+  /* Matfile logging */
   // rt_StartDataLoggingWithStartTime(Linear_Model_M->rtwLogInfo, 0.0, rtmGetTFinal
   //   (Linear_Model_M), Linear_Model_M->Timing.stepSize0, (&rtmGetErrorStatus
   //   (Linear_Model_M)));
@@ -924,8 +933,8 @@ static void uart_rx_task() {
     static const char *RX_TASK_TAG = "RX_TASK";
     char *data_in = (char *) malloc(BUF_SIZE);
 	float t = 0.1;
-	float vx_current = 0.0;
-	float vy_current = 0.0;
+	float vx_current = 7.0;
+	float vy_current = 7.0;
     while (1) {
         int len_in = uart_read_bytes(UART_PORT_NUM, data_in, (BUF_SIZE - 1), 100 / portTICK_PERIOD_MS);
         if (len_in > 0) {
@@ -933,6 +942,8 @@ static void uart_rx_task() {
           //ESP_LOGI(RX_TASK_TAG, "Read %d bytes: \n'%s'", len_in, data_in);
 		  float x_dir, y_dir, z_dir, steering, throttle;
 		  sscanf(data_in, "%f,%f,%f,%f,%f", &x_dir, &y_dir, &z_dir, &steering, &throttle);
+      printf("Steering: %f\n", steering);
+      printf("Throttle: %f\n", throttle);
 		  //printf("x_dir = %f, y_dir = %f, z_dir = %f, steering = %f, throttle = %f\n", x_dir, y_dir, z_dir, steering, throttle);
 		  float vx_next = vx_current + x_dir * t;
 		  float vy_next = vy_current + y_dir * t;
@@ -942,11 +953,11 @@ static void uart_rx_task() {
 		  float current_speed_input = sqrt(vx_next * vx_next + vy_next * vy_next);
 		  steering_scaled = steering / 1024;
 		  throttle_scaled = throttle / 1024;
-		  printf("Left Motor\t%.3f\tRight Motor\t%.3f\n", thr_left_scaled*steering_scaled, thr_rigt_scaled*(1-steering_scaled));
-		  steering_scaled = steering_scaled - 0.5;	  
+		  // printf("Left Motor\t%.3f\tRight Motor\t%.3f\n", thr_left_scaled*steering_scaled, thr_rigt_scaled*(1-steering_scaled));
+		  steering_scaled = (steering_scaled - 0.5)*2*90/180*3.14;	  
 		  speed_scaled = current_speed_input;
-		  //printf("steering_scaled = %f, throttle_scaled = %f, speed_scaled = %f\n", steering_scaled, throttle_scaled, speed_scaled);
-		  //printf("Current velocity: %f m/s\n", current_speed_input);
+		  printf("steering_scaled = %f, throttle_scaled = %f, speed_scaled = %f\n", steering_scaled, throttle_scaled, speed_scaled);
+		  printf("Current velocity: %f m/s\n", current_speed_input);
 		  //usleep(100000);
         }
         vTaskDelay(pdMS_TO_TICKS(5));
@@ -988,8 +999,8 @@ static void temp_PID_task() {
 
         // Notify dac_left
         // xQueueSend(dac_left_evt_queue_send, &mv_thr_send, 10);
-        vTaskDelay(pdMS_TO_TICKS(1000));
-        //printf("Linear Left: %.2f, linear right: %.2f\n", thr_left_scaled, thr_rigt_scaled);
+        vTaskDelay(pdMS_TO_TICKS(100));
+        printf("Linear Left: %.2f, linear right: %.2f\n", thr_left_scaled, thr_rigt_scaled);
     }
     
     Linear_Model_terminate();
@@ -1034,10 +1045,10 @@ void app_main() {
     gpio_init();
     uart_init();
 
-    xTaskCreate(mcp4725_task,"mcp4725_task",2048,NULL,5,NULL);
+    // xTaskCreate(mcp4725_task,"mcp4725_task",2048,NULL,5,NULL);
     xTaskCreate(uart_rx_task,"uart_rx_task",4096,NULL,5,NULL);
     xTaskCreate(temp_PID_task,"temp_PID_task",4096,NULL,5,NULL);
-    xTaskCreate(speed_emulator_task,"speed_emulator_task",4096,NULL,5,NULL);
+    // xTaskCreate(speed_emulator_task,"speed_emulator_task",4096,NULL,5,NULL);
 
     if (testing_mode)
         xTaskCreate(throttle_emulator_task,"throttle_emulator_task",4096,NULL,5,NULL);

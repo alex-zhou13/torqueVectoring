@@ -7,9 +7,9 @@
  *
  * Code generation for model "Linear_Model".
  *
- * Model version              : 1.11
+ * Model version              : 1.12
  * Simulink Coder version : 9.7 (R2022a) 13-Nov-2021
- * C source code generated on : Thu Mar 23 16:30:31 2023
+ * C source code generated on : Thu Mar 30 15:39:01 2023
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -19,6 +19,7 @@
  */
 
 #include "Linear_Model.h"
+#include <math.h>
 #include "rt_nonfinite.h"
 #include "rtwtypes.h"
 #include "Linear_Model_private.h"
@@ -220,21 +221,38 @@ void Linear_Model_step(void)
   /* :  K_u = 0.05; */
   /* :  tire_road_coeff = 1; */
   /* :  sig = 1; */
+  /* :  steering_Angle = steering_In*2*90/180*pi; */
   /* :  yawRate_max = sig*tire_road_coeff*g/V_CG; */
   yawRate_max = 9.81 / Linear_Model_U.V_CG;
 
-  /* :  yawRate = V_CG/((l_r+l_f)+K_u+V_CG^2) * steering_Angle; */
-  yawRate = Linear_Model_U.V_CG / (Linear_Model_U.V_CG * Linear_Model_U.V_CG +
-    1.6460000000000001) * Linear_Model_U.SteeringAngleEncoder;
+  /* :  yawRate = V_CG/((l_r+l_f)+K_u*V_CG^2) * steering_Angle; */
+  yawRate = Linear_Model_U.V_CG / (Linear_Model_U.V_CG * Linear_Model_U.V_CG *
+    0.05 + 1.596) * (Linear_Model_U.SteeringAngleEncoder * 2.0 * 90.0 / 180.0 *
+                     3.1415926535897931);
 
-  /* :  if (yawRate <= yawRate_max) */
-  if (yawRate <= yawRate_max) {
+  /* :  if (abs(yawRate) <= abs(yawRate_max)) */
+  if (fabs(yawRate) <= fabs(yawRate_max)) {
     /* :  des_yawRate = yawRate; */
     Linear_Model_B.des_yawRate = yawRate;
   } else {
     /* :  else */
-    /* :  des_yawRate = yawRate_max; */
-    Linear_Model_B.des_yawRate = yawRate_max;
+    /* :  if (sign(yawRate) == 1) */
+    if (!rtIsNaN(yawRate)) {
+      if (yawRate < 0.0) {
+        yawRate = -1.0;
+      } else {
+        yawRate = (yawRate > 0.0);
+      }
+    }
+
+    if (yawRate == 1.0) {
+      /* :  des_yawRate = yawRate_max; */
+      Linear_Model_B.des_yawRate = yawRate_max;
+    } else {
+      /* :  else */
+      /* :  des_yawRate = -yawRate_max; */
+      Linear_Model_B.des_yawRate = -yawRate_max;
+    }
   }
 
   /* End of MATLAB Function: '<Root>/Desired_yawRate' */
@@ -280,10 +298,11 @@ void Linear_Model_step(void)
   /* MATLAB Function: '<Root>/MATLAB Function' incorporates:
    *  Constant: '<Root>/Max Toque of Motors (N*m)'
    *  Constant: '<Root>/Max Voltage'
+   *  Inport: '<Root>/Steering Angle Encoder'
    *  Inport: '<Root>/throttle_Input'
    */
-  /* :  if (sign(torque_Diff) == -1) */
-  yawRate_max = Linear_Model_B.Sum_h;
+  /* :  if (sign(steering_In) == 1) */
+  yawRate_max = Linear_Model_U.SteeringAngleEncoder;
   if (!rtIsNaN(yawRate_max)) {
     if (yawRate_max < 0.0) {
       yawRate_max = -1.0;
@@ -292,7 +311,7 @@ void Linear_Model_step(void)
     }
   }
 
-  if (yawRate_max == -1.0) {
+  if (yawRate_max == 1.0) {
     /* :  right_Motor_Control = throttle_Input*motor_Control_Voltage_Max; */
     yawRate = Linear_Model_U.throttle_Input * Linear_Model_P.MaxVoltage_Value;
 
@@ -428,7 +447,7 @@ void Linear_Model_step(void)
   /* Sum: '<S5>/Sum' */
   Linear_Model_B.dx[1] = Linear_Model_B.Bu[1] + Linear_Model_B.Ax[1];
   if (rtmIsMajorTimeStep(Linear_Model_M)) {
-    // /* Matfile logging */
+    /* Matfile logging */
     // rt_UpdateTXYLogVars(Linear_Model_M->rtwLogInfo, (Linear_Model_M->Timing.t));
   }                                    /* end MajorTimeStep */
 
@@ -693,7 +712,7 @@ void Linear_Model_initialize(void)
   /* external outputs */
   (void)memset(&Linear_Model_Y, 0, sizeof(ExtY_Linear_Model_T));
 
-  // /* Matfile logging */
+  /* Matfile logging */
   // rt_StartDataLoggingWithStartTime(Linear_Model_M->rtwLogInfo, 0.0, rtmGetTFinal
   //   (Linear_Model_M), Linear_Model_M->Timing.stepSize0, (&rtmGetErrorStatus
   //   (Linear_Model_M)));

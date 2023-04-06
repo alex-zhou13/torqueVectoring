@@ -49,7 +49,7 @@
 #define I2C_CLK_SPEED 400000 // 400 KHz
 
 #define MCP4725_LEFT_ADDRESS 0x63 // default address
-#define MCP4725_RIGHT_ADDRESS 0x63 // default address
+#define MCP4725_RIGHT_ADDRESS 0x62 // default address
 #define MCP4725_MAX_TICKS (10/portTICK_PERIOD_MS) // max ticks for i2c
 
 /////////////// UART DEF ////////////////
@@ -84,7 +84,7 @@ double speed_scaled; // as input, where do we get these?
 double something = 0;
 
 // Boolean value to put the program into testing mode
-bool testing_mode = 1;
+bool testing_mode = 0;
 
 /////////////// SIMULINK PI DEFS AND FUNCS ///////////////
 /* Block signals (default storage) */
@@ -821,24 +821,25 @@ static void mcp4725_task() {
     }; // values to write to eeprom, will be set on reboot
 
     mcp4725_eeprom_t eeprom_read_left; // structure to hold the eeprom after we read it
-    // mcp4725_eeprom_t eeprom_read_right; // structure to hold the eeprom after we read it
+    mcp4725_eeprom_t eeprom_read_right; // structure to hold the eeprom after we read it
 
-    ESP_ERROR_CHECK(mcp4725_write_eeprom(dac_left,eeprom_write)); // write the above configuration
-    // ESP_ERROR_CHECK(mcp4725_write_eeprom(dac_right,eeprom_write)); // write the above configuration
+    // ESP_ERROR_CHECK(mcp4725_write_eeprom(dac_left,eeprom_write)); // write the above configuration
+    ESP_ERROR_CHECK(mcp4725_write_eeprom(dac_right,eeprom_write)); // write the above configuration
     vTaskDelay(50 / portTICK_PERIOD_MS); // wait for device
     ESP_ERROR_CHECK(mcp4725_read_eeprom(dac_left,&eeprom_read_left)); // read the eeprom
-    // ESP_ERROR_CHECK(mcp4725_read_eeprom(dac_right,&eeprom_read_right)); // read the eeprom
+    ESP_ERROR_CHECK(mcp4725_read_eeprom(dac_right,&eeprom_read_right)); // read the eeprom
 
     ESP_LOGI(TAG,"Power_Down_Mode Left Saved: %i",eeprom_read_left.power_down_mode); // print the saved configuration
-    // ESP_LOGI(TAG,"Power_Down_Mode Right Saved: %i",eeprom_read_right.power_down_mode); // print the saved configuration
+    ESP_LOGI(TAG,"Power_Down_Mode Right Saved: %i",eeprom_read_right.power_down_mode); // print the saved configuration
     ESP_LOGI(TAG,"Input_Data Left Saved: %i",eeprom_read_left.input_data);
-    // ESP_LOGI(TAG,"Input_Data Right Saved: %i",eeprom_read_right.input_data);
+    ESP_LOGI(TAG,"Input_Data Right Saved: %i",eeprom_read_right.input_data);
+
     // Continuously write values as they arrive via UART
     while (1) {
       int messageData[4] = {0};
         // if xQueueReceive(dac_left_evt_queue_send, &messageData, 100 / portTICK_PERIOD_MS)) {
             ESP_ERROR_CHECK(mcp4725_set_voltage(dac_left,thr_left_scaled*(double) 4095)); // scale from 0-1 to 0-4095 = 5v
-            // ESP_ERROR_CHECK(mcp4725_set_voltage(dac_right,thr_rigt_scaled*(double) 4095)); // scale from 0-1 to 0-4095 = 5v
+            ESP_ERROR_CHECK(mcp4725_set_voltage(dac_right,thr_rigt_scaled*(double) 4095)); // scale from 0-1 to 0-4095 = 5v
             vTaskDelay(pdMS_TO_TICKS(10));
         // }
     }
@@ -1033,7 +1034,7 @@ void throttle_emulator_task() {
     int i = 0;
     while (1) {
         thr_left_scaled = (float) i/10.0;
-        thr_rigt_scaled = (float) i/10.0;
+        thr_rigt_scaled = (float) 1.0-(i/10.0);
         vTaskDelay(pdMS_TO_TICKS(1000));
         i = (i+1)%11;
     }

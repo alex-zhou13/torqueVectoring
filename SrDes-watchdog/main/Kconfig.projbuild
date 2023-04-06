@@ -3,7 +3,7 @@ menu "watchdog Configuration"
     config RELAY_GPIO
         int "Safety Shutdown Relay GPIO number"
         range 0 47
-        default 11
+        default 19
 
     config BLINK_GPIO
         int "LED GPIO number"

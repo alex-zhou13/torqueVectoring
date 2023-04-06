@@ -31,30 +31,6 @@ static const adc_unit_t unit = ADC_UNIT_1;
 #define DURATION        5           // in cumulative seconds sustained
 #define THRESHOLD       3           // voltage threshold to start monitoring
 
-// // LED Values and Functions
-// static uint8_t s_led_state = 0;
-// static led_strip_t *pStrip_a;
-// static void set_led(int red, int green, int blue)
-// {
-//     /* If the addressable LED is enabled */
-//     if (s_led_state) {
-//         /* Set the LED pixel using RGB from 0 (0%) to 255 (100%) for each color */
-//         pStrip_a->set_pixel(pStrip_a, 0, red, green, blue);
-//         /* Refresh the strip to send data */
-//         pStrip_a->refresh(pStrip_a, 100);
-//     } else {
-//         /* Set all LED off to clear all pixels */
-//         pStrip_a->clear(pStrip_a, 50);
-//     }
-// }
-
-// static void configure_led(void)
-// {
-//     /* LED strip initialization with the GPIO and pixels number*/
-//     pStrip_a = led_strip_init(CONFIG_BLINK_LED_RMT_CHANNEL, BLINK_GPIO, 1);
-//     /* Set all LED off to clear all pixels */
-//     pStrip_a->clear(pStrip_a, 50);
-// }
 
 void app_main(void)
 {
@@ -78,11 +54,6 @@ void app_main(void)
 
     // close relay to send power to next component
     gpio_set_level(RELAY_GPIO, 1);
-
-    // Config and set board LED to green
-    // configure_led();
-    // set_led(0,16,0);
-    // s_led_state = 1;
 
     // Continuously sample adc1
     while (1)
@@ -125,12 +96,9 @@ void app_main(void)
     }
 
     // Only happens if there is reason to shut down    
-    // Blink LED red and open Relay
     while (1) {
-        // set_led(255,0,0);
+        printf("Tripped!\n");
         gpio_set_level(RELAY_GPIO, 0);
-        /* Toggle the LED state */
-        // s_led_state = !s_led_state;
         vTaskDelay(pdMS_TO_TICKS(250));
     }
 }

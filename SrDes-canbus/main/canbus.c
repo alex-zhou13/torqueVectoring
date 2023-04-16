@@ -4,13 +4,13 @@
 #include "driver/gpio.h"
 #include "driver/twai.h"
 
-#define TX_GPIO_NUM     (GPIO_NUM_17)
-#define RX_GPIO_NUM     (GPIO_NUM_18)
+#define CAN_TX_GPIO_NUM     (GPIO_NUM_17)
+#define CAN_RX_GPIO_NUM     (GPIO_NUM_18)
 
 void app_main()
 {
     //Initialize configuration structures using macro initializers
-    twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT(TX_GPIO_NUM, RX_GPIO_NUM, TWAI_MODE_NORMAL);
+    twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT(TX_GPIO_NUM, CAN_RX_GPIO_NUM, TWAI_MODE_NORMAL);
     twai_timing_config_t t_config = TWAI_TIMING_CONFIG_500KBITS();
     twai_filter_config_t f_config = TWAI_FILTER_CONFIG_ACCEPT_ALL();
 
@@ -36,7 +36,7 @@ void app_main()
     message.extd = 1;
     message.data_length_code = 4;
     for (int i = 0; i < 4; i++) {
-        message.data[i] = 0;
+        message.data[i] = i;
     }
 
     //Queue message for transmission
@@ -46,27 +46,27 @@ void app_main()
         printf("Failed to queue message for transmission\n");
     }
 
-    // //Wait for message to be received////////////////////////////////////
-    // twai_message_t message;
-    // if (twai_receive(&message, pdMS_TO_TICKS(10000)) == ESP_OK) {
-    //     printf("Message received\n");
-    // } else {
-    //     printf("Failed to receive message\n");
-    //     return;
-    // }
+    //Wait for message to be received////////////////////////////////////
+    twai_message_t message_r;
+    if (twai_receive(&message_r, pdMS_TO_TICKS(10000)) == ESP_OK) {
+        printf("Message received\n");
+    } else {
+        printf("Failed to receive message\n");
+        return;
+    }
 
-    // //Process received message
-    // if (message.extd) {
-    //     printf("Message is in Extended Format\n");
-    // } else {
-    //     printf("Message is in Standard Format\n");
-    // }
-    // printf("ID is %d\n", message.identifier);
-    // if (!(message.rtr)) {
-    //     for (int i = 0; i < message.data_length_code; i++) {
-    //         printf("Data byte %d = %d\n", i, message.data[i]);
-    //     }
-    // }
+    //Process received message
+    if (message_r.extd) {
+        printf("Message is in Extended Format\n");
+    } else {
+        printf("Message is in Standard Format\n");
+    }
+    printf("ID is %ld\n", message_r.identifier);
+    if (!(message_r.rtr)) {
+        for (int i = 0; i < message_r.data_length_code; i++) {
+            printf("Data byte %d = %d\n", i, message_r.data[i]);
+        }
+    }
 
     //Reconfigure alerts to detect Error Passive and Bus-Off error states////////////
     uint32_t alerts_to_enable = TWAI_ALERT_ERR_PASS | TWAI_ALERT_BUS_OFF;

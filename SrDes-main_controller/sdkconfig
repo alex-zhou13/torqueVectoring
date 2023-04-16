@@ -406,6 +406,13 @@ CONFIG_PARTITION_TABLE_MD5=y
 # end of Partition Table
 
 #
+# watchdog Configuration
+#
+CONFIG_RELAY_GPIO=11
+CONFIG_BLINK_GPIO=38
+# end of watchdog Configuration
+
+#
 # Compiler options
 #
 CONFIG_COMPILER_OPTIMIZATION_DEFAULT=y

@@ -21,7 +21,7 @@ int RPM_L = 0;
 int RPM_R = 0;
 bool enable = true;
 bool testing = false;
-bool slip_L = fals
+bool slip_L = false;
 bool slip_R = false;
 
 /////////////// GPIO DEF ////////////////

@@ -77,8 +77,8 @@ int len_out = 4;
 
 /////////////// CAN DEF ////////////////
 QueueHandle_t can_tx_queue = NULL;
-#define CAN_TX_GPIO_NUM (GPIO_NUM_17)
-#define CAN_RX_GPIO_NUM (GPIO_NUM_18)
+#define CAN_TX_GPIO_NUM 1
+#define CAN_RX_GPIO_NUM 2
 
 #define MC_LEFT_ID 0x00
 #define MC_RIGHT_ID 0x01
@@ -908,54 +908,6 @@ static void uart_init() {
     return;
 }
 
-/*
-static void uart_rx_task() {
-// Configure a temporary buffer for the incoming data
-// uint8_t *data = (uint8_t *) malloc(BUF_SIZE);
-// Buffer for input data
-static const char *RX_TASK_TAG = "RX_TASK";
-char *data_in = (char *) malloc(BUF_SIZE);
-while (1) {
-int len_in = uart_read_bytes(UART_PORT_NUM, data_in, (BUF_SIZE - 1), 100 / portTICK_PERIOD_MS);
-if (len_in > 0) {
-data_in[len_in] = '\0';
-ESP_LOGI(RX_TASK_TAG, "Read %d bytes: \n'%s'", len_in, data_in);
-
-// Use sscanf to extract the float values from the string
-sscanf(data_in, "%f,%f,%f,%f,%f", &x_dir, &y_dir, &z_dir, &steering, &throttle);
-// Print the values to verify
-printf("x_dir = %f, y_dir = %f, z_dir = %f, steering = %f, throttle = %f\n", x_dir, y_dir, z_dir, steering, throttle);
-
-
-//split_rx(data_in);
-//something = (double)*accel_x;
-//printf("Something: %f\n", something);
-// if (data_in[0] == start) {
-//     int throttle_mv_lower = data_in[1];
-//     int throttle_mv_upper = data_in[2];
-//     int steering_mv_lower = data_in[3];
-//     // int steering_mv_lower = 0;
-//     int steering_mv_upper = data_in[4];
-//     // int steering_mv_upper = 0;
-//     printf("First value: $.2d", throttle_mv_lower);
-
-//     data_in[len_in] = '\0';
-//     int throttle_mv = throttle_mv_upper*256+throttle_mv_lower;
-//     int steering_mv = steering_mv_upper*256+steering_mv_lower;
-//     throttle_scaled = (double) throttle_mv/5000;
-//     steering_scaled = (double) steering_mv/5000 - 0.5;
-//     // printf("UART data Recieved: th_left=%d\th_right=%d (mV) \n", throttle_mv, steering_mv);
-//     // printf("Values converted:   throttle=%f\tsteering=%f\n", throttle_scaled, steering_scaled);
-//     // // Notify PID
-//     // xQueueSend(uart_evt_queue_send, &mv_thr_send, 10);
-// }
-}
-vTaskDelay(pdMS_TO_TICKS(5));
-}
-free(data_in);
-}
-*/
-
 static void uart_rx_task() {
     static const char *RX_TASK_TAG = "RX_TASK";
     char *data_in = (char *)malloc(BUF_SIZE);
@@ -1081,7 +1033,7 @@ We will not be processing any outgoing CAN bus commands, only recieving very sel
 */
 void can_init() {
     // Initialize configuration structures using macro initializers
-    twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT(TX_GPIO_NUM, CAN_RX_GPIO_NUM, TWAI_MODE_NORMAL);
+    twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT(CAN_TX_GPIO_NUM, CAN_RX_GPIO_NUM, TWAI_MODE_NORMAL);
     twai_timing_config_t t_config = TWAI_TIMING_CONFIG_500KBITS(); // 500 Kbit/s
     twai_filter_config_t f_config = TWAI_FILTER_CONFIG_ACCEPT_ALL();
 
@@ -1109,7 +1061,7 @@ void can_tx_task()
     // Incoming format: Packet ID | Node ID (Ex) | Data Bytes
     int txBuffer[10];
     while (1) {
-        if (xQueueReceive(queue, &(txBuffer), (TickType_t)5)) {
+        if (xQueueReceive(can_tx_queue, &(txBuffer), (TickType_t)5)) {
             // Configure message to transmit
             twai_message_t message;
             message.identifier = txBuffer[0] * pow(2, 8) + txBuffer[1]; // PacketID and NodeID
@@ -1128,7 +1080,7 @@ void can_tx_task()
             }
         }
         else {
-            printf("No message queued for transmission right now\n")
+            printf("No message queued for transmission right now\n");
         }
     }
 }
@@ -1143,7 +1095,6 @@ void can_rx_task() {
         }
         else {
             printf("Failed to receive message after %d seconds\n", waitticks / 1000);
-            return;
         }
 
         // Process received message
@@ -1153,24 +1104,26 @@ void can_rx_task() {
         if (message.extd) {
             printf("Message is in Extended Format\n");
             packetID = message.identifier >> 8;
-            nodeID = message.identifier % pow(2, 8);
+            nodeID = (int) message.identifier % (int) pow(2, 8);
         }
         else {
             printf("Message is in Standard Format\n");
             packetID = message.identifier >> 5;
-            nodeID = message.identifier % pow(2, 5);
+            nodeID = (int) message.identifier % (int) pow(2, 5);
         }
-        printf("MessageID:\t%ld\nPacketID:\t%ld\nNodeID: \t%ld", message.identifier, packetID, nodeID);
+        printf("MessageID:\t%ld\tPacketID:\t%d\nNodeID:\t%d\t", message.identifier, packetID, nodeID);
         if (!(message.rtr)) {
             // Process each byte
             if (packetID == 0x20) {
                 if (nodeID == MC_LEFT_ID)
-                    RPM_L = message.data[0]<<24 + message.data[1]<<16 + message.data[2]<<8 + message.data[3];
+                    RPM_L = (message.data[0]<<24) + (message.data[1]<<16) + (message.data[2]<<8) + message.data[3];
                 if (nodeID == MC_RIGHT_ID)
-                    RPM_R = message.data[0]<<24 + message.data[1]<<16 + message.data[2]<<8 + message.data[3];
+                    RPM_R = (message.data[0]<<24) + (message.data[1]<<16) + (message.data[2]<<8) + message.data[3];
                 speed_scaled = (double) (RPM_L+RPM_R)/2/SIM_RATIO*SIM_WHEEL_DIAM*3.1415/60;
+                printf("RPM_L:\t%d\tRPM_R:\t%d\tSpeed:\t%f\n",RPM_L,RPM_R, speed_scaled);
             }
         }
+        vTaskDelay(pdMS_TO_TICKS(5));
     }
 }
 
@@ -1229,11 +1182,15 @@ void app_main() {
     i2c_setup();
     gpio_init();
     uart_init();
+    can_init();
 
     // xTaskCreate(mcp4725_task,"mcp4725_task",2048,NULL,5,NULL);
     xTaskCreate(uart_rx_task, "uart_rx_task", 4096, NULL, 5, NULL);
     xTaskCreate(temp_PID_task, "temp_PID_task", 4096, NULL, 5, NULL);
     // xTaskCreate(speed_emulator_task,"speed_emulator_task",4096,NULL,5,NULL);
+    // xTaskCreate(can_tx_task,"can_tx_task",4096,NULL,5,NULL);
+    xTaskCreate(can_rx_task,"can_rx_task",4096,NULL,5,NULL);
+    xTaskCreate(can_alert_task,"can_alert_task",4096,NULL,5,NULL);
 
     if (testing_mode)
         xTaskCreate(throttle_emulator_task, "throttle_emulator_task", 4096, NULL, 5, NULL);

@@ -11,7 +11,7 @@
 // RTOS
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-// #include "freertos/queue.h"
+#include "freertos/queue.h"
 
 // GPIO，UART，ADC, drivers
 #include "driver/uart.h"
@@ -19,6 +19,7 @@
 #include "driver/adc.h"
 #include "esp_adc_cal.h"
 #include "mcp4725.h" // dac_left device driver
+#include "driver/twai.h"
 
 // PI controller
 #include "Linear_Model.h"
@@ -73,10 +74,6 @@
 #define BUF_SIZE (1024)
 char start = 0x1B;
 int len_out = 4;
-
-// /////////////// RTOS DEF ////////////////
-// static xQueueHandle uart_evt_queue_send = NULL;
-// static xQueueHandle dac_left_evt_queue_send = NULL;
 
 /////////////// CAN DEF ////////////////
 QueueHandle_t can_tx_queue = NULL;

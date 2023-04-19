@@ -16,12 +16,12 @@
 /////////////// GLOBALS ////////////////
 double thr_left_scaled;
 double thr_right_scaled;
-#define TIMESTEP        10          // in ms
+#define TIMESTEP        15          // in ms
 int RPM_L = 0;
 int RPM_R = 0;
-bool enable = false;
-bool testing = true;
-bool slip_L = false;
+bool enable = true;
+bool testing = false;
+bool slip_L = fals
 bool slip_R = false;
 
 /////////////// GPIO DEF ////////////////
@@ -29,33 +29,32 @@ bool slip_R = false;
 #define GPIO_RIGHT_SLIP    5
 
 /////////////// MOTOR/SERVO DEF ////////////////
-#define ESC_LEFT_GPIO                (18)   // GPIO connects to the PWM signal line for the left esc/motor
-#define ESC_RIGHT_GPIO               (19)   // GPIO connects to the PWM signal line for the right esc/motor
+#define ESC_LEFT_GPIO                (17)   // GPIO connects to the PWM signal line for the left esc/motor
+#define ESC_RIGHT_GPIO               (18)   // GPIO connects to the PWM signal line for the right esc/motor
 
-#define MAX_MOTOR_DUTY          (1860) // Maximum motor duty in microseconds
-#define TOP_MOTOR_DUTY          (1400) // Maximum motor duty in microseconds
-#define MIN_MOTOR_DUTY          (1280) // Minimum motor duty in microseconds
+#define MAX_MOTOR_DUTY          (1080) // Maximum motor duty in microseconds
+#define MIN_MOTOR_DUTY          (1000) // Minimum motor duty in microseconds
 
 /////////////// ADC DEF ////////////////
 #define DEFAULT_VREF    3300        //Use adc1_vref_to_gpio() to obtain a better estimate
 #define NO_OF_SAMPLES   64          //Multisampling
 static esp_adc_cal_characteristics_t *adc_chars;
 static const adc_channel_t V_LEFT_CHANNEL = ADC_CHANNEL_8, // adc1_8 GPIO9
-                           V_RIGHT_CHANNEL = ADC_CHANNEL_9; // adc1_9 GPIO10
+                           V_RIGHT_CHANNEL = ADC_CHANNEL_9, // adc1_9 GPIO10
                            V_ENABLE_CHANNEL = ADC_CHANNEL_7; // adc1_7 GPIO8
 static const adc_atten_t atten = ADC_ATTEN_DB_11;
 static const adc_unit_t unit = ADC_UNIT_1;
 
 /////////////// CAN DEF ////////////////
 QueueHandle_t can_tx_queue = NULL;
-#define CAN_TX_GPIO_NUM     (GPIO_NUM_17)
-#define CAN_RX_GPIO_NUM     (GPIO_NUM_18)
+#define CAN_TX_GPIO_NUM     1//(GPIO_NUM_43)
+#define CAN_RX_GPIO_NUM     2//(GPIO_NUM_44)
 
 #define MC_LEFT_ID          0x00
 #define MC_RIGHT_ID         0x01
 
-#define GD1_REPORT_FREQ     20  // ms
-#define GD5_REPORT_FREQ     100  // ms
+#define GD1_REPORT_FREQ     500  // ms
+#define GD5_REPORT_FREQ     1000  // ms
 
 /////////////// VEHIC PARAMS DEF //////////////
 #define SIM_MAX_VOLTAGE     237     // V
@@ -71,10 +70,10 @@ QueueHandle_t can_tx_queue = NULL;
 #define SIM_DRAG_COEF       1
 #define SIM_ROLL_COEF       0.1
 #define SIM_FRONT_AREA      1.2
-#define SIM_STA_FRIC_COEF   1
+#define SIM_STA_FRIC_COEF   1.2
 #define SIM_KIN_FRIC_COEF   0.8*SIM_STA_FRIC_COEF // very bad case
 #define SIM_WEIGHT          210     // kg
-#define SIM_TIMESTEP        5       // ms
+#define SIM_TIMESTEP        15       // ms
 #define SIM_LENGTH          2       // m
 #define SIM_WIDTH           1.5
 
@@ -98,10 +97,21 @@ static void motor_task() {
     int motor_left_duty ;
     int motor_right_duty;
 
+    // Allow time for the esc to be plugged inESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, motor_left_duty));
+    printf("Plug in ESC now!\n");
+    // ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, MAX_MOTOR_DUTY));
+    // ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_1, MCPWM_TIMER_0, MCPWM_OPR_A, MAX_MOTOR_DUTY));
+    // vTaskDelay(pdMS_TO_TICKS(5000));
+    ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, MIN_MOTOR_DUTY-40));
+    ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_1, MCPWM_TIMER_0, MCPWM_OPR_A, MIN_MOTOR_DUTY-40));
+    vTaskDelay(pdMS_TO_TICKS(10000));
+
+    RPM_L = 0;
+    RPM_R = 0;
     while (1) {
-        motor_left_duty = (TOP_MOTOR_DUTY-MIN_MOTOR_DUTY)*((double) RPM_L/SIM_MAX_RPM)+MIN_MOTOR_DUTY;
-        motor_right_duty = (TOP_MOTOR_DUTY-MIN_MOTOR_DUTY)*((double) RPM_R/SIM_MAX_RPM)+MIN_MOTOR_DUTY;
-        printf("Duty L: %d\tDuty R: %d\n",motor_left_duty,motor_right_duty);
+        motor_left_duty = (int) ((float) (MAX_MOTOR_DUTY-MIN_MOTOR_DUTY)*((float) RPM_L/((float) SIM_MAX_RPM))+MIN_MOTOR_DUTY);
+        motor_right_duty = (int) ((float) (MAX_MOTOR_DUTY-MIN_MOTOR_DUTY)*((float) RPM_R/((float) SIM_MAX_RPM))+MIN_MOTOR_DUTY);
+        // printf("Duty L: %d\tDuty R: %d\n",motor_left_duty,motor_right_duty);
         ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, motor_left_duty));
         ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_1, MCPWM_TIMER_0, MCPWM_OPR_A, motor_right_duty));
         vTaskDelay(pdMS_TO_TICKS(TIMESTEP)); //Add delay, since it takes time for servo to rotate, generally 100ms/60degree rotation under 5V power supply
@@ -110,8 +120,7 @@ static void motor_task() {
 ///////////////// ADC FUNCS /////////////////
 void adc_task() {
     // Configure ADC
-    if (unit == ADC_UNIT_1)
-    {
+    if (unit == ADC_UNIT_1) {
         adc1_config_width(ADC_WIDTH_BIT_12);
         adc1_config_channel_atten(V_LEFT_CHANNEL, atten);
         adc1_config_channel_atten(V_RIGHT_CHANNEL, atten);
@@ -137,9 +146,11 @@ void adc_task() {
         raw_right /= NO_OF_SAMPLES;
         raw_enable /= NO_OF_SAMPLES;
 
+        // printf("Raw Right = %ld\tRaw Left = %ld\n",raw_right, raw_left);
+
         // Convert ADC readings to voltages in mV
         double   v_left = (double) (esp_adc_cal_raw_to_voltage(raw_left, adc_chars) - esp_adc_cal_raw_to_voltage(0, adc_chars) + 1)/1000,
-                 v_right = (double) (esp_adc_cal_raw_to_voltage(raw_right, adc_chars) - esp_adc_cal_raw_to_voltage(0, adc_chars) + 1)/1000;
+                 v_right = (double) (esp_adc_cal_raw_to_voltage(raw_right, adc_chars) - esp_adc_cal_raw_to_voltage(0, adc_chars) + 1)/1000,
                  v_enable = (double) (esp_adc_cal_raw_to_voltage(raw_enable, adc_chars) - esp_adc_cal_raw_to_voltage(0, adc_chars) + 1)/1000;
         
         // Calculate values
@@ -147,11 +158,11 @@ void adc_task() {
 
         enable = (v_enable>2.5); // if "high"
 
-        thr_left_scaled = v_left/5;
-        thr_right_scaled = v_right/5;
+        thr_left_scaled = (v_left/5 > 1) ? 1 : v_left/5;
+        thr_right_scaled = (v_right/5 > 1) ? 1 : v_right/5;
 
         // Print to console
-        printf("Voltage Left\t%.3f\tRight\t%.3f\n", v_left, v_right);
+        // printf("Voltage Left\t%.3f\tRight\t%.3f\tthr_L:\t%.3f\tthr_R:\t%.3f\n", v_left, v_right,thr_left_scaled,thr_right_scaled);
 
         vTaskDelay(pdMS_TO_TICKS(TIMESTEP));
     }
@@ -211,7 +222,7 @@ We will not be processing any incoming CAN bus commands, only sending very selec
 */
 void can_init() {
     //Initialize configuration structures using macro initializers
-    twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT(TX_GPIO_NUM, CAN_RX_GPIO_NUM, TWAI_MODE_NORMAL);
+    twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT(CAN_TX_GPIO_NUM, CAN_RX_GPIO_NUM, TWAI_MODE_NORMAL);
     twai_timing_config_t t_config = TWAI_TIMING_CONFIG_500KBITS(); // 500 Kbit/s
     twai_filter_config_t f_config = TWAI_FILTER_CONFIG_ACCEPT_ALL();
 
@@ -235,11 +246,15 @@ void can_init() {
 void can_tx_task() {
     // Incoming format: Packet ID | Node ID (Ex) | Data Bytes
     int txBuffer[10];
+    while (can_tx_queue == 0) {
+        printf("waiting for queue creation\n");
+        vTaskDelay(pdMS_TO_TICKS(100));
+    }
     while (1) {
         if (xQueueReceive(can_tx_queue, &(txBuffer), (TickType_t)5)) {
             // Configure message to transmit
             twai_message_t message;
-            message.identifier = txBuffer[0]<<8 + txBuffer[1]; // PacketID and NodeID
+            message.identifier = (txBuffer[0]<<8) + txBuffer[1]; // PacketID and NodeID
             message.extd = 1; // Extended format
             message.data_length_code = 8; // Length of message in bytes, always 8 for sending
             for (int i = 0; i < message.data_length_code; i++) {
@@ -248,12 +263,12 @@ void can_tx_task() {
 
             //queue message for transmission
             if (twai_transmit(&message, pdMS_TO_TICKS(1000)) == ESP_OK) {
-                printf("Message queued for transmission\n");
+                // printf("Message queued for transmission\n");
             } else {
                 printf("Failed to queue message for transmission\n");
             }
         } else {
-            printf("No message queued for transmission right now\n")
+            // printf("No message queued for transmission right now\n");
         }
     }
 }
@@ -267,7 +282,6 @@ void can_rx_task() {
             printf("Message received\n");
         } else {
             printf("Failed to receive message after %d seconds\n", waitticks/1000);
-            return;
         }
 
         //Process received message
@@ -276,7 +290,7 @@ void can_rx_task() {
         } else {
             printf("Message is in Standard Format\n");
         }
-        printf("MessageID:\t%ld\nPacketID:\t%ld\nNodeID: \t%ld", message.identifier, message.identifier>>8, message.identifier%pow(2,8));
+        // printf("MessageID:\t%ld\nPacketID:\t%ld\nNodeID: \t%ld", message.identifier, message.identifier>>8, message.identifier%pow(2,8));
         if (!(message.rtr)) {
             for (int i = 0; i < message.data_length_code; i++) {
                 printf("Data byte %d = %d\n", i, message.data[i]);
@@ -339,28 +353,28 @@ static void speed_emulator_task () {
             }
 
             // Calculate speed
-            speed = max((double) speed + (FR+FL)*((double) SIM_TIMESTEP/1000.0)/((double)2*SIM_WEIGHT) - ((double) SIM_ROLL_COEF*SIM_WEIGHT + 0.5*SIM_AIR_DENSITY*SIM_DRAG_COEF*SIM_FRONT_AREA*speed*speed)*((double) SIM_TIMESTEP/1000)/(double)SIM_WEIGHT, 0);
-            
+            speed = (double) speed + (FR+FL)*((double) SIM_TIMESTEP/1000.0)/((double)2*SIM_WEIGHT) - ((double) SIM_ROLL_COEF*SIM_WEIGHT + 0.5*SIM_AIR_DENSITY*SIM_DRAG_COEF*SIM_FRONT_AREA*speed*speed)*((double) SIM_TIMESTEP/1000)/(double)SIM_WEIGHT;
+
             // Apply "brakes" after 2 seconds of no throttle (<1%), acceleration of -5 m/s^2
-            if (thr_left_scaled <= 0.01 || thr_right_scaled <= 0.01) {
+            if (thr_left_scaled <= 0.01 && thr_right_scaled <= 0.01) {
                 idle_time += SIM_TIMESTEP;
                 if (idle_time >= 2000) {
-                    speed = max(speed - (double) 5*SIM_TIMESTEP/1000,0)
+                    speed = speed - (double) 5*SIM_TIMESTEP/1000;
                     idle_time = 2000;
                 }
             } else {
                 idle_time = 0;
             }
             
-            // Limit speed by (non-slip) RPM limit
-            speed = min(speed, SIM_MAX_RPM/SIM_RATIO*SIM_WHEEL_DIAM*3.1415/60);
-
+            // Gate speed by (non-slip) RPM limit and 0 (no reverse)
+            speed = (speed >= SIM_MAX_RPM/SIM_RATIO*SIM_WHEEL_DIAM*3.1415/60) ? SIM_MAX_RPM/SIM_RATIO*SIM_WHEEL_DIAM*3.1415/60 : speed;
+            speed = (speed >= 0) ? speed : 0;
+            
             // Calculate RPM, global var
             // If slip, say gains 1000 RPM per second, otherwise determined by wheel speed
-            RPM_L = (slip_L) ? (RPM_L + SIM_TIMESTEP) : (double) speed / (SIM_WHEEL_DIAM*3.1415) * SIM_RATIO * 60;
-            RPM_R = (slip_R) ? (RPM_R + SIM_TIMESTEP) : (double) speed / (SIM_WHEEL_DIAM*3.1415) * SIM_RATIO * 60;
+            RPM_L = (slip_L) ? ((RPM_L >= SIM_MAX_RPM) ? SIM_MAX_RPM : RPM_L + SIM_TIMESTEP) : (double) speed / (SIM_WHEEL_DIAM*3.1415) * SIM_RATIO * 60;
+            RPM_R = (slip_R) ? ((RPM_R >= SIM_MAX_RPM) ? SIM_MAX_RPM : RPM_R + SIM_TIMESTEP) : (double) speed / (SIM_WHEEL_DIAM*3.1415) * SIM_RATIO * 60;
             
-            printf("TL:\t%.3f\tTR:\t%.3f\tRPML:\t%d\tRPMR:\t%d\tSpeed:\t%f m\\s\n", thr_left_scaled, thr_rigt_scaled,RPM_L, RPM_R, speed);
             vTaskDelay(pdMS_TO_TICKS(SIM_TIMESTEP));
         } else if (!testing) {
             speed = 0;
@@ -369,17 +383,18 @@ static void speed_emulator_task () {
             vTaskDelay(pdMS_TO_TICKS(SIM_TIMESTEP));
         } else {
             speed = 0;
-            RPM_L = (RPM_L<MIN_MOTOR_DUTY||RPM_L>=TOP_MOTOR_DUTY) ? MIN_MOTOR_DUTY : RPM_L + 20;
+            RPM_L = (RPM_L<0||RPM_L>=SIM_MAX_RPM) ? 0 : RPM_L + 200;
             RPM_R = RPM_L;
             vTaskDelay(pdMS_TO_TICKS(2000));
         }
+    printf("TL:\t%.3f\tTR:\t%.3f\tRPML:\t%d\tRPMR:\t%d\t(RPM_max=%d)\tSpeed:\t%f m\\s\n", thr_left_scaled, thr_right_scaled,RPM_L, RPM_R, SIM_MAX_RPM, speed);
     }
 }
 
 // Sends the data corresponding to "General Data 1" in the DTI HV500 CAN Bus spec
 void gd1_report_task() {
     int txBuffer[10];
-    can_tx_queue = xQueueCreate(5, sizeof(txBuffer)); 
+    can_tx_queue = xQueueCreate(50, sizeof(txBuffer)); 
     if (can_tx_queue == 0)
     {
         printf("Failed to create can_tx_queue= %p\n", can_tx_queue);
@@ -431,7 +446,7 @@ void gd5_report_task() {
         xQueueSend(can_tx_queue, (void*)txBuffer, (TickType_t)0);
         
         txBuffer[1] = MC_RIGHT_ID;
-        txBuffer[2] = (uint8_t) tl;   // throttle R
+        txBuffer[2] = (uint8_t) tr;   // throttle R
         xQueueSend(can_tx_queue, (void*)txBuffer, (TickType_t)0);
 
         vTaskDelay(pdMS_TO_TICKS(GD5_REPORT_FREQ));
@@ -467,7 +482,7 @@ void slip_indicator_task () {
 ///////////////// MAIN FUNC //////////////////
 void app_main(void)
 {
-    can_init;
+    can_init();
     
     xTaskCreate(&motor_task, "motor_task", 4096, NULL, 5, NULL);
     xTaskCreate(&adc_task, "adc_task", 4096, NULL, 5, NULL);

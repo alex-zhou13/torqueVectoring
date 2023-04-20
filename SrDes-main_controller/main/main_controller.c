@@ -19,7 +19,7 @@
 #include "driver/adc.h"
 #include "esp_adc_cal.h"
 #include "mcp4725.h" // dac_left device driver
-//#include "driver/twai.h"
+#include "driver/twai.h"
 
 // PI controller
 #include "Linear_Model.h"
@@ -38,6 +38,7 @@
 #define SIM_NM_PER_A        0.5     // Nm
 #define SIM_MAX_RPM         SIM_MAX_VOLTAGE*SIM_RPM_PER_V
 #define SIM_MAX_TORQUE      SIM_MAX_DISCHARGE*SIM_NM_PER_A
+#define SIM_POLE_PAIRS      10
 
 #define SIM_WHEEL_DIAM      0.5 // m
 #define SIM_RATIO           3.6
@@ -83,6 +84,8 @@ QueueHandle_t can_tx_queue = NULL;
 #define MC_LEFT_ID 0x00
 #define MC_RIGHT_ID 0x01
 
+#define THR_REPORT_FREQ     500 // ms
+
 /////////////// GLOBAL VARS DEF ////////////////
 double throttle_scaled;
 double thr_left_scaled;
@@ -91,7 +94,8 @@ double steering_scaled;
 double speed_scaled;
 int RPM_L = 0;
 int RPM_R = 0;
-bool testing_mode = 0; // Boolean value to put the program into testing mode
+
+bool testing_mode = 1; // Boolean value to put the program into testing mode
 
 /////////////// SIMULINK PI DEFS AND FUNCS ///////////////
 /* Block signals (default storage) */
@@ -945,7 +949,7 @@ We will not be processing any outgoing CAN bus commands, only recieving very sel
 0x22, fault codes only
 0x24, with some variables left blank (0xFFFF)
 */
-/*
+
 void can_init() {
     // Initialize configuration structures using macro initializers
     twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT(CAN_TX_GPIO_NUM, CAN_RX_GPIO_NUM, TWAI_MODE_NORMAL);
@@ -988,14 +992,14 @@ void can_tx_task()
 
             // Queue message for transmission
             if (twai_transmit(&message, pdMS_TO_TICKS(1000)) == ESP_OK) {
-                printf("Message queued for transmission\n");
+                // printf("Message queued for transmission\n");
             }
             else {
                 printf("Failed to queue message for transmission\n");
             }
         }
         else {
-            printf("No message queued for transmission right now\n");
+            // printf("No message queued for transmission right now\n");
         }
     }
 }
@@ -1030,10 +1034,14 @@ void can_rx_task() {
         if (!(message.rtr)) {
             // Process each byte
             if (packetID == 0x20) {
-                if (nodeID == MC_LEFT_ID)
-                    RPM_L = (message.data[0]<<24) + (message.data[1]<<16) + (message.data[2]<<8) + message.data[3];
-                if (nodeID == MC_RIGHT_ID)
-                    RPM_R = (message.data[0]<<24) + (message.data[1]<<16) + (message.data[2]<<8) + message.data[3];
+                if (nodeID == MC_LEFT_ID) {
+                    int ERPM_L = (message.data[0]<<24) + (message.data[1]<<16) + (message.data[2]<<8) + message.data[3];
+                    RPM_L = ERPM_L/SIM_POLE_PAIRS;
+                }
+                if (nodeID == MC_RIGHT_ID) {
+                    int ERPM_R = (message.data[0]<<24) + (message.data[1]<<16) + (message.data[2]<<8) + message.data[3];
+                    RPM_R = ERPM_R/SIM_POLE_PAIRS;
+                }
                 speed_scaled = (double) (RPM_L+RPM_R)/2/SIM_RATIO*SIM_WHEEL_DIAM*3.1415/60;
                 printf("RPM_L:\t%d\tRPM_R:\t%d\tSpeed:\t%f\n",RPM_L,RPM_R, speed_scaled);
             }
@@ -1058,8 +1066,41 @@ void can_alert_task() {
         twai_read_alerts(&alerts_triggered, portMAX_DELAY);
     }
 }
-*/
+
+void throttle_report_task() {
+    int txBuffer[10];
+    can_tx_queue = xQueueCreate(50, sizeof(txBuffer)); 
+    if (can_tx_queue == 0)
+    {
+        printf("Failed to create can_tx_queue= %p\n", can_tx_queue);
+    }
+    
+    while(1) {
+        int TL = thr_left_scaled*1000;
+        txBuffer[0] = 0x05;
+        txBuffer[1] = MC_LEFT_ID;
+        txBuffer[2] = TL>>8;      // Target relative AC current, [15:08]
+        txBuffer[3] = TL;         // Target relative AC current, [07:00]
+        txBuffer[4] = 0xFF;       // Not Used
+        txBuffer[5] = 0xFF;       // Not Used
+        txBuffer[6] = 0xFF;       // Not Used
+        txBuffer[7] = 0xFF;       // Not Used
+        txBuffer[8] = 0xFF;       // Not Used
+        txBuffer[9] = 0xFF;       // Not Used
+        xQueueSend(can_tx_queue, (void*)txBuffer, (TickType_t)0);
+        
+        int TR = thr_rigt_scaled*1000;
+        txBuffer[1] = MC_RIGHT_ID;
+        txBuffer[2] = TR>>8;     // Target relative AC current, [15:08]
+        txBuffer[3] = TR;         // Target relative AC current, [07:00]
+        xQueueSend(can_tx_queue, (void*)txBuffer, (TickType_t)0);
+
+        // printf("TL:\t%d\tTL:\t%d\n",TL,TR);
+        vTaskDelay(pdMS_TO_TICKS(THR_REPORT_FREQ));
+    }
+}
 ///////////////// DEBUGGING/TESTING DUMMY FUNCS //////////////////
+/* NOT USED, NO SUPPORT
 double calc_speed(double speed, double t_left, double t_right) {
     double FL = (double)72 * SIM_RATIO / (SIM_WHEEL_DIAM / 2) * t_left;
     double FR = (double)72 * SIM_RATIO / (SIM_WHEEL_DIAM / 2) * t_right;
@@ -1080,32 +1121,36 @@ static void speed_emulator_task() {
         vTaskDelay(pdMS_TO_TICKS(SIM_TIMESTEP));
         }
     }
-}
+} */
+
 
 void throttle_emulator_task() {
     int i = 0;
     while (1) {
-        thr_left_scaled = (float)i / 10.0;
-        thr_rigt_scaled = (float)1.0 - (i / 10.0);
+        thr_left_scaled = 0.9;
+        thr_rigt_scaled = 0.1;
+        
+        // thr_left_scaled = (float)i / 10.0;
+        // thr_rigt_scaled = (float)1.0 - (i / 10.0);
         vTaskDelay(pdMS_TO_TICKS(1000));
-        i = (i + 1) % 11;
+        // i = (i + 1) % 11;
     }
 }
 
 ///////////////// MAIN FUNC //////////////////
 void app_main() {
+    can_init();
     i2c_setup();
     gpio_init();
     uart_init();
-    //can_init();
 
-    xTaskCreate(mcp4725_task,"mcp4725_task",2048,NULL,5,NULL);
-    xTaskCreate(uart_rx_task, "uart_rx_task", 4096, NULL, 5, NULL);
-    xTaskCreate(temp_PID_task, "temp_PID_task", 4096, NULL, 5, NULL);
-    // xTaskCreate(speed_emulator_task,"speed_emulator_task",4096,NULL,5,NULL);
-    // xTaskCreate(can_tx_task,"can_tx_task",4096,NULL,5,NULL);
-    //xTaskCreate(can_rx_task,"can_rx_task",4096,NULL,5,NULL);
-    //xTaskCreate(can_alert_task,"can_alert_task",4096,NULL,5,NULL);
+    xTaskCreate(mcp4725_task,"mcp4725_task",2048,NULL,2,NULL);
+    xTaskCreate(uart_rx_task, "uart_rx_task", 4096, NULL, 4, NULL);
+    xTaskCreate(temp_PID_task, "temp_PID_task", 4096, NULL, 4, NULL);
+    xTaskCreate(throttle_report_task,"throttle_report_task",4096,NULL,2,NULL);
+    xTaskCreate(can_tx_task,"can_tx_task",4096,NULL,3,NULL);
+    xTaskCreate(can_rx_task,"can_rx_task",4096,NULL,3,NULL);
+    xTaskCreate(can_alert_task,"can_alert_task",4096,NULL,1,NULL);
 
     if (testing_mode)
         xTaskCreate(throttle_emulator_task, "throttle_emulator_task", 4096, NULL, 5, NULL);

@@ -21,6 +21,7 @@ int RPM_L = 0;
 int RPM_R = 0;
 bool enable = true;
 bool testing = false;
+bool CANnotADC = true;
 bool slip_L = false;
 bool slip_R = false;
 
@@ -29,19 +30,24 @@ bool slip_R = false;
 #define GPIO_RIGHT_SLIP    5
 
 /////////////// MOTOR/SERVO DEF ////////////////
-#define ESC_LEFT_GPIO                (17)   // GPIO connects to the PWM signal line for the left esc/motor
-#define ESC_RIGHT_GPIO               (18)   // GPIO connects to the PWM signal line for the right esc/motor
+#define ESC_LR_GPIO                (17)   // GPIO connects to the PWM signal line for the left rear esc/motor
+#define ESC_LF_GPIO                (15)   // GPIO connects to the PWM signal line for the left front esc/motor
+#define ESC_RR_GPIO                (18)   // GPIO connects to the PWM signal line for the right rear esc/motor
+#define ESC_RF_GPIO                (16)   // GPIO connects to the PWM signal line for the right front esc/motor
 
 #define MAX_MOTOR_DUTY          (1080) // Maximum motor duty in microseconds
 #define MIN_MOTOR_DUTY          (1000) // Minimum motor duty in microseconds
 
 /////////////// ADC DEF ////////////////
-#define DEFAULT_VREF    3300        //Use adc1_vref_to_gpio() to obtain a better estimate
+#define DEFAULT_VREF    1100        //Use adc1_vref_to_gpio() to obtain a better estimate
 #define NO_OF_SAMPLES   64          //Multisampling
 static esp_adc_cal_characteristics_t *adc_chars;
 static const adc_channel_t V_LEFT_CHANNEL = ADC_CHANNEL_8, // adc1_8 GPIO9
                            V_RIGHT_CHANNEL = ADC_CHANNEL_9, // adc1_9 GPIO10
                            V_ENABLE_CHANNEL = ADC_CHANNEL_7; // adc1_7 GPIO8
+// static const adc_channel_t V_LEFT_CHANNEL = ADC_CHANNEL_5, // adc1_8 GPIO9
+//                            V_RIGHT_CHANNEL = ADC_CHANNEL_6, // adc1_9 GPIO10
+//                            V_ENABLE_CHANNEL = ADC_CHANNEL_7; // adc1_7 GPIO8
 static const adc_atten_t atten = ADC_ATTEN_DB_11;
 static const adc_unit_t unit = ADC_UNIT_1;
 
@@ -63,6 +69,7 @@ QueueHandle_t can_tx_queue = NULL;
 #define SIM_NM_PER_A        0.5     // Nm
 #define SIM_MAX_RPM         SIM_MAX_VOLTAGE*SIM_RPM_PER_V
 #define SIM_MAX_TORQUE      SIM_MAX_DISCHARGE*SIM_NM_PER_A
+#define SIM_POLE_PAIRS      10
 
 #define SIM_WHEEL_DIAM      0.5     // m
 #define SIM_RATIO           3.6
@@ -81,8 +88,10 @@ QueueHandle_t can_tx_queue = NULL;
 // Basic task that inits motor and sets speeds
 static void motor_task() {
     // Init Motor and servo
-    mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM0A, ESC_LEFT_GPIO); // To drive a RC servo, one MCPWM generator is enough
-    mcpwm_gpio_init(MCPWM_UNIT_1, MCPWM0A, ESC_RIGHT_GPIO); // To drive a RC servo, one MCPWM generator is enough
+    mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM0A, ESC_LR_GPIO); // To drive a RC servo, one MCPWM generator is enough
+    mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM0B, ESC_LF_GPIO); // To drive a RC servo, one MCPWM generator is enough
+    mcpwm_gpio_init(MCPWM_UNIT_1, MCPWM0A, ESC_RR_GPIO); // To drive a RC servo, one MCPWM generator is enough
+    mcpwm_gpio_init(MCPWM_UNIT_1, MCPWM0B, ESC_RF_GPIO); // To drive a RC servo, one MCPWM generator is enough
 
     mcpwm_config_t pwm_config = {
         .frequency = 50, // frequency = 50Hz, i.e. for every servo motor time period should be 20ms
@@ -94,26 +103,35 @@ static void motor_task() {
     mcpwm_init(MCPWM_UNIT_0, MCPWM_TIMER_0, &pwm_config);
     mcpwm_init(MCPWM_UNIT_1, MCPWM_TIMER_0, &pwm_config);
 
-    int motor_left_duty ;
-    int motor_right_duty;
+    int motor_lr_duty;
+    int motor_lf_duty;
+    int motor_rr_duty;
+    int motor_rf_duty;
 
-    // Allow time for the esc to be plugged inESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, motor_left_duty));
+    // Allow time for the esc to be plugged inESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, motor_lr_duty));
     printf("Plug in ESC now!\n");
     // ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, MAX_MOTOR_DUTY));
     // ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_1, MCPWM_TIMER_0, MCPWM_OPR_A, MAX_MOTOR_DUTY));
     // vTaskDelay(pdMS_TO_TICKS(5000));
     ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, MIN_MOTOR_DUTY-40));
+    ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, MIN_MOTOR_DUTY-40));
     ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_1, MCPWM_TIMER_0, MCPWM_OPR_A, MIN_MOTOR_DUTY-40));
+    ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_1, MCPWM_TIMER_0, MCPWM_OPR_B, MIN_MOTOR_DUTY-40));
     vTaskDelay(pdMS_TO_TICKS(10000));
 
     RPM_L = 0;
     RPM_R = 0;
     while (1) {
-        motor_left_duty = (int) ((float) (MAX_MOTOR_DUTY-MIN_MOTOR_DUTY)*((float) RPM_L/((float) SIM_MAX_RPM))+MIN_MOTOR_DUTY);
-        motor_right_duty = (int) ((float) (MAX_MOTOR_DUTY-MIN_MOTOR_DUTY)*((float) RPM_R/((float) SIM_MAX_RPM))+MIN_MOTOR_DUTY);
-        // printf("Duty L: %d\tDuty R: %d\n",motor_left_duty,motor_right_duty);
-        ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, motor_left_duty));
-        ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_1, MCPWM_TIMER_0, MCPWM_OPR_A, motor_right_duty));
+        motor_lr_duty = (int) ((float) (MAX_MOTOR_DUTY-MIN_MOTOR_DUTY)*((float) RPM_L/((float) SIM_MAX_RPM))+MIN_MOTOR_DUTY);
+        motor_lf_duty = (int) ((float) (MAX_MOTOR_DUTY-MIN_MOTOR_DUTY)*thr_left_scaled+MIN_MOTOR_DUTY);
+        motor_rr_duty = (int) ((float) (MAX_MOTOR_DUTY-MIN_MOTOR_DUTY)*((float) RPM_R/((float) SIM_MAX_RPM))+MIN_MOTOR_DUTY);
+        motor_rf_duty = (int) ((float) (MAX_MOTOR_DUTY-MIN_MOTOR_DUTY)*thr_right_scaled+MIN_MOTOR_DUTY);
+
+        // printf("Duty L: %d\tDuty R: %d\n",motor_lr_duty,motor_rr_duty);
+        ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, motor_lr_duty));
+        ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, motor_lf_duty));
+        ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_1, MCPWM_TIMER_0, MCPWM_OPR_A, motor_rr_duty));
+        ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_1, MCPWM_TIMER_0, MCPWM_OPR_B, motor_rf_duty));
         vTaskDelay(pdMS_TO_TICKS(TIMESTEP)); //Add delay, since it takes time for servo to rotate, generally 100ms/60degree rotation under 5V power supply
     }
 }
@@ -158,9 +176,14 @@ void adc_task() {
 
         enable = (v_enable>2.5); // if "high"
 
-        thr_left_scaled = (v_left/5 > 1) ? 1 : v_left/5;
-        thr_right_scaled = (v_right/5 > 1) ? 1 : v_right/5;
-
+        if (testing) {
+            // Do nothing, will be set by simulation
+        } else if (CANnotADC) {
+            // Do nothing, will be set by CAN values
+        } else {
+            thr_left_scaled = (v_left/5 > 1) ? 1 : v_left/5;
+            thr_right_scaled = (v_right/5 > 1) ? 1 : v_right/5;
+        }
         // Print to console
         // printf("Voltage Left\t%.3f\tRight\t%.3f\tthr_L:\t%.3f\tthr_R:\t%.3f\n", v_left, v_right,thr_left_scaled,thr_right_scaled);
 
@@ -280,22 +303,47 @@ void can_rx_task() {
         int waitticks = 10000;
         if (twai_receive(&message, pdMS_TO_TICKS(waitticks)) == ESP_OK) {
             printf("Message received\n");
-        } else {
-            printf("Failed to receive message after %d seconds\n", waitticks/1000);
+        }
+        else {
+            printf("Failed to receive message after %d seconds\n", waitticks / 1000);
         }
 
-        //Process received message
+        // Process received message
+        int packetID = 0;
+        int nodeID = 0;
+
         if (message.extd) {
             printf("Message is in Extended Format\n");
-        } else {
-            printf("Message is in Standard Format\n");
+            packetID = message.identifier >> 8;
+            nodeID = (int) message.identifier % (int) pow(2, 8);
         }
-        // printf("MessageID:\t%ld\nPacketID:\t%ld\nNodeID: \t%ld", message.identifier, message.identifier>>8, message.identifier%pow(2,8));
+        else {
+            printf("Message is in Standard Format\n");
+            packetID = message.identifier >> 5;
+            nodeID = (int) message.identifier % (int) pow(2, 5);
+        }
+        printf("MessageID:\t%ld\tPacketID:\t%d\nNodeID:\t%d\t", message.identifier, packetID, nodeID);
         if (!(message.rtr)) {
-            for (int i = 0; i < message.data_length_code; i++) {
-                printf("Data byte %d = %d\n", i, message.data[i]);
+            // Process each byte
+            if (packetID == 0x05) {
+                int TL = 0; 
+                int TR = 0;
+                if (nodeID == MC_LEFT_ID) {
+                    TL = (message.data[0]<<8) + message.data[1];
+                    thr_left_scaled = (double) TL/1000.0;
+                    printf("byte0: %d\tbyte1: %d\n",message.data[0],message.data[1]);
+                }
+                if (nodeID == MC_RIGHT_ID) {
+                    TR = (message.data[0]<<8) + message.data[1];
+                    thr_right_scaled = (double) TR/1000.0;
+                    printf("byte0: %d\tbyte1: %d\n",message.data[0],message.data[1]);
+                }
+
+                printf("TL:\t%d\tTR:\t%d\n",TL,TR);
+                printf("Thr_left:\t%f\tThr_right:\t%f\n",thr_left_scaled,thr_right_scaled);
             }
         }
+        vTaskDelay(pdMS_TO_TICKS(5));
     }
 }
     
@@ -376,15 +424,22 @@ static void speed_emulator_task () {
             RPM_R = (slip_R) ? ((RPM_R >= SIM_MAX_RPM) ? SIM_MAX_RPM : RPM_R + SIM_TIMESTEP) : (double) speed / (SIM_WHEEL_DIAM*3.1415) * SIM_RATIO * 60;
             
             vTaskDelay(pdMS_TO_TICKS(SIM_TIMESTEP));
-        } else if (!testing) {
+        } else if (!testing) { // disabled and not testing mode
             speed = 0;
             RPM_L = 0;
             RPM_R = 0;
             vTaskDelay(pdMS_TO_TICKS(SIM_TIMESTEP));
-        } else {
+        } else { // testing mode
             speed = 0;
-            RPM_L = (RPM_L<0||RPM_L>=SIM_MAX_RPM) ? 0 : RPM_L + 200;
+
+            // set RPM
+            RPM_L = (RPM_L<0||RPM_L>=SIM_MAX_RPM) ? 0 : RPM_L + 400;
             RPM_R = RPM_L;
+
+            // set throttle
+            thr_left_scaled = (thr_left_scaled<0||thr_left_scaled>=1) ? 0 : thr_left_scaled + 0.2;
+            thr_right_scaled = (thr_right_scaled<0||thr_right_scaled>=1) ? 0 : thr_right_scaled + 0.2;
+
             vTaskDelay(pdMS_TO_TICKS(2000));
         }
     printf("TL:\t%.3f\tTR:\t%.3f\tRPML:\t%d\tRPMR:\t%d\t(RPM_max=%d)\tSpeed:\t%f m\\s\n", thr_left_scaled, thr_right_scaled,RPM_L, RPM_R, SIM_MAX_RPM, speed);
@@ -401,23 +456,25 @@ void gd1_report_task() {
     }
 
     while (1) {
+        int ERPM_L = RPM_L*SIM_POLE_PAIRS;
         txBuffer[0] = 0x20;
         txBuffer[1] = MC_LEFT_ID;
-        txBuffer[2] = (uint8_t) RPM_L>>8*3; // ERPM, [31:24]
-        txBuffer[3] = (uint8_t) RPM_L>>8*2; // ERPM, [23:16]
-        txBuffer[4] = (uint8_t) RPM_L>>8*1; // ERPM, [15:08]
-        txBuffer[5] = (uint8_t) RPM_L;      // ERPM, [07:00]
-        txBuffer[6] = (uint8_t) 0xFF;       // Duty Cycle [15:08]
-        txBuffer[7] = (uint8_t) 0xFF;       // Duty Cycle [07:00]
-        txBuffer[8] = (uint8_t) 0xFF;       // Input Voltage [15:08]
-        txBuffer[9] = (uint8_t) 0xFF;       // Input Voltage [07:00]
+        txBuffer[2] = ERPM_L>>8*3; // ERPM, [31:24]
+        txBuffer[3] = ERPM_L>>8*2; // ERPM, [23:16]
+        txBuffer[4] = ERPM_L>>8*1; // ERPM, [15:08]
+        txBuffer[5] = ERPM_L;      // ERPM, [07:00]
+        txBuffer[6] = 0xFF;       // Duty Cycle [15:08]
+        txBuffer[7] = 0xFF;       // Duty Cycle [07:00]
+        txBuffer[8] = 0xFF;       // Input Voltage [15:08]
+        txBuffer[9] = 0xFF;       // Input Voltage [07:00]
         xQueueSend(can_tx_queue, (void*)txBuffer, (TickType_t)0);
         
+        int ERPM_R = RPM_R*SIM_POLE_PAIRS;
         txBuffer[1] = MC_RIGHT_ID;
-        txBuffer[2] = (uint8_t) RPM_R>>8*3; // ERPM, [31:24]
-        txBuffer[3] = (uint8_t) RPM_R>>8*2; // ERPM, [23:16]
-        txBuffer[4] = (uint8_t) RPM_R>>8*1; // ERPM, [15:08]
-        txBuffer[5] = (uint8_t) RPM_R;      // ERPM, [07:00]
+        txBuffer[2] = ERPM_R>>8*3; // ERPM, [31:24]
+        txBuffer[3] = ERPM_R>>8*2; // ERPM, [23:16]
+        txBuffer[4] = ERPM_R>>8*1; // ERPM, [15:08]
+        txBuffer[5] = ERPM_R;      // ERPM, [07:00]
         xQueueSend(can_tx_queue, (void*)txBuffer, (TickType_t)0);
 
         vTaskDelay(pdMS_TO_TICKS(GD1_REPORT_FREQ));
@@ -435,18 +492,18 @@ void gd5_report_task() {
         int tr = thr_right_scaled*127;
         txBuffer[0] = 0x24;
         txBuffer[1] = MC_LEFT_ID;
-        txBuffer[2] = (uint8_t) tl;   // throttle L
-        txBuffer[3] = (uint8_t) 0x00; // brake
-        txBuffer[4] = (uint8_t) 0x00; // digital
-        txBuffer[5] = (uint8_t) enable; // Drive Enable
-        txBuffer[6] = (uint8_t) 0xFF; // Don't care
-        txBuffer[7] = (uint8_t) 0xFF; // Don't care
-        txBuffer[8] = (uint8_t) 0xFF; // Don't care
-        txBuffer[9] = (uint8_t) 0xFF; // Don't care
+        txBuffer[2] = tl;   // throttle L
+        txBuffer[3] = 0x00; // brake
+        txBuffer[4] = 0x00; // digital
+        txBuffer[5] = enable; // Drive Enable
+        txBuffer[6] = 0xFF; // Don't care
+        txBuffer[7] = 0xFF; // Don't care
+        txBuffer[8] = 0xFF; // Don't care
+        txBuffer[9] = 0xFF; // Don't care
         xQueueSend(can_tx_queue, (void*)txBuffer, (TickType_t)0);
         
         txBuffer[1] = MC_RIGHT_ID;
-        txBuffer[2] = (uint8_t) tr;   // throttle R
+        txBuffer[2] = tr;   // throttle R
         xQueueSend(can_tx_queue, (void*)txBuffer, (TickType_t)0);
 
         vTaskDelay(pdMS_TO_TICKS(GD5_REPORT_FREQ));

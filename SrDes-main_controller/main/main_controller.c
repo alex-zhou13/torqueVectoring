@@ -845,8 +845,8 @@ static void uart_rx_task() {
           data_in[len_in] = '\0';
 		  float x_dir, y_dir, z_dir, steering, throttle;
 		  sscanf(data_in, "%f,%f,%f,%f,%f", &x_dir, &y_dir, &z_dir, &steering, &throttle);
-      printf("Steering: %f\n", steering);
-      printf("Throttle: %f\n", throttle);
+      // printf("Steering: %f\n", steering);
+      // printf("Throttle: %f\n", throttle);
 		  float vx_next = vx_current + x_dir * t;
 		  float vy_next = vy_current + y_dir * t;
 		  vx_current = vx_next;
@@ -855,8 +855,9 @@ static void uart_rx_task() {
 		  throttle_scaled = throttle / 1024;
             //steering_scaled = (steering / 1024 - 0.5) * 2 * 90 / 180 * 3.14;
 			steering_scaled = steering/1024 - 0.5;
-            // speed_scaled = current_speed_input;
-		  printf("steering_scaled = %f, throttle_scaled = %f, speed_scaled = %f\n", steering_scaled, throttle_scaled, speed_scaled);
+      // speed_scaled = current_speed_input;
+      speed_scaled = 10;
+		  printf("steering_scaled:\t%f\tthrottle_scaled:\t%f\tspeed_scaled:\t%f\tleft:\t%f\tright:\t%f\n", steering_scaled, throttle_scaled, speed_scaled, thr_left_scaled, thr_rigt_scaled);
         }
         vTaskDelay(pdMS_TO_TICKS(5));
     }
@@ -897,7 +898,6 @@ static void temp_PID_task() {
         // Notify dac_left
         // xQueueSend(dac_left_evt_queue_send, &mv_thr_send, 10);
         vTaskDelay(pdMS_TO_TICKS(100));
-        printf("Linear Left: %.2f, linear right: %.2f\n", thr_left_scaled, thr_rigt_scaled);
     }
     
     Linear_Model_terminate();

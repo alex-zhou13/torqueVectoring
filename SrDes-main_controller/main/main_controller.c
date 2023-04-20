@@ -856,8 +856,8 @@ static void uart_rx_task() {
             //steering_scaled = (steering / 1024 - 0.5) * 2 * 90 / 180 * 3.14;
 			steering_scaled = steering/1024 - 0.5;
       // speed_scaled = current_speed_input;
-      speed_scaled = 10;
-		  printf("steering_scaled:\t%f\tthrottle_scaled:\t%f\tspeed_scaled:\t%f\tleft:\t%f\tright:\t%f\n", steering_scaled, throttle_scaled, speed_scaled, thr_left_scaled, thr_rigt_scaled);
+      // speed_scaled = 10;
+		  printf("steering_scaled:\t%.3f\tthrottle_scaled:\t%.3f\tspeed_scaled:\t%.3f\tleft:\t%.3f\tright:\t%.3f\n", steering_scaled, throttle_scaled, speed_scaled, thr_left_scaled, thr_rigt_scaled);
         }
         vTaskDelay(pdMS_TO_TICKS(5));
     }

@@ -95,7 +95,7 @@ double speed_scaled;
 int RPM_L = 0;
 int RPM_R = 0;
 
-bool testing_mode = 1; // Boolean value to put the program into testing mode
+bool testing_mode = 0; // Boolean value to put the program into testing mode
 
 /////////////// SIMULINK PI DEFS AND FUNCS ///////////////
 /* Block signals (default storage) */

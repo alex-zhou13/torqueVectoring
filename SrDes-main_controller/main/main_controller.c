@@ -849,7 +849,8 @@ static void uart_rx_task() {
 		  vy_current = vy_next;
 		  float current_speed_input = sqrt(vx_next * vx_next + vy_next * vy_next);
 		  throttle_scaled = throttle / 1024;
-            steering_scaled = (steering / 1024 - 0.5) * 2 * 90 / 180 * 3.14;
+            //steering_scaled = (steering / 1024 - 0.5) * 2 * 90 / 180 * 3.14;
+			steering_scaled = steering/1024 - 0.5;
             // speed_scaled = current_speed_input;
 		  printf("steering_scaled = %f, throttle_scaled = %f, speed_scaled = %f\n", steering_scaled, throttle_scaled, speed_scaled);
         }
@@ -1098,7 +1099,7 @@ void app_main() {
     uart_init();
     //can_init();
 
-    // xTaskCreate(mcp4725_task,"mcp4725_task",2048,NULL,5,NULL);
+    xTaskCreate(mcp4725_task,"mcp4725_task",2048,NULL,5,NULL);
     xTaskCreate(uart_rx_task, "uart_rx_task", 4096, NULL, 5, NULL);
     xTaskCreate(temp_PID_task, "temp_PID_task", 4096, NULL, 5, NULL);
     // xTaskCreate(speed_emulator_task,"speed_emulator_task",4096,NULL,5,NULL);

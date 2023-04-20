@@ -7,9 +7,9 @@
  *
  * Code generation for model "Linear_Model".
  *
- * Model version              : 1.12
+ * Model version              : 1.14
  * Simulink Coder version : 9.7 (R2022a) 13-Nov-2021
- * C source code generated on : Thu Mar 30 15:39:01 2023
+ * C source code generated on : Wed Apr 19 00:49:09 2023
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -23,17 +23,27 @@
 /* Block parameters (default storage) */
 P_Linear_Model_T Linear_Model_P = {
   /* Mask Parameter: PIDController_InitialConditionF
-   * Referenced by: '<S32>/Filter'
+   * Referenced by: '<S30>/Filter'
    */
   0.0,
 
   /* Mask Parameter: PIDController_InitialConditio_e
-   * Referenced by: '<S37>/Integrator'
+   * Referenced by: '<S35>/Integrator'
    */
   0.0,
 
-  /* Expression: x0
-   * Referenced by: '<S5>/Integrator'
+  /* Expression: [0, 0.0974090329888150, 0.000170465807730426]
+   * Referenced by: '<Root>/Discrete Transfer Fcn'
+   */
+  { 0.0, 0.097409032988815, 0.000170465807730426 },
+
+  /* Expression: [1, 0.00477228554123995, 9.18837401797686e-07]
+   * Referenced by: '<Root>/Discrete Transfer Fcn'
+   */
+  { 1.0, 0.00477228554123995, 9.18837401797686E-7 },
+
+  /* Expression: 0
+   * Referenced by: '<Root>/Discrete Transfer Fcn'
    */
   0.0,
 

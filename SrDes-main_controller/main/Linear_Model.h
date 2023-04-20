@@ -7,9 +7,9 @@
  *
  * Code generation for model "Linear_Model".
  *
- * Model version              : 1.12
+ * Model version              : 1.14
  * Simulink Coder version : 9.7 (R2022a) 13-Nov-2021
- * C source code generated on : Thu Mar 30 15:39:01 2023
+ * C source code generated on : Wed Apr 19 00:49:09 2023
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -166,50 +166,44 @@
 
 /* Block signals (default storage) */
 typedef struct {
-  real_T x[2];                         /* '<S5>/Integrator' */
+  real_T DiscreteTransferFcn;          /* '<Root>/Discrete Transfer Fcn' */
   real_T Sum;                          /* '<Root>/Sum' */
   real_T uDLookupTable;                /* '<Root>/1-D Lookup Table' */
-  real_T PProdOut;                     /* '<S42>/PProd Out' */
-  real_T Integrator;                   /* '<S37>/Integrator' */
-  real_T DProdOut;                     /* '<S31>/DProd Out' */
-  real_T Filter;                       /* '<S32>/Filter' */
-  real_T SumD;                         /* '<S32>/SumD' */
-  real_T NProdOut;                     /* '<S40>/NProd Out' */
-  real_T Sum_h;                        /* '<S46>/Sum' */
+  real_T PProdOut;                     /* '<S40>/PProd Out' */
+  real_T Integrator;                   /* '<S35>/Integrator' */
+  real_T DProdOut;                     /* '<S29>/DProd Out' */
+  real_T Filter;                       /* '<S30>/Filter' */
+  real_T SumD;                         /* '<S30>/SumD' */
+  real_T NProdOut;                     /* '<S38>/NProd Out' */
+  real_T Sum_h;                        /* '<S44>/Sum' */
   real_T uDLookupTable1;               /* '<Root>/1-D Lookup Table1' */
-  real_T IProdOut;                     /* '<S34>/IProd Out' */
-  real_T TmpSignalConversionAtProductInp[2];
-  real_T Bu[2];                        /* '<S5>/Product' */
-  real_T Ax[2];                        /* '<S5>/Product1' */
-  real_T dx[2];                        /* '<S5>/Sum' */
-  real_T A[4];                         /* '<Root>/MATLAB Function1' */
-  real_T B[4];                         /* '<Root>/MATLAB Function1' */
-  real_T C[2];                         /* '<Root>/MATLAB Function1' */
-  real_T D[2];                         /* '<Root>/MATLAB Function1' */
-  real_T right_Motor_Control;          /* '<Root>/MATLAB Function' */
-  real_T left_Motor_Control;           /* '<Root>/MATLAB Function' */
+  real_T IProdOut;                     /* '<S32>/IProd Out' */
+  real_T right_Motor_Control_out;      /* '<Root>/MATLAB Function' */
+  real_T left_Motor_Control_out;       /* '<Root>/MATLAB Function' */
   real_T des_yawRate;                  /* '<Root>/Desired_yawRate' */
 } B_Linear_Model_T;
 
+/* Block states (default storage) for system '<Root>' */
+typedef struct {
+  real_T DiscreteTransferFcn_states[2];/* '<Root>/Discrete Transfer Fcn' */
+} DW_Linear_Model_T;
+
 /* Continuous states (default storage) */
 typedef struct {
-  real_T VyYaw_rate[2];                /* '<S5>/Integrator' */
-  real_T Integrator_CSTATE;            /* '<S37>/Integrator' */
-  real_T Filter_CSTATE;                /* '<S32>/Filter' */
+  real_T Integrator_CSTATE;            /* '<S35>/Integrator' */
+  real_T Filter_CSTATE;                /* '<S30>/Filter' */
 } X_Linear_Model_T;
 
 /* State derivatives (default storage) */
 typedef struct {
-  real_T VyYaw_rate[2];                /* '<S5>/Integrator' */
-  real_T Integrator_CSTATE;            /* '<S37>/Integrator' */
-  real_T Filter_CSTATE;                /* '<S32>/Filter' */
+  real_T Integrator_CSTATE;            /* '<S35>/Integrator' */
+  real_T Filter_CSTATE;                /* '<S30>/Filter' */
 } XDot_Linear_Model_T;
 
 /* State disabled  */
 typedef struct {
-  boolean_T VyYaw_rate[2];             /* '<S5>/Integrator' */
-  boolean_T Integrator_CSTATE;         /* '<S37>/Integrator' */
-  boolean_T Filter_CSTATE;             /* '<S32>/Filter' */
+  boolean_T Integrator_CSTATE;         /* '<S35>/Integrator' */
+  boolean_T Filter_CSTATE;             /* '<S30>/Filter' */
 } XDis_Linear_Model_T;
 
 #ifndef ODE3_INTG
@@ -232,23 +226,31 @@ typedef struct {
 
 /* External outputs (root outports fed by signals with default storage) */
 typedef struct {
-  real_T right_Motor_Control;          /* '<Root>/right_Motor_Control' */
-  real_T left_Motor_Control;           /* '<Root>/left_Motor_Control' */
+  real_T right_Motor_Control_out;      /* '<Root>/right_Motor_Control_out' */
+  real_T left_Motor_Control_out;       /* '<Root>/left_Motor_Control_out' */
 } ExtY_Linear_Model_T;
 
 /* Parameters (default storage) */
 struct P_Linear_Model_T_ {
   real_T PIDController_InitialConditionF;
                               /* Mask Parameter: PIDController_InitialConditionF
-                               * Referenced by: '<S32>/Filter'
+                               * Referenced by: '<S30>/Filter'
                                */
   real_T PIDController_InitialConditio_e;
                               /* Mask Parameter: PIDController_InitialConditio_e
-                               * Referenced by: '<S37>/Integrator'
+                               * Referenced by: '<S35>/Integrator'
                                */
-  real_T Integrator_IC;                /* Expression: x0
-                                        * Referenced by: '<S5>/Integrator'
-                                        */
+  real_T DiscreteTransferFcn_NumCoef[3];
+                    /* Expression: [0, 0.0974090329888150, 0.000170465807730426]
+                     * Referenced by: '<Root>/Discrete Transfer Fcn'
+                     */
+  real_T DiscreteTransferFcn_DenCoef[3];
+                   /* Expression: [1, 0.00477228554123995, 9.18837401797686e-07]
+                    * Referenced by: '<Root>/Discrete Transfer Fcn'
+                    */
+  real_T DiscreteTransferFcn_InitialStat;/* Expression: 0
+                                          * Referenced by: '<Root>/Discrete Transfer Fcn'
+                                          */
   real_T uDLookupTable_tableData[7];
                            /* Expression: [305, 395, 450, 500, 510, 475, 450]/19
                             * Referenced by: '<Root>/1-D Lookup Table'
@@ -277,7 +279,7 @@ struct P_Linear_Model_T_ {
 /* Real-time Model Data Structure */
 struct tag_RTM_Linear_Model_T {
   const char_T *errorStatus;
-  // RTWLogInfo *rtwLogInfo;
+  //RTWLogInfo *rtwLogInfo;
   RTWSolverInfo solverInfo;
   X_Linear_Model_T *contStates;
   int_T *periodicContStateIndices;
@@ -287,8 +289,8 @@ struct tag_RTM_Linear_Model_T {
   boolean_T zCCacheNeedsReset;
   boolean_T derivCacheNeedsReset;
   boolean_T CTOutputIncnstWithState;
-  real_T odeY[4];
-  real_T odeF[3][4];
+  real_T odeY[2];
+  real_T odeF[3][2];
   ODE3_IntgData intgData;
 
   /*
@@ -331,6 +333,9 @@ extern B_Linear_Model_T Linear_Model_B;
 /* Continuous states (default storage) */
 extern X_Linear_Model_T Linear_Model_X;
 
+/* Block states (default storage) */
+extern DW_Linear_Model_T Linear_Model_DW;
+
 /* External inputs (root inport signals with default storage) */
 extern ExtU_Linear_Model_T Linear_Model_U;
 
@@ -348,9 +353,6 @@ extern RT_MODEL_Linear_Model_T *const Linear_Model_M;
 /*-
  * These blocks were eliminated from the model due to optimizations:
  *
- * Block '<S5>/Product2' : Unused code path elimination
- * Block '<S5>/Product3' : Unused code path elimination
- * Block '<S5>/Sum1' : Unused code path elimination
  * Block '<Root>/Cast To Double' : Eliminate redundant data type conversion
  * Block '<Root>/Cast To Double1' : Eliminate redundant data type conversion
  * Block '<Root>/Cast To Double2' : Eliminate redundant data type conversion
@@ -375,56 +377,54 @@ extern RT_MODEL_Linear_Model_T *const Linear_Model_M;
  * '<Root>' : 'Linear_Model'
  * '<S1>'   : 'Linear_Model/Desired_yawRate'
  * '<S2>'   : 'Linear_Model/MATLAB Function'
- * '<S3>'   : 'Linear_Model/MATLAB Function1'
- * '<S4>'   : 'Linear_Model/PID Controller'
- * '<S5>'   : 'Linear_Model/Varying State Space'
- * '<S6>'   : 'Linear_Model/PID Controller/Anti-windup'
- * '<S7>'   : 'Linear_Model/PID Controller/D Gain'
- * '<S8>'   : 'Linear_Model/PID Controller/Filter'
- * '<S9>'   : 'Linear_Model/PID Controller/Filter ICs'
- * '<S10>'  : 'Linear_Model/PID Controller/I Gain'
- * '<S11>'  : 'Linear_Model/PID Controller/Ideal P Gain'
- * '<S12>'  : 'Linear_Model/PID Controller/Ideal P Gain Fdbk'
- * '<S13>'  : 'Linear_Model/PID Controller/Integrator'
- * '<S14>'  : 'Linear_Model/PID Controller/Integrator ICs'
- * '<S15>'  : 'Linear_Model/PID Controller/N Copy'
- * '<S16>'  : 'Linear_Model/PID Controller/N Gain'
- * '<S17>'  : 'Linear_Model/PID Controller/P Copy'
- * '<S18>'  : 'Linear_Model/PID Controller/Parallel P Gain'
- * '<S19>'  : 'Linear_Model/PID Controller/Reset Signal'
- * '<S20>'  : 'Linear_Model/PID Controller/Saturation'
- * '<S21>'  : 'Linear_Model/PID Controller/Saturation Fdbk'
- * '<S22>'  : 'Linear_Model/PID Controller/Sum'
- * '<S23>'  : 'Linear_Model/PID Controller/Sum Fdbk'
- * '<S24>'  : 'Linear_Model/PID Controller/Tracking Mode'
- * '<S25>'  : 'Linear_Model/PID Controller/Tracking Mode Sum'
- * '<S26>'  : 'Linear_Model/PID Controller/Tsamp - Integral'
- * '<S27>'  : 'Linear_Model/PID Controller/Tsamp - Ngain'
- * '<S28>'  : 'Linear_Model/PID Controller/postSat Signal'
- * '<S29>'  : 'Linear_Model/PID Controller/preSat Signal'
- * '<S30>'  : 'Linear_Model/PID Controller/Anti-windup/Passthrough'
- * '<S31>'  : 'Linear_Model/PID Controller/D Gain/External Parameters'
- * '<S32>'  : 'Linear_Model/PID Controller/Filter/Cont. Filter'
- * '<S33>'  : 'Linear_Model/PID Controller/Filter ICs/Internal IC - Filter'
- * '<S34>'  : 'Linear_Model/PID Controller/I Gain/External Parameters'
- * '<S35>'  : 'Linear_Model/PID Controller/Ideal P Gain/Passthrough'
- * '<S36>'  : 'Linear_Model/PID Controller/Ideal P Gain Fdbk/Disabled'
- * '<S37>'  : 'Linear_Model/PID Controller/Integrator/Continuous'
- * '<S38>'  : 'Linear_Model/PID Controller/Integrator ICs/Internal IC'
- * '<S39>'  : 'Linear_Model/PID Controller/N Copy/Disabled'
- * '<S40>'  : 'Linear_Model/PID Controller/N Gain/External Parameters'
- * '<S41>'  : 'Linear_Model/PID Controller/P Copy/Disabled'
- * '<S42>'  : 'Linear_Model/PID Controller/Parallel P Gain/External Parameters'
- * '<S43>'  : 'Linear_Model/PID Controller/Reset Signal/Disabled'
- * '<S44>'  : 'Linear_Model/PID Controller/Saturation/Passthrough'
- * '<S45>'  : 'Linear_Model/PID Controller/Saturation Fdbk/Disabled'
- * '<S46>'  : 'Linear_Model/PID Controller/Sum/Sum_PID'
- * '<S47>'  : 'Linear_Model/PID Controller/Sum Fdbk/Disabled'
- * '<S48>'  : 'Linear_Model/PID Controller/Tracking Mode/Disabled'
- * '<S49>'  : 'Linear_Model/PID Controller/Tracking Mode Sum/Passthrough'
- * '<S50>'  : 'Linear_Model/PID Controller/Tsamp - Integral/Passthrough'
- * '<S51>'  : 'Linear_Model/PID Controller/Tsamp - Ngain/Passthrough'
- * '<S52>'  : 'Linear_Model/PID Controller/postSat Signal/Forward_Path'
- * '<S53>'  : 'Linear_Model/PID Controller/preSat Signal/Forward_Path'
+ * '<S3>'   : 'Linear_Model/PID Controller'
+ * '<S4>'   : 'Linear_Model/PID Controller/Anti-windup'
+ * '<S5>'   : 'Linear_Model/PID Controller/D Gain'
+ * '<S6>'   : 'Linear_Model/PID Controller/Filter'
+ * '<S7>'   : 'Linear_Model/PID Controller/Filter ICs'
+ * '<S8>'   : 'Linear_Model/PID Controller/I Gain'
+ * '<S9>'   : 'Linear_Model/PID Controller/Ideal P Gain'
+ * '<S10>'  : 'Linear_Model/PID Controller/Ideal P Gain Fdbk'
+ * '<S11>'  : 'Linear_Model/PID Controller/Integrator'
+ * '<S12>'  : 'Linear_Model/PID Controller/Integrator ICs'
+ * '<S13>'  : 'Linear_Model/PID Controller/N Copy'
+ * '<S14>'  : 'Linear_Model/PID Controller/N Gain'
+ * '<S15>'  : 'Linear_Model/PID Controller/P Copy'
+ * '<S16>'  : 'Linear_Model/PID Controller/Parallel P Gain'
+ * '<S17>'  : 'Linear_Model/PID Controller/Reset Signal'
+ * '<S18>'  : 'Linear_Model/PID Controller/Saturation'
+ * '<S19>'  : 'Linear_Model/PID Controller/Saturation Fdbk'
+ * '<S20>'  : 'Linear_Model/PID Controller/Sum'
+ * '<S21>'  : 'Linear_Model/PID Controller/Sum Fdbk'
+ * '<S22>'  : 'Linear_Model/PID Controller/Tracking Mode'
+ * '<S23>'  : 'Linear_Model/PID Controller/Tracking Mode Sum'
+ * '<S24>'  : 'Linear_Model/PID Controller/Tsamp - Integral'
+ * '<S25>'  : 'Linear_Model/PID Controller/Tsamp - Ngain'
+ * '<S26>'  : 'Linear_Model/PID Controller/postSat Signal'
+ * '<S27>'  : 'Linear_Model/PID Controller/preSat Signal'
+ * '<S28>'  : 'Linear_Model/PID Controller/Anti-windup/Passthrough'
+ * '<S29>'  : 'Linear_Model/PID Controller/D Gain/External Parameters'
+ * '<S30>'  : 'Linear_Model/PID Controller/Filter/Cont. Filter'
+ * '<S31>'  : 'Linear_Model/PID Controller/Filter ICs/Internal IC - Filter'
+ * '<S32>'  : 'Linear_Model/PID Controller/I Gain/External Parameters'
+ * '<S33>'  : 'Linear_Model/PID Controller/Ideal P Gain/Passthrough'
+ * '<S34>'  : 'Linear_Model/PID Controller/Ideal P Gain Fdbk/Disabled'
+ * '<S35>'  : 'Linear_Model/PID Controller/Integrator/Continuous'
+ * '<S36>'  : 'Linear_Model/PID Controller/Integrator ICs/Internal IC'
+ * '<S37>'  : 'Linear_Model/PID Controller/N Copy/Disabled'
+ * '<S38>'  : 'Linear_Model/PID Controller/N Gain/External Parameters'
+ * '<S39>'  : 'Linear_Model/PID Controller/P Copy/Disabled'
+ * '<S40>'  : 'Linear_Model/PID Controller/Parallel P Gain/External Parameters'
+ * '<S41>'  : 'Linear_Model/PID Controller/Reset Signal/Disabled'
+ * '<S42>'  : 'Linear_Model/PID Controller/Saturation/Passthrough'
+ * '<S43>'  : 'Linear_Model/PID Controller/Saturation Fdbk/Disabled'
+ * '<S44>'  : 'Linear_Model/PID Controller/Sum/Sum_PID'
+ * '<S45>'  : 'Linear_Model/PID Controller/Sum Fdbk/Disabled'
+ * '<S46>'  : 'Linear_Model/PID Controller/Tracking Mode/Disabled'
+ * '<S47>'  : 'Linear_Model/PID Controller/Tracking Mode Sum/Passthrough'
+ * '<S48>'  : 'Linear_Model/PID Controller/Tsamp - Integral/Passthrough'
+ * '<S49>'  : 'Linear_Model/PID Controller/Tsamp - Ngain/Passthrough'
+ * '<S50>'  : 'Linear_Model/PID Controller/postSat Signal/Forward_Path'
+ * '<S51>'  : 'Linear_Model/PID Controller/preSat Signal/Forward_Path'
  */
 #endif                                 /* RTW_HEADER_Linear_Model_h_ */

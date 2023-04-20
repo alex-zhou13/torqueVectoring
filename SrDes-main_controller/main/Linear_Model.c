@@ -7,9 +7,9 @@
  *
  * Code generation for model "Linear_Model".
  *
- * Model version              : 1.12
+ * Model version              : 1.14
  * Simulink Coder version : 9.7 (R2022a) 13-Nov-2021
- * C source code generated on : Thu Mar 30 15:39:01 2023
+ * C source code generated on : Wed Apr 19 00:49:09 2023
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -30,6 +30,9 @@ B_Linear_Model_T Linear_Model_B;
 
 /* Continuous states */
 X_Linear_Model_T Linear_Model_X;
+
+/* Block states (default storage) */
+DW_Linear_Model_T Linear_Model_DW;
 
 /* External inputs (root inport signals with default storage) */
 ExtU_Linear_Model_T Linear_Model_U;
@@ -128,7 +131,7 @@ static void rt_ertODEUpdateContinuousStates(RTWSolverInfo *si )
   real_T *f2 = id->f[2];
   real_T hB[3];
   int_T i;
-  int_T nXc = 4;
+  int_T nXc = 2;
   rtsiSetSimTimeStep(si,MINOR_TIME_STEP);
 
   /* Save the state values at time t in y, we'll use x as ynew. */
@@ -182,10 +185,6 @@ static void rt_ertODEUpdateContinuousStates(RTWSolverInfo *si )
 /* Model step function */
 void Linear_Model_step(void)
 {
-  real_T tmp;
-  real_T tmp_0;
-  real_T tmp_1;
-  real_T tmp_2;
   real_T yawRate;
   real_T yawRate_max;
   if (rtmIsMajorTimeStep(Linear_Model_M)) {
@@ -256,13 +255,20 @@ void Linear_Model_step(void)
   }
 
   /* End of MATLAB Function: '<Root>/Desired_yawRate' */
+  if (rtmIsMajorTimeStep(Linear_Model_M)) {
+    /* DiscreteTransferFcn: '<Root>/Discrete Transfer Fcn' */
+    yawRate_max = Linear_Model_DW.DiscreteTransferFcn_states[0] *
+      Linear_Model_P.DiscreteTransferFcn_NumCoef[1];
+    yawRate_max += Linear_Model_DW.DiscreteTransferFcn_states[1] *
+      Linear_Model_P.DiscreteTransferFcn_NumCoef[2];
 
-  /* Integrator: '<S5>/Integrator' */
-  Linear_Model_B.x[0] = Linear_Model_X.VyYaw_rate[0];
-  Linear_Model_B.x[1] = Linear_Model_X.VyYaw_rate[1];
+    /* DiscreteTransferFcn: '<Root>/Discrete Transfer Fcn' */
+    Linear_Model_B.DiscreteTransferFcn = yawRate_max;
+  }
 
   /* Sum: '<Root>/Sum' */
-  Linear_Model_B.Sum = Linear_Model_B.des_yawRate - Linear_Model_B.x[1];
+  Linear_Model_B.Sum = Linear_Model_B.des_yawRate -
+    Linear_Model_B.DiscreteTransferFcn;
 
   /* Lookup_n-D: '<Root>/1-D Lookup Table' incorporates:
    *  Inport: '<Root>/V_CG'
@@ -271,27 +277,27 @@ void Linear_Model_step(void)
     Linear_Model_P.uDLookupTable_bp01Data,
     Linear_Model_P.uDLookupTable_tableData, 6U);
 
-  /* Product: '<S42>/PProd Out' */
+  /* Product: '<S40>/PProd Out' */
   Linear_Model_B.PProdOut = Linear_Model_B.Sum * Linear_Model_B.uDLookupTable;
 
-  /* Integrator: '<S37>/Integrator' */
+  /* Integrator: '<S35>/Integrator' */
   Linear_Model_B.Integrator = Linear_Model_X.Integrator_CSTATE;
 
-  /* Product: '<S31>/DProd Out' incorporates:
+  /* Product: '<S29>/DProd Out' incorporates:
    *  Constant: '<Root>/Constant3'
    */
   Linear_Model_B.DProdOut = Linear_Model_B.Sum * Linear_Model_P.Constant3_Value;
 
-  /* Integrator: '<S32>/Filter' */
+  /* Integrator: '<S30>/Filter' */
   Linear_Model_B.Filter = Linear_Model_X.Filter_CSTATE;
 
-  /* Sum: '<S32>/SumD' */
+  /* Sum: '<S30>/SumD' */
   Linear_Model_B.SumD = Linear_Model_B.DProdOut - Linear_Model_B.Filter;
 
-  /* Product: '<S40>/NProd Out' */
+  /* Product: '<S38>/NProd Out' */
   Linear_Model_B.NProdOut = Linear_Model_B.SumD * 0.0;
 
-  /* Sum: '<S46>/Sum' */
+  /* Sum: '<S44>/Sum' */
   Linear_Model_B.Sum_h = (Linear_Model_B.PProdOut + Linear_Model_B.Integrator) +
     Linear_Model_B.NProdOut;
 
@@ -341,16 +347,20 @@ void Linear_Model_step(void)
     }
   }
 
-  Linear_Model_B.right_Motor_Control = yawRate;
-  Linear_Model_B.left_Motor_Control = yawRate_max;
+  /* :  left_Motor_Control_out = left_Motor_Control; */
+  Linear_Model_B.left_Motor_Control_out = yawRate_max;
+
+  /* :  right_Motor_Control_out = right_Motor_Control; */
+  Linear_Model_B.right_Motor_Control_out = yawRate;
 
   /* End of MATLAB Function: '<Root>/MATLAB Function' */
 
-  /* Outport: '<Root>/right_Motor_Control' */
-  Linear_Model_Y.right_Motor_Control = Linear_Model_B.right_Motor_Control;
+  /* Outport: '<Root>/right_Motor_Control_out' */
+  Linear_Model_Y.right_Motor_Control_out =
+    Linear_Model_B.right_Motor_Control_out;
 
-  /* Outport: '<Root>/left_Motor_Control' */
-  Linear_Model_Y.left_Motor_Control = Linear_Model_B.left_Motor_Control;
+  /* Outport: '<Root>/left_Motor_Control_out' */
+  Linear_Model_Y.left_Motor_Control_out = Linear_Model_B.left_Motor_Control_out;
 
   /* Lookup_n-D: '<Root>/1-D Lookup Table1' incorporates:
    *  Inport: '<Root>/V_CG'
@@ -359,96 +369,28 @@ void Linear_Model_step(void)
     Linear_Model_P.uDLookupTable1_bp01Data,
     Linear_Model_P.uDLookupTable1_tableData, 6U);
 
-  /* MATLAB Function: '<Root>/MATLAB Function1' incorporates:
-   *  Inport: '<Root>/V_CG'
-   */
-  /* :  g = 9.81; */
-  /* :  Cyf = 20; */
-  /* :  Cyr = 1; */
-  /* :  m = 500; */
-  /* :  l_f = 0.813; */
-  /* :  l_r = 0.783; */
-  /* :  Izz = 190.701; */
-  /* :  K_u = 0.05; */
-  /* :  tr = 0.645; */
-  /* :  Gr = 3.6; */
-  /* :  Rw = 0.25; */
-  /* :  A =[-(Cyf+Cyr)/(m*Vx0), (-l_f*Cyf+l_r*Cyr)/(m*Vx0)-Vx0; (-l_f*Cyf+l_r*Cyr)/... */
-  /* :      (Izz*Vx0), -(l_f^2*Cyf+l_r^2*Cyr)/(Izz*Vx0)]; */
-  Linear_Model_B.A[0] = -21.0 / (500.0 * Linear_Model_U.V_CG);
-  Linear_Model_B.A[2] = -15.476999999999999 / (500.0 * Linear_Model_U.V_CG) -
-    Linear_Model_U.V_CG;
-  Linear_Model_B.A[1] = -15.476999999999999 / (190.701 * Linear_Model_U.V_CG);
-  Linear_Model_B.A[3] = -13.832468999999998 / (190.701 * Linear_Model_U.V_CG);
-
-  /* :  B = [Cyf/(m*Vx0), 0; (l_f*Cyf)/Izz, 1/(Rw/(2*tr*Gr)*Izz)]; */
-  Linear_Model_B.B[0] = 20.0 / (500.0 * Linear_Model_U.V_CG);
-  Linear_Model_B.B[2] = 0.0;
-
-  /* :  C = [1, 1]; */
-  /* :  D = [0, 0]; */
-  Linear_Model_B.B[1] = 0.085264366731165539;
-  Linear_Model_B.C[0] = 1.0;
-  Linear_Model_B.D[0] = 0.0;
-  Linear_Model_B.B[3] = 0.097409032988814967;
-  Linear_Model_B.C[1] = 1.0;
-  Linear_Model_B.D[1] = 0.0;
-
-  /* Product: '<S34>/IProd Out' */
+  /* Product: '<S32>/IProd Out' */
   Linear_Model_B.IProdOut = Linear_Model_B.Sum * Linear_Model_B.uDLookupTable1;
-
-  /* SignalConversion generated from: '<S5>/Product' incorporates:
-   *  Inport: '<Root>/Steering Angle Encoder'
-   */
-  Linear_Model_B.TmpSignalConversionAtProductInp[0] =
-    Linear_Model_U.SteeringAngleEncoder;
-  Linear_Model_B.TmpSignalConversionAtProductInp[1] = Linear_Model_B.Sum_h;
-
-  /* Product: '<S5>/Product' */
-  yawRate_max = Linear_Model_B.B[0];
-  yawRate = Linear_Model_B.TmpSignalConversionAtProductInp[0];
-  tmp_0 = Linear_Model_B.TmpSignalConversionAtProductInp[1];
-  yawRate_max *= yawRate;
-  yawRate_max += 0.0 * tmp_0;
-
-  /* Product: '<S5>/Product' */
-  Linear_Model_B.Bu[0] = yawRate_max;
-
-  /* Product: '<S5>/Product' */
-  tmp_1 = 0.085264366731165539 * yawRate;
-  tmp_1 += 0.097409032988814967 * tmp_0;
-
-  /* Product: '<S5>/Product' */
-  Linear_Model_B.Bu[1] = tmp_1;
-
-  /* Product: '<S5>/Product1' */
-  yawRate_max = Linear_Model_B.A[0];
-  tmp_1 = Linear_Model_B.A[1];
-  tmp = Linear_Model_B.A[2];
-  tmp_2 = Linear_Model_B.A[3];
-  yawRate = Linear_Model_B.x[0];
-  tmp_0 = Linear_Model_B.x[1];
-  yawRate_max *= yawRate;
-  yawRate_max += tmp * tmp_0;
-
-  /* Product: '<S5>/Product1' */
-  Linear_Model_B.Ax[0] = yawRate_max;
-
-  /* Sum: '<S5>/Sum' */
-  Linear_Model_B.dx[0] = Linear_Model_B.Bu[0] + Linear_Model_B.Ax[0];
-
-  /* Product: '<S5>/Product1' */
-  tmp_1 *= yawRate;
-  tmp_1 += tmp_2 * tmp_0;
-
-  /* Product: '<S5>/Product1' */
-  Linear_Model_B.Ax[1] = tmp_1;
-
-  /* Sum: '<S5>/Sum' */
-  Linear_Model_B.dx[1] = Linear_Model_B.Bu[1] + Linear_Model_B.Ax[1];
   if (rtmIsMajorTimeStep(Linear_Model_M)) {
     /* Matfile logging */
     // rt_UpdateTXYLogVars(Linear_Model_M->rtwLogInfo, (Linear_Model_M->Timing.t));
+  }                                    /* end MajorTimeStep */
+
+  if (rtmIsMajorTimeStep(Linear_Model_M)) {
+    if (rtmIsMajorTimeStep(Linear_Model_M)) {
+      real_T denAccum;
+
+      /* Update for DiscreteTransferFcn: '<Root>/Discrete Transfer Fcn' */
+      denAccum = Linear_Model_B.Sum_h;
+      denAccum -= Linear_Model_DW.DiscreteTransferFcn_states[0] *
+        Linear_Model_P.DiscreteTransferFcn_DenCoef[1];
+      denAccum -= Linear_Model_DW.DiscreteTransferFcn_states[1] *
+        Linear_Model_P.DiscreteTransferFcn_DenCoef[2];
+      denAccum /= Linear_Model_P.DiscreteTransferFcn_DenCoef[0];
+      Linear_Model_DW.DiscreteTransferFcn_states[1] =
+        Linear_Model_DW.DiscreteTransferFcn_states[0];
+      Linear_Model_DW.DiscreteTransferFcn_states[0] = denAccum;
+    }
   }                                    /* end MajorTimeStep */
 
   if (rtmIsMajorTimeStep(Linear_Model_M)) {
@@ -506,14 +448,10 @@ void Linear_Model_derivatives(void)
   XDot_Linear_Model_T *_rtXdot;
   _rtXdot = ((XDot_Linear_Model_T *) Linear_Model_M->derivs);
 
-  /* Derivatives for Integrator: '<S5>/Integrator' */
-  _rtXdot->VyYaw_rate[0] = Linear_Model_B.dx[0];
-  _rtXdot->VyYaw_rate[1] = Linear_Model_B.dx[1];
-
-  /* Derivatives for Integrator: '<S37>/Integrator' */
+  /* Derivatives for Integrator: '<S35>/Integrator' */
   _rtXdot->Integrator_CSTATE = Linear_Model_B.IProdOut;
 
-  /* Derivatives for Integrator: '<S32>/Filter' */
+  /* Derivatives for Integrator: '<S30>/Filter' */
   _rtXdot->Filter_CSTATE = Linear_Model_B.NProdOut;
 }
 
@@ -568,132 +506,132 @@ void Linear_Model_initialize(void)
 
   // /* Setup for data logging */
   // {
-  //   static RTWLogInfo rt_DataLoggingInfo;
-  //   rt_DataLoggingInfo.loggingInterval = (NULL);
-  //   Linear_Model_M->rtwLogInfo = &rt_DataLoggingInfo;
+    // static RTWLogInfo rt_DataLoggingInfo;
+    // rt_DataLoggingInfo.loggingInterval = (NULL);
+    // Linear_Model_M->rtwLogInfo = &rt_DataLoggingInfo;
   // }
 
   // /* Setup for data logging */
   // {
-  //   rtliSetLogXSignalInfo(Linear_Model_M->rtwLogInfo, (NULL));
-  //   rtliSetLogXSignalPtrs(Linear_Model_M->rtwLogInfo, (NULL));
-  //   rtliSetLogT(Linear_Model_M->rtwLogInfo, "tout");
-  //   rtliSetLogX(Linear_Model_M->rtwLogInfo, "");
-  //   rtliSetLogXFinal(Linear_Model_M->rtwLogInfo, "");
-  //   rtliSetLogVarNameModifier(Linear_Model_M->rtwLogInfo, "rt_");
-  //   rtliSetLogFormat(Linear_Model_M->rtwLogInfo, 0);
-  //   rtliSetLogMaxRows(Linear_Model_M->rtwLogInfo, 0);
-  //   rtliSetLogDecimation(Linear_Model_M->rtwLogInfo, 1);
+    // rtliSetLogXSignalInfo(Linear_Model_M->rtwLogInfo, (NULL));
+    // rtliSetLogXSignalPtrs(Linear_Model_M->rtwLogInfo, (NULL));
+    // rtliSetLogT(Linear_Model_M->rtwLogInfo, "tout");
+    // rtliSetLogX(Linear_Model_M->rtwLogInfo, "");
+    // rtliSetLogXFinal(Linear_Model_M->rtwLogInfo, "");
+    // rtliSetLogVarNameModifier(Linear_Model_M->rtwLogInfo, "rt_");
+    // rtliSetLogFormat(Linear_Model_M->rtwLogInfo, 0);
+    // rtliSetLogMaxRows(Linear_Model_M->rtwLogInfo, 0);
+    // rtliSetLogDecimation(Linear_Model_M->rtwLogInfo, 1);
 
-  //   /*
-  //    * Set pointers to the data and signal info for each output
-  //    */
-  //   {
-  //     static void * rt_LoggedOutputSignalPtrs[] = {
-  //       &Linear_Model_Y.right_Motor_Control,
-  //       &Linear_Model_Y.left_Motor_Control
-  //     };
+    // /*
+     // * Set pointers to the data and signal info for each output
+     // */
+    // {
+      // static void * rt_LoggedOutputSignalPtrs[] = {
+        // &Linear_Model_Y.right_Motor_Control_out,
+        // &Linear_Model_Y.left_Motor_Control_out
+      // };
 
-  //     rtliSetLogYSignalPtrs(Linear_Model_M->rtwLogInfo, ((LogSignalPtrsType)
-  //       rt_LoggedOutputSignalPtrs));
-  //   }
+      // rtliSetLogYSignalPtrs(Linear_Model_M->rtwLogInfo, ((LogSignalPtrsType)
+        // rt_LoggedOutputSignalPtrs));
+    // }
 
-  //   {
-  //     static int_T rt_LoggedOutputWidths[] = {
-  //       1,
-  //       1
-  //     };
+    // {
+      // static int_T rt_LoggedOutputWidths[] = {
+        // 1,
+        // 1
+      // };
 
-  //     static int_T rt_LoggedOutputNumDimensions[] = {
-  //       1,
-  //       1
-  //     };
+      // static int_T rt_LoggedOutputNumDimensions[] = {
+        // 1,
+        // 1
+      // };
 
-  //     static int_T rt_LoggedOutputDimensions[] = {
-  //       1,
-  //       1
-  //     };
+      // static int_T rt_LoggedOutputDimensions[] = {
+        // 1,
+        // 1
+      // };
 
-  //     static boolean_T rt_LoggedOutputIsVarDims[] = {
-  //       0,
-  //       0
-  //     };
+      // static boolean_T rt_LoggedOutputIsVarDims[] = {
+        // 0,
+        // 0
+      // };
 
-  //     static void* rt_LoggedCurrentSignalDimensions[] = {
-  //       (NULL),
-  //       (NULL)
-  //     };
+      // static void* rt_LoggedCurrentSignalDimensions[] = {
+        // (NULL),
+        // (NULL)
+      // };
 
-  //     static int_T rt_LoggedCurrentSignalDimensionsSize[] = {
-  //       4,
-  //       4
-  //     };
+      // static int_T rt_LoggedCurrentSignalDimensionsSize[] = {
+        // 4,
+        // 4
+      // };
 
-  //     static BuiltInDTypeId rt_LoggedOutputDataTypeIds[] = {
-  //       SS_DOUBLE,
-  //       SS_DOUBLE
-  //     };
+      // static BuiltInDTypeId rt_LoggedOutputDataTypeIds[] = {
+        // SS_DOUBLE,
+        // SS_DOUBLE
+      // };
 
-  //     static int_T rt_LoggedOutputComplexSignals[] = {
-  //       0,
-  //       0
-  //     };
+      // static int_T rt_LoggedOutputComplexSignals[] = {
+        // 0,
+        // 0
+      // };
 
-  //     static RTWPreprocessingFcnPtr rt_LoggingPreprocessingFcnPtrs[] = {
-  //       (NULL),
-  //       (NULL)
-  //     };
+      // static RTWPreprocessingFcnPtr rt_LoggingPreprocessingFcnPtrs[] = {
+        // (NULL),
+        // (NULL)
+      // };
 
-  //     static const char_T *rt_LoggedOutputLabels[] = {
-  //       "",
-  //       "" };
+      // static const char_T *rt_LoggedOutputLabels[] = {
+        // "",
+        // "" };
 
-  //     static const char_T *rt_LoggedOutputBlockNames[] = {
-  //       "Linear_Model/right_Motor_Control",
-  //       "Linear_Model/left_Motor_Control" };
+      // static const char_T *rt_LoggedOutputBlockNames[] = {
+        // "Linear_Model/right_Motor_Control_out",
+        // "Linear_Model/left_Motor_Control_out" };
 
-  //     static RTWLogDataTypeConvert rt_RTWLogDataTypeConvert[] = {
-  //       { 0, SS_DOUBLE, SS_DOUBLE, 0, 0, 0, 1.0, 0, 0.0 },
+      // static RTWLogDataTypeConvert rt_RTWLogDataTypeConvert[] = {
+        // { 0, SS_DOUBLE, SS_DOUBLE, 0, 0, 0, 1.0, 0, 0.0 },
 
-  //       { 0, SS_DOUBLE, SS_DOUBLE, 0, 0, 0, 1.0, 0, 0.0 }
-  //     };
+        // { 0, SS_DOUBLE, SS_DOUBLE, 0, 0, 0, 1.0, 0, 0.0 }
+      // };
 
-  //     static RTWLogSignalInfo rt_LoggedOutputSignalInfo[] = {
-  //       {
-  //         2,
-  //         rt_LoggedOutputWidths,
-  //         rt_LoggedOutputNumDimensions,
-  //         rt_LoggedOutputDimensions,
-  //         rt_LoggedOutputIsVarDims,
-  //         rt_LoggedCurrentSignalDimensions,
-  //         rt_LoggedCurrentSignalDimensionsSize,
-  //         rt_LoggedOutputDataTypeIds,
-  //         rt_LoggedOutputComplexSignals,
-  //         (NULL),
-  //         rt_LoggingPreprocessingFcnPtrs,
+      // static RTWLogSignalInfo rt_LoggedOutputSignalInfo[] = {
+        // {
+          // 2,
+          // rt_LoggedOutputWidths,
+          // rt_LoggedOutputNumDimensions,
+          // rt_LoggedOutputDimensions,
+          // rt_LoggedOutputIsVarDims,
+          // rt_LoggedCurrentSignalDimensions,
+          // rt_LoggedCurrentSignalDimensionsSize,
+          // rt_LoggedOutputDataTypeIds,
+          // rt_LoggedOutputComplexSignals,
+          // (NULL),
+          // rt_LoggingPreprocessingFcnPtrs,
 
-  //         { rt_LoggedOutputLabels },
-  //         (NULL),
-  //         (NULL),
-  //         (NULL),
+          // { rt_LoggedOutputLabels },
+          // (NULL),
+          // (NULL),
+          // (NULL),
 
-  //         { rt_LoggedOutputBlockNames },
+          // { rt_LoggedOutputBlockNames },
 
-  //         { (NULL) },
-  //         (NULL),
-  //         rt_RTWLogDataTypeConvert
-  //       }
-  //     };
+          // { (NULL) },
+          // (NULL),
+          // rt_RTWLogDataTypeConvert
+        // }
+      // };
 
-  //     rtliSetLogYSignalInfo(Linear_Model_M->rtwLogInfo,
-  //                           rt_LoggedOutputSignalInfo);
+      // rtliSetLogYSignalInfo(Linear_Model_M->rtwLogInfo,
+                            // rt_LoggedOutputSignalInfo);
 
-  //     /* set currSigDims field */
-  //     rt_LoggedCurrentSignalDimensions[0] = &rt_LoggedOutputWidths[0];
-  //     rt_LoggedCurrentSignalDimensions[1] = &rt_LoggedOutputWidths[1];
-  //   }
+      // /* set currSigDims field */
+      // rt_LoggedCurrentSignalDimensions[0] = &rt_LoggedOutputWidths[0];
+      // rt_LoggedCurrentSignalDimensions[1] = &rt_LoggedOutputWidths[1];
+    // }
 
-  //   rtliSetLogY(Linear_Model_M->rtwLogInfo, "yout");
+    // rtliSetLogY(Linear_Model_M->rtwLogInfo, "yout");
   // }
 
   /* block I/O */
@@ -706,26 +644,32 @@ void Linear_Model_initialize(void)
                   sizeof(X_Linear_Model_T));
   }
 
+  /* states (dwork) */
+  (void) memset((void *)&Linear_Model_DW, 0,
+                sizeof(DW_Linear_Model_T));
+
   /* external inputs */
   (void)memset(&Linear_Model_U, 0, sizeof(ExtU_Linear_Model_T));
 
   /* external outputs */
   (void)memset(&Linear_Model_Y, 0, sizeof(ExtY_Linear_Model_T));
 
-  /* Matfile logging */
+  // /* Matfile logging */
   // rt_StartDataLoggingWithStartTime(Linear_Model_M->rtwLogInfo, 0.0, rtmGetTFinal
-  //   (Linear_Model_M), Linear_Model_M->Timing.stepSize0, (&rtmGetErrorStatus
-  //   (Linear_Model_M)));
+    // (Linear_Model_M), Linear_Model_M->Timing.stepSize0, (&rtmGetErrorStatus
+    // (Linear_Model_M)));
 
-  /* InitializeConditions for Integrator: '<S5>/Integrator' */
-  Linear_Model_X.VyYaw_rate[0] = Linear_Model_P.Integrator_IC;
-  Linear_Model_X.VyYaw_rate[1] = Linear_Model_P.Integrator_IC;
+  /* InitializeConditions for DiscreteTransferFcn: '<Root>/Discrete Transfer Fcn' */
+  Linear_Model_DW.DiscreteTransferFcn_states[0] =
+    Linear_Model_P.DiscreteTransferFcn_InitialStat;
+  Linear_Model_DW.DiscreteTransferFcn_states[1] =
+    Linear_Model_P.DiscreteTransferFcn_InitialStat;
 
-  /* InitializeConditions for Integrator: '<S37>/Integrator' */
+  /* InitializeConditions for Integrator: '<S35>/Integrator' */
   Linear_Model_X.Integrator_CSTATE =
     Linear_Model_P.PIDController_InitialConditio_e;
 
-  /* InitializeConditions for Integrator: '<S32>/Filter' */
+  /* InitializeConditions for Integrator: '<S30>/Filter' */
   Linear_Model_X.Filter_CSTATE = Linear_Model_P.PIDController_InitialConditionF;
 }
 

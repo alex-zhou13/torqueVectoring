@@ -84,7 +84,7 @@ QueueHandle_t can_tx_queue = NULL;
 #define MC_LEFT_ID 0x00
 #define MC_RIGHT_ID 0x01
 
-#define THR_REPORT_FREQ     500 // ms
+#define THR_REPORT_FREQ     50 // ms
 
 /////////////// GLOBAL VARS DEF ////////////////
 double throttle_scaled;
@@ -96,6 +96,8 @@ int RPM_L = 0;
 int RPM_R = 0;
 
 bool testing_mode = 0; // Boolean value to put the program into testing mode
+bool printCAN = false;
+bool dummy_mode = true;
 
 /////////////// SIMULINK PI DEFS AND FUNCS ///////////////
 /* Block signals (default storage) */
@@ -299,7 +301,7 @@ void Linear_Model_step(void)
 
   /* :  yawRate = V_CG/((l_r+l_f)+K_u*V_CG^2) * steering_Angle; */
   yawRate = speed_scaled / (speed_scaled * speed_scaled *
-    0.05 + 1.596) * (steering_scaled * 2.0 * 90.0 / 180.0 *
+    0.05 + 1.596) * (abs(steering_scaled) * 2.0 * 90.0 / 180.0 *
                      3.1415926535897931);
 
   /* :  if (abs(yawRate) <= abs(yawRate_max)) */
@@ -890,7 +892,7 @@ static void temp_PID_task() {
         // thr_left_scaled = throttle_scaled;
         // thr_rigt_scaled = throttle_scaled;
         // In testing mode, the throttle signal is stepped progressively from 0-1
-        if (!testing_mode) {
+        if (!testing_mode && !dummy_mode) {
             thr_left_scaled = Linear_Model_Y.left_Motor_Control_out;
             thr_rigt_scaled = Linear_Model_Y.right_Motor_Control_out;
         }
@@ -1010,10 +1012,12 @@ void can_rx_task() {
         twai_message_t message;
         int waitticks = 10000;
         if (twai_receive(&message, pdMS_TO_TICKS(waitticks)) == ESP_OK) {
-            printf("Message received\n");
+            if (printCAN)
+                printf("Message received\n");
         }
         else {
-            printf("Failed to receive message after %d seconds\n", waitticks / 1000);
+            if (printCAN)
+                printf("Failed to receive message after %d seconds\n", waitticks / 1000);
         }
 
         // Process received message
@@ -1021,16 +1025,21 @@ void can_rx_task() {
         int nodeID = 0;
 
         if (message.extd) {
-            printf("Message is in Extended Format\n");
+            if (printCAN)
+                printf("Message is in Extended Format\n");
             packetID = message.identifier >> 8;
             nodeID = (int) message.identifier % (int) pow(2, 8);
         }
         else {
-            printf("Message is in Standard Format\n");
+            if (printCAN)
+                printf("Message is in Standard Format\n");
             packetID = message.identifier >> 5;
             nodeID = (int) message.identifier % (int) pow(2, 5);
         }
-        printf("MessageID:\t%ld\tPacketID:\t%d\nNodeID:\t%d\t", message.identifier, packetID, nodeID);
+
+        if (printCAN)
+            printf("MessageID:\t%ld\tPacketID:\t%d\nNodeID:\t%d\t", message.identifier, packetID, nodeID);
+
         if (!(message.rtr)) {
             // Process each byte
             if (packetID == 0x20) {
@@ -1043,7 +1052,9 @@ void can_rx_task() {
                     RPM_R = ERPM_R/SIM_POLE_PAIRS;
                 }
                 speed_scaled = (double) (RPM_L+RPM_R)/2/SIM_RATIO*SIM_WHEEL_DIAM*3.1415/60;
-                printf("RPM_L:\t%d\tRPM_R:\t%d\tSpeed:\t%f\n",RPM_L,RPM_R, speed_scaled);
+
+                if (printCAN)
+                    printf("RPM_L:\t%d\tRPM_R:\t%d\tSpeed:\t%f\n",RPM_L,RPM_R, speed_scaled);
             }
         }
         vTaskDelay(pdMS_TO_TICKS(5));
@@ -1054,10 +1065,12 @@ void can_alert_task() {
     // Reconfigure alerts to detect Error Passive and Bus-Off error states////////////
     uint32_t alerts_to_enable = TWAI_ALERT_ERR_PASS | TWAI_ALERT_BUS_OFF;
     if (twai_reconfigure_alerts(alerts_to_enable, NULL) == ESP_OK) {
-        printf("Alerts reconfigured\n");
+        if (printCAN)
+            printf("Alerts reconfigured\n");
     }
     else {
-        printf("Failed to reconfigure alerts");
+        if (printCAN)
+            printf("Failed to reconfigure alerts");
 }
 
     while (1) {
@@ -1076,7 +1089,7 @@ void throttle_report_task() {
     }
     
     while(1) {
-        int TL = thr_left_scaled*1000;
+        int TL = thr_left_scaled*1000/5;
         txBuffer[0] = 0x05;
         txBuffer[1] = MC_LEFT_ID;
         txBuffer[2] = TL>>8;      // Target relative AC current, [15:08]
@@ -1089,7 +1102,7 @@ void throttle_report_task() {
         txBuffer[9] = 0xFF;       // Not Used
         xQueueSend(can_tx_queue, (void*)txBuffer, (TickType_t)0);
         
-        int TR = thr_rigt_scaled*1000;
+        int TR = thr_rigt_scaled*1000/5;
         txBuffer[1] = MC_RIGHT_ID;
         txBuffer[2] = TR>>8;     // Target relative AC current, [15:08]
         txBuffer[3] = TR;         // Target relative AC current, [07:00]
@@ -1123,7 +1136,16 @@ static void speed_emulator_task() {
     }
 } */
 
-
+void PID_dummy_model_task() {
+    while (1) {
+        // Basically a linear model, but soften the throttle inputs
+        double TL = throttle_scaled*(steering_scaled+0.5);
+        double TR = throttle_scaled*((-1*steering_scaled)+0.5);
+        thr_left_scaled = ((TL > 1) ? 1 : ((TL < 0) ? 0 : TL))*5;
+        thr_rigt_scaled = ((TR > 1) ? 1 : ((TR < 0) ? 0 : TR))*5;;
+        vTaskDelay(pdMS_TO_TICKS(10));
+    }
+}
 void throttle_emulator_task() {
     int i = 0;
     while (1) {
@@ -1154,4 +1176,6 @@ void app_main() {
 
     if (testing_mode)
         xTaskCreate(throttle_emulator_task, "throttle_emulator_task", 4096, NULL, 5, NULL);
+    if (dummy_mode)
+        xTaskCreate(PID_dummy_model_task, "PID_dummy_model_task", 4096, NULL, 5, NULL);
 }

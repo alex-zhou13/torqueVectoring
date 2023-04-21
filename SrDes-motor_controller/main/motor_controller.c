@@ -22,6 +22,7 @@ int RPM_R = 0;
 bool enable = true;
 bool testing = false;
 bool CANnotADC = true;
+bool printCAN = false;
 bool slip_L = false;
 bool slip_R = false;
 
@@ -59,7 +60,7 @@ QueueHandle_t can_tx_queue = NULL;
 #define MC_LEFT_ID          0x00
 #define MC_RIGHT_ID         0x01
 
-#define GD1_REPORT_FREQ     500  // ms
+#define GD1_REPORT_FREQ     50  // ms
 #define GD5_REPORT_FREQ     1000  // ms
 
 /////////////// VEHIC PARAMS DEF //////////////
@@ -302,10 +303,12 @@ void can_rx_task() {
         twai_message_t message;
         int waitticks = 10000;
         if (twai_receive(&message, pdMS_TO_TICKS(waitticks)) == ESP_OK) {
-            printf("Message received\n");
+            if (printCAN)
+                printf("Message received\n");
         }
         else {
-            printf("Failed to receive message after %d seconds\n", waitticks / 1000);
+            if (printCAN)
+                printf("Failed to receive message after %d seconds\n", waitticks / 1000);
         }
 
         // Process received message
@@ -313,16 +316,20 @@ void can_rx_task() {
         int nodeID = 0;
 
         if (message.extd) {
-            printf("Message is in Extended Format\n");
+            if (printCAN)
+                printf("Message is in Extended Format\n");
             packetID = message.identifier >> 8;
             nodeID = (int) message.identifier % (int) pow(2, 8);
         }
         else {
-            printf("Message is in Standard Format\n");
+            if (printCAN)
+                printf("Message is in Standard Format\n");
             packetID = message.identifier >> 5;
             nodeID = (int) message.identifier % (int) pow(2, 5);
         }
-        printf("MessageID:\t%ld\tPacketID:\t%d\nNodeID:\t%d\t", message.identifier, packetID, nodeID);
+
+        if (printCAN)
+            printf("MessageID:\t%ld\tPacketID:\t%d\nNodeID:\t%d\t", message.identifier, packetID, nodeID);
         if (!(message.rtr)) {
             // Process each byte
             if (packetID == 0x05) {
@@ -331,16 +338,15 @@ void can_rx_task() {
                 if (nodeID == MC_LEFT_ID) {
                     TL = (message.data[0]<<8) + message.data[1];
                     thr_left_scaled = (double) TL/1000.0;
-                    printf("byte0: %d\tbyte1: %d\n",message.data[0],message.data[1]);
                 }
                 if (nodeID == MC_RIGHT_ID) {
                     TR = (message.data[0]<<8) + message.data[1];
                     thr_right_scaled = (double) TR/1000.0;
-                    printf("byte0: %d\tbyte1: %d\n",message.data[0],message.data[1]);
                 }
-
-                printf("TL:\t%d\tTR:\t%d\n",TL,TR);
-                printf("Thr_left:\t%f\tThr_right:\t%f\n",thr_left_scaled,thr_right_scaled);
+                if (printCAN) {
+                    printf("TL:\t%d\tTR:\t%d\n",TL,TR);
+                    printf("Thr_left:\t%f\tThr_right:\t%f\n",thr_left_scaled,thr_right_scaled);
+                }
             }
         }
         vTaskDelay(pdMS_TO_TICKS(5));
@@ -351,9 +357,11 @@ void can_alert_task() {
     //Reconfigure alerts to detect Error Passive and Bus-Off error states////////////
     uint32_t alerts_to_enable = TWAI_ALERT_ERR_PASS | TWAI_ALERT_BUS_OFF;
     if (twai_reconfigure_alerts(alerts_to_enable, NULL) == ESP_OK) {
-        printf("Alerts reconfigured\n");
+        if (printCAN)
+            printf("Alerts reconfigured\n");
     } else {
-        printf("Failed to reconfigure alerts");
+        if (printCAN)
+            printf("Failed to reconfigure alerts");
     }
 
     while(1) {

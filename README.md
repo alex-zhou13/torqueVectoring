@@ -12,3 +12,5 @@ A few of the biggest issues we ran into when creating this system was interfacin
 
 Currently, this system has only been tested on a 3D demonstration vehicle model prototype. Our client, Terrier Motosports of Boston University, is currently in development of their next generation formula race car that can fit a human being inside and race down a track. The ultimate end goal is to install these electronics onto any real life-sized formula race car that uses independently-controlled motors for its wheels, such as the one under development. Our hope is that this system serves as a more affordable alternative to proprietary solutions already in existence, while being modular and simpler for configuration across various formula specifications, both physically and algorithmically.
 
+More information about our hardware and software methodologies can be found in the "Wiki" tab of this repo, under their own README files. 
+

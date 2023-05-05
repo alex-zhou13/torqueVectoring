@@ -35,9 +35,14 @@ bool slip_R = false;
 #define ESC_LF_GPIO                (15)   // GPIO connects to the PWM signal line for the left front esc/motor
 #define ESC_RR_GPIO                (18)   // GPIO connects to the PWM signal line for the right rear esc/motor
 #define ESC_RF_GPIO                (16)   // GPIO connects to the PWM signal line for the right front esc/motor
+#define ESC_STEER_GPIO             (13)   // GPIO connects to the PWM signal line for the steering esc/servo
 
 #define MAX_MOTOR_DUTY          (1080) // Maximum motor duty in microseconds
 #define MIN_MOTOR_DUTY          (1000) // Minimum motor duty in microseconds
+
+#define SERVO_MIN_PULSEWIDTH_US (0) // Minimum pulse width in microsecond. I adjusted this from 1000 to 0
+#define SERVO_MAX_PULSEWIDTH_US (1150) // Maximum pulse width in microsecond. I adjusted this from 2000 to 3000 
+#define SERVO_MAX_DEGREE        (40)   // Maximum angle in degree upto which servo can rotate
 
 /////////////// ADC DEF ////////////////
 #define DEFAULT_VREF    1100        //Use adc1_vref_to_gpio() to obtain a better estimate
@@ -136,6 +141,37 @@ static void motor_task() {
         vTaskDelay(pdMS_TO_TICKS(TIMESTEP)); //Add delay, since it takes time for servo to rotate, generally 100ms/60degree rotation under 5V power supply
     }
 }
+
+// function that converts angle to duty
+static inline uint32_t example_convert_servo_angle_to_duty_us(int angle)
+{
+    return (angle + SERVO_MAX_DEGREE) * (SERVO_MAX_PULSEWIDTH_US - SERVO_MIN_PULSEWIDTH_US) / (2 * SERVO_MAX_DEGREE) + SERVO_MIN_PULSEWIDTH_US;
+}
+
+// Basic task that inits servo and sets steering angles
+static void servo_task() {
+
+    mcpwm_gpio_init(MCPWM_UNIT_0, MCPWM0A, ESC_STEER_GPIO); // To drive a RC servo, one MCPWM generator is enough
+
+    mcpwm_config_t pwm_config = {
+        .frequency = 50, // frequency = 50Hz, i.e. for every servo motor time period should be 20ms
+        .cmpr_a = 0,     // duty cycle of PWMxA = 0
+        .counter_mode = MCPWM_UP_COUNTER,
+        .duty_mode = MCPWM_DUTY_MODE_0,
+    };
+
+    mcpwm_init(MCPWM_UNIT_0, MCPWM_TIMER_0, &pwm_config);
+
+    ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, SERVO_MIN_PULSEWIDTH_US));
+    
+    while (1) {
+        for (int angle = -SERVO_MAX_DEGREE; angle < SERVO_MAX_DEGREE; angle++) {
+            ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, example_convert_servo_angle_to_duty_us(angle)));
+            vTaskDelay(pdMS_TO_TICKS(TIMESTEP)); //Add delay, since it takes time for servo to rotate, generally 100ms/60degree rotation under 5V power supply
+        }        
+    }
+}
+
 ///////////////// ADC FUNCS /////////////////
 void adc_task() {
     // Configure ADC
@@ -550,6 +586,7 @@ void app_main(void)
     can_init();
     
     xTaskCreate(&motor_task, "motor_task", 4096, NULL, 5, NULL);
+    xTaskCreate(&servo_task, "servo_task", 4096, NULL, 5, NULL);
     xTaskCreate(&adc_task, "adc_task", 4096, NULL, 5, NULL);
 
     xTaskCreate(&can_tx_task, "can_tx_task", 4096, NULL, 5, NULL);

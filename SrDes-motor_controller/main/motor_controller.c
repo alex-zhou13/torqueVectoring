@@ -35,9 +35,9 @@ bool slip_R = false;
 #define ESC_LF_GPIO                (15)   // GPIO connects to the PWM signal line for the left front esc/motor
 #define ESC_RR_GPIO                (18)   // GPIO connects to the PWM signal line for the right rear esc/motor
 #define ESC_RF_GPIO                (16)   // GPIO connects to the PWM signal line for the right front esc/motor
-#define ESC_STEER_GPIO             (13)   // GPIO connects to the PWM signal line for the steering esc/servo
+#define ESC_STEER_GPIO             (46)   // GPIO connects to the PWM signal line for the steering esc/servo
 
-#define MAX_MOTOR_DUTY          (1080) // Maximum motor duty in microseconds
+#define MAX_MOTOR_DUTY          (1100) // Maximum motor duty in microseconds
 #define MIN_MOTOR_DUTY          (1000) // Minimum motor duty in microseconds
 
 #define SERVO_MIN_PULSEWIDTH_US (0) // Minimum pulse width in microsecond. I adjusted this from 1000 to 0
@@ -117,13 +117,15 @@ static void motor_task() {
     // Allow time for the esc to be plugged inESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, motor_lr_duty));
     printf("Plug in ESC now!\n");
     // ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, MAX_MOTOR_DUTY));
+    // ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, MAX_MOTOR_DUTY));
     // ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_1, MCPWM_TIMER_0, MCPWM_OPR_A, MAX_MOTOR_DUTY));
+    // ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_1, MCPWM_TIMER_0, MCPWM_OPR_B, MAX_MOTOR_DUTY));
     // vTaskDelay(pdMS_TO_TICKS(5000));
     ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_A, MIN_MOTOR_DUTY-40));
     ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_0, MCPWM_TIMER_0, MCPWM_OPR_B, MIN_MOTOR_DUTY-40));
     ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_1, MCPWM_TIMER_0, MCPWM_OPR_A, MIN_MOTOR_DUTY-40));
     ESP_ERROR_CHECK(mcpwm_set_duty_in_us(MCPWM_UNIT_1, MCPWM_TIMER_0, MCPWM_OPR_B, MIN_MOTOR_DUTY-40));
-    vTaskDelay(pdMS_TO_TICKS(10000));
+    vTaskDelay(pdMS_TO_TICKS(5000));
 
     RPM_L = 0;
     RPM_R = 0;
@@ -586,7 +588,7 @@ void app_main(void)
     can_init();
     
     xTaskCreate(&motor_task, "motor_task", 4096, NULL, 5, NULL);
-    xTaskCreate(&servo_task, "servo_task", 4096, NULL, 5, NULL);
+    // xTaskCreate(&servo_task, "servo_task", 4096, NULL, 5, NULL);
     xTaskCreate(&adc_task, "adc_task", 4096, NULL, 5, NULL);
 
     xTaskCreate(&can_tx_task, "can_tx_task", 4096, NULL, 5, NULL);
